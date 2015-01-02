@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.rankwave.sdkdemo"
+    android:versionCode="3"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="21" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <permission android:name="com.rankwave.sdkdemo.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.rankwave.sdkdemo.permission.C2D_MESSAGE" />
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Custom" >
+        <receiver
+            android:name="com.rankwave.connect.sdk.core.GCMReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.gcm.intent.RETRY" />
+
+                <category android:name="com.rankwave.connectsdkdemo" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.rankwave.connect.sdk.core.ConnectReceiver" />
+
+        <activity
+            android:name=".IntroActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoginActivity" >
+        </activity>
+        <activity android:name=".MainActivity" >
+        </activity>
+        <activity android:name=".InputAccountActivity" >
+        </activity>
+        <activity android:name=".InputProfileActivity" >
+        </activity>
+        
+        <activity
+            android:name="com.rankwave.connect.sdk.NotificationActivity" 
+            android:theme="@style/Theme.Translucent" >
+        </activity>
+        
+        <activity
+            android:name="com.rankwave.connect.sdk.OAuthLoginActivity">
+        </activity>
+        
+        <activity android:name="com.facebook.LoginActivity" >
+        </activity>
+        
+        <meta-data
+            android:name="com.rankwave.connect.sdk.ConnectId"
+            android:value="@string/connect_id" />
+        
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_appid" />
+       
+        <meta-data
+            android:name="com.rankwave.connect.sdk.TwitterConsumerKey"
+            android:value="@string/twitter_consumer_key" />
+        
+         <meta-data
+            android:name="com.rankwave.connect.sdk.TwitterConsumerSecret"
+            android:value="@string/twitter_consumer_secret" />
+         
+         <meta-data
+            android:name="com.rankwave.connect.sdk.SenderId"
+            android:value="@string/sender_id" />
+    </application>
+
+</manifest>
