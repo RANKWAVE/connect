@@ -32,7 +32,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.gcm.intent.RETRY" />
 
-                <category android:name="com.rankwave.connectsdkdemo" />
+                <category android:name="com.rankwave.sdkdemo" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.rankwave.connect.sdk.core.ConnectReceiver" />

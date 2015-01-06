@@ -1,8 +1,5 @@
 package com.rankwave.sdkdemo;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -299,24 +296,19 @@ public class LoginActivity extends Activity {
 		ImageView iv_loading = (ImageView) findViewById(R.id.iv_loading);
 		rotateAnimation(1000, iv_loading);
 		
-		
-		String payload = getIntent().getStringExtra(Connect.INTENT_PUSH_PAYLOAD);
-	    if (payload != null) {
-	          Log.d(AppConst.LOG_TAG, "Connect push notification with payload " + payload);
-	    }
 	}
 	
 	
 	public void goMainActivity(){
-		Connect.registerGCMRregistrationId(new ConnectCallback<Session>(){
+		Connect.setGCMRegistrationId(new ConnectCallback<Session>(){
 			@Override
 			public void onSuccess(Session session){
-				Log.i(AppConst.LOG_TAG, "registerGCMRregistrationId Success");
+				Log.i(AppConst.LOG_TAG, "registerGCMRegistrationId Success");
 			}
 			
 			@Override
 			public void onFail(FuncResult funcResult, Exception exception){
-				Log.i(AppConst.LOG_TAG, "registerGCMRregistrationId fail :: " + exception.getMessage());
+				Log.i(AppConst.LOG_TAG, "registerGCMRegistrationId fail :: " + exception.getMessage());
 			}
 			
 		});
@@ -364,13 +356,4 @@ public class LoginActivity extends Activity {
 
 	}
 	
-	
-	 @Override
-	  protected void onNewIntent(Intent intent) {
-	      super.onNewIntent(intent);
-	      String payload = getIntent().getStringExtra(Connect.INTENT_PUSH_PAYLOAD);
-	      if (payload != null) {
-	          Log.d(AppConst.LOG_TAG, "Connect push notification with payload " + payload);
-	      }
-	  }
 }

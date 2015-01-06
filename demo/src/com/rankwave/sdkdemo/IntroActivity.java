@@ -1,10 +1,13 @@
 package com.rankwave.sdkdemo;
 
+import com.rankwave.connect.sdk.Connect;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,6 +19,13 @@ public class IntroActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		String payload = getIntent().getStringExtra(Connect.INTENT_PUSH_PAYLOAD);
+	    if (payload != null) {
+	          Log.d(AppConst.LOG_TAG, "Connect push notification with payload " + payload);
+	    }
+			    
+			    
 		setContentView(R.layout.intro);
 		
 		ImageView iv_cloud1 = (ImageView)findViewById(R.id.iv_cloud_1);		
@@ -56,5 +66,15 @@ public class IntroActivity extends Activity {
 		translate.setFillAfter(true);
 		
 		view.startAnimation(translate);		
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		String payload = getIntent().getStringExtra(Connect.INTENT_PUSH_PAYLOAD);
+		
+		if (payload != null) {
+			Log.d(AppConst.LOG_TAG, "Connect push notification with payload " + payload);
+		}
 	}
 }

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="Gildong Hong"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="18sp" />
 
@@ -190,31 +190,42 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/btn_unregister_gcm_id"
+            
+            <Button                
+                android:id="@+id/btn_set_gcm_id"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Unregister GCM Rregistration ID"
+                android:text="Set GCM Registration ID"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_white"
                 android:textSize="18sp" />
             
-            <Button                
-                android:id="@+id/btn_register_gcm_id"
+           <Button
+                android:id="@+id/btn_unset_gcm_id"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Register GCM Rregistration ID"
+                android:text="Unset GCM Registration ID"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_gray"
                 android:textSize="18sp" />
-          
+           
+          <Button                
+                android:id="@+id/btn_blank1"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textColor="#333"
+                android:text=""
+                android:gravity="center"
+                android:background="@drawable/selector_btn_white"
+                android:textSize="18sp" />
         </LinearLayout>
         
         
