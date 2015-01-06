@@ -13,8 +13,9 @@ import android.widget.EditText;
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
 import com.rankwave.connect.sdk.Profile;
-import com.rankwave.connect.sdk.Session;
 import com.rankwave.connect.sdk.Profile.Hometown;
+import com.rankwave.connect.sdk.Profile.Residence;
+import com.rankwave.connect.sdk.Session;
 
 public class InputProfileActivity extends Activity{
 
@@ -50,30 +51,7 @@ public class InputProfileActivity extends Activity{
 			edit_birthday.setText(Session.getInstance().getUser().getSnsInfo().getBirthday());
 			
 		}else if(requestCode == REQUEST_CODE_UPDATE){
-			Connect.profileGet(new ConnectCallback<Profile>(){
-				@Override
-				public void onSuccess(Profile profile){
-					Log.i(AppConst.LOG_TAG, "profileGet success");
-					Log.i(AppConst.LOG_TAG, profile.toString());
-					
-					if(profile != null){
-						if(profile.getEmail() != null)
-							edit_email.setText(profile.getEmail());
-						
-						if(profile.getName() != null)
-							edit_name.setText(profile.getName());
-						
-						if(profile.getBirthday() != null)
-							edit_birthday.setText(profile.getBirthday());
-					}
-				}
-				
-				@Override
-				public void onFail(FuncResult funcResult, Exception exception){
-					Log.i(AppConst.LOG_TAG, "profileGet fail :: " + funcResult);
-					Log.i(AppConst.LOG_TAG, "profileGet fail :: " + exception.getMessage());
-				}
-			});
+			
 		}
 		
 		Button btn_ok = (Button)findViewById(R.id.btn_ok);
@@ -90,11 +68,29 @@ public class InputProfileActivity extends Activity{
 				profile.setEmail(email);
 				profile.setBirthday(birthday);
 				profile.setName(name);
-								
+
+				/*
+				//Residense info sample
+				Residence residence = profile.new Residence();
+				residence.setCountry("대한민국");
+				residence.setStates("서초구");
+				residence.setCity("서울");
+				residence.setStreet("방배로");
+				residence.setSpot("사무실");
+				profile.setResidence(residence);
+				
+				//Hometown info sample
 				Hometown hometown = profile.new Hometown();
-				hometown.setCountry("seoul");
+				hometown.setCountry("대한민국");
+				hometown.setStates("남양주");
+				hometown.setCity("경기도");
+				hometown.setStreet("늘을길");
+				hometown.setSpot("");
 				profile.setHometown(hometown);
 				
+				profile.setLocale("ko_kr");
+				profile.setTimezone("9.5");
+				*/
 				
 				if(requestCode == REQUEST_CODE_JOIN){
 					Connect.join(profile, new ConnectCallback<Session>(){
@@ -128,10 +124,8 @@ public class InputProfileActivity extends Activity{
 						@Override
 						public void onSuccess(Session session){
 							Log.i(AppConst.LOG_TAG, "pofile update success");
-							
-							startActivity(new Intent(
-									InputProfileActivity.this,
-									MainActivity.class));
+
+							finish();
 							
 							new Handler().postDelayed(new Runnable() {
 								
