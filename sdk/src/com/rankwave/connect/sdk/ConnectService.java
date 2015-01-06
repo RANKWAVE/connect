@@ -745,7 +745,7 @@ public class ConnectService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void registerGCMRregistrationId(ConnectCallback<Session> callback){
+	public static void setGCMRegistrationId(ConnectCallback<Session> callback){
 		Session session = Session.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -798,7 +798,7 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void unregisterGCMRregistrationId(ConnectCallback<Session> callback){
+	public static void unsetGCMRegistrationId(ConnectCallback<Session> callback){
 		Session session = Session.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -820,9 +820,16 @@ public class ConnectService {
 					try {
 						if(json.has("error")){
 							JSONObject error = json.getJSONObject("error");
-							
-							if(connectCallback != null){
-								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+
+							String code = error.getString("code");
+							if(code != null && code.equals("701")){	//case by unregistered device
+								if(connectCallback != null){
+									connectCallback.onSuccess(Session.getInstance());
+								}
+							}else{
+								if(connectCallback != null){
+									connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+								}
 							}
 						}else{
 							if(connectCallback != null){

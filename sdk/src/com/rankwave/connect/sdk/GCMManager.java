@@ -271,7 +271,7 @@ public class GCMManager {
 	public void uploadRegistrationId() {
 
 		if (Connect.getActiveSession().getState() == SessionState.OPENED) {
-			ConnectService.unregisterGCMRregistrationId(null);
+			ConnectService.setGCMRegistrationId(null);
 
 		} else {
 

@@ -1,7 +1,6 @@
 package com.rankwave.connect.sdk;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,7 +92,7 @@ public final class Connect {
 		
 		//push click action upload
 		final SharedPreferences prefs = context.getSharedPreferences(Connect.SDK_PREFERENCES, Context.MODE_PRIVATE);
-		String push_seq = prefs.getString("push_seq", "");
+		String push_seq = prefs.getString(Connect.INTENT_PUSH_SEQ, "");
 		
 		if(!push_seq.equals("")){
 			try{
@@ -155,7 +154,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void anonymousLogin(ConnectCallback<Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.READY && session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
@@ -204,7 +203,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void facebookLogin(Activity activity, ConnectCallback<Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.READY && session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
@@ -231,7 +230,7 @@ public final class Connect {
 	 * @param connectCallback 
 	 */
 	public static void setFacebookToken(String faceook_access_token, ConnectCallback<com.rankwave.connect.sdk.Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.READY && session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
@@ -287,7 +286,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void twitterLogin(Activity activity, ConnectCallback<Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.READY && session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
@@ -319,7 +318,7 @@ public final class Connect {
 	 * @param connectCallback 
 	 */
 	public static void setTwitterToken(String twitter_access_token, String twitter_token_secret, ConnectCallback<Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.READY && session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
@@ -382,7 +381,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void join(Profile profile, ConnectCallback<Session> connectCallback) {
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -425,7 +424,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void logout(ConnectCallback<Session> connectCallback){
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -446,7 +445,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void leave(ConnectCallback<Session> connectCallback){
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -468,7 +467,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void profileUpdate(Profile profile, ConnectCallback<Session> connectCallback){
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -490,7 +489,7 @@ public final class Connect {
 	 * @param connectCallback
 	 */
 	public static void profileGet(ConnectCallback<Profile> connectCallback){
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -505,14 +504,14 @@ public final class Connect {
 	}
 	
 	/**
-	 * pushRegister
+	 * setGCMRegistrationId
 	 * 
 	 * @param connectCallback
 	 */
-	public static void registerGCMRregistrationId(ConnectCallback<Session> connectCallback){
+	public static void setGCMRegistrationId(ConnectCallback<Session> connectCallback){
 		user_connect_callback = connectCallback;
 		
-		Session session = getActiveSession();
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -530,22 +529,22 @@ public final class Connect {
 				@Override
 				public void run() {
 
-					ConnectService.registerGCMRregistrationId(user_connect_callback);
+					ConnectService.setGCMRegistrationId(user_connect_callback);
 				}
 			}, 1000);
 		}else{
-			ConnectService.registerGCMRregistrationId(connectCallback);
+			ConnectService.setGCMRegistrationId(connectCallback);
 		}
 	}
 	
 	
 	/**
-	 * pushUnRegister
+	 * unsetGCMRegistrationId
 	 * 
 	 * @param connectCallback
 	 */
-	public static void unregisterGCMRregistrationId(ConnectCallback<Session> connectCallback){
-		Session session = getActiveSession();
+	public static void unsetGCMRegistrationId(ConnectCallback<Session> connectCallback){
+		Session session = getSession();
 		if(session != null){
 			if(session.getState() != SessionState.OPENED){
 				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
@@ -556,7 +555,7 @@ public final class Connect {
 			return;
 		}
 		
-		ConnectService.unregisterGCMRregistrationId(connectCallback);
+		ConnectService.unsetGCMRegistrationId(connectCallback);
 	}
 	
 	
@@ -564,7 +563,15 @@ public final class Connect {
 		
 	}
 	
-	
+	public static void getSession(ConnectCallback<Session> connectCallback){
+		Session session = getSession();
+		if(session != null){
+			connectCallback.onSuccess(session);
+		}else{
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session is null"));
+			return;
+		}
+	}
 	
 	/**
 	 * getVersion
@@ -585,6 +592,10 @@ public final class Connect {
 	
 	public static Session getActiveSession(){
 		return Session.getInstance();
+	}
+	
+	public static Session getSession(){
+		return Session.getSession();
 	}
 	
 	

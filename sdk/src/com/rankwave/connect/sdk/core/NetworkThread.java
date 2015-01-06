@@ -77,6 +77,7 @@ public class NetworkThread implements Runnable {
 		int retCd = E_UNKNOWN_EXCEPTION;
 		JSONObject json = null;
 		final ArrayList<Object> arrResponse = new ArrayList<Object>();
+		String requestMessage = "";
 		try {
 			
 			if(checkNetworkConnection(context) == false)
@@ -95,7 +96,7 @@ public class NetworkThread implements Runnable {
 				return;
 			}
 			
-			String requestMessage = url;
+			requestMessage = url;
 			
 			Log.d(Connect.TAG, requestMessage);
 			
@@ -143,7 +144,7 @@ public class NetworkThread implements Runnable {
 				arrResponse.add(callbackObj);
 				
 			} catch (JSONException e) {
-
+				Log.e(Connect.TAG, requestMessage);
 				e.printStackTrace();
 				retCd = E_INVALID_JSON_OBJECT;
 				
@@ -153,6 +154,7 @@ public class NetworkThread implements Runnable {
 			}
 
 		} catch (Exception e) {
+			Log.e(Connect.TAG, requestMessage);
 			e.printStackTrace();
 			retCd = E_CLIENT_PROTOCOL_EXCEPTION;
 			arrResponse.add(Integer.valueOf(retCd));

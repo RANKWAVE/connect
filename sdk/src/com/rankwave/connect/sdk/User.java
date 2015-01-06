@@ -143,4 +143,15 @@ public class User {
 			birthday = "";
 		}
 	}
+
+
+
+	@Override
+	public String toString() {
+		return "User [idType=" + idType + ", snsType=" + snsType + ", snsInfo="
+				+ snsInfo + ", emailVerify=" + emailVerify + ", joined="
+				+ joined + "]";
+	}
+	
+	
 }

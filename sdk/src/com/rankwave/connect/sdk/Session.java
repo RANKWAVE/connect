@@ -37,6 +37,10 @@ public class Session {
 	}
 	
 	
+	public static Session getSession(){
+		return instance;
+	}
+	
 	/**
 	 * Session init
 	 * 
