@@ -100,7 +100,7 @@ public final class Connect {
 				etc.put(Connect.INTENT_PUSH_SEQ, push_seq);
 				etc.put("os_type", DeviceInfo.getInstance().getOs_type());
 				
-				ConnectService.action(null, "PUSH", 1, "APP", etc);
+				ConnectService.action(null, "PUSH", 1, "CONNECT SDK", etc);
 				
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString(Connect.INTENT_PUSH_SEQ, "");
@@ -481,27 +481,6 @@ public final class Connect {
 		ConnectService.profileUpdate(profile, connectCallback);
 	}
 	
-	
-	/**
-	 * profileGet
-	 * 
-	 * @param profile
-	 * @param connectCallback
-	 */
-	public static void profileGet(ConnectCallback<Profile> connectCallback){
-		Session session = getSession();
-		if(session != null){
-			if(session.getState() != SessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Open"));
-				return;
-			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session is null"));
-			return;
-		}
-		
-		ConnectService.profileGet(connectCallback);
-	}
 	
 	/**
 	 * setGCMRegistrationId

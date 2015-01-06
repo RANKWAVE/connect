@@ -1,5 +1,7 @@
 package com.rankwave.connect.sdk;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -240,13 +242,18 @@ public class ConnectService {
 				if(profile.getName().equals("")){
 					params.add(new BasicNameValuePair("name", null));
 				}else{
-					params.add(new BasicNameValuePair("name", profile.getName()));
+					try{
+						params.add(new BasicNameValuePair("name", URLEncoder.encode(profile.getName(), "UTF-8")));
+					}catch(UnsupportedEncodingException ue){
+						
+					}
+					
 				}
 			}
 				
 			if(profile.getBirthday() != null){
 				if(profile.getBirthday().equals("")){
-					params.add(new BasicNameValuePair("birthday", null));
+					params.add(new BasicNameValuePair("birthday", "null"));
 				}else{
 					params.add(new BasicNameValuePair("birthday", profile.getBirthday()));
 				}
@@ -254,45 +261,118 @@ public class ConnectService {
 			
 			if(profile.getGender() != null){
 				if(profile.getGender().equals("")){
-					params.add(new BasicNameValuePair("gender", null));
+					params.add(new BasicNameValuePair("gender", "null"));
 				}else{
 					params.add(new BasicNameValuePair("gender", profile.getGender()));
 				}
 			}
 			
+			
 			if(profile.getResidence() != null){
 				try{
 					JSONObject residenceObject = new JSONObject();
-					residenceObject.put("country", profile.getResidence().getCountry());
-					residenceObject.put("states", profile.getResidence().getStates());
-					residenceObject.put("city", profile.getResidence().getCity());
-					residenceObject.put("street", profile.getResidence().getStreet());
-					residenceObject.put("spot", profile.getResidence().getSpot());
+					if(profile.getResidence().getCountry() != null){
+						if(profile.getResidence().getCountry().equals("")){
+							residenceObject.put("country", "null");
+						}else{
+							residenceObject.put("country", URLEncoder.encode(profile.getResidence().getCountry(),"UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getStates() != null){
+						if(profile.getResidence().getStates().equals("")){
+							residenceObject.put("states", "null");
+						}else{
+							residenceObject.put("states", URLEncoder.encode(profile.getResidence().getStates(),"UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getCity() != null){
+						if(profile.getResidence().getCity().equals("")){
+							residenceObject.put("city", "null");
+						}else{
+							residenceObject.put("city", URLEncoder.encode(profile.getResidence().getCity(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getStreet() != null){
+						if(profile.getResidence().getStreet().equals("")){
+							residenceObject.put("street", "null");
+						}else{
+							residenceObject.put("street", URLEncoder.encode(profile.getResidence().getStreet(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getSpot() != null){
+						if(profile.getResidence().getSpot().equals("")){
+							residenceObject.put("spot", "null");
+						}else{
+							residenceObject.put("spot", URLEncoder.encode(profile.getResidence().getSpot(), "UTF-8"));
+						}
+					}
 					
 					params.add(new BasicNameValuePair("residence", residenceObject.toString()));
 				}catch(JSONException e){
-					e.printStackTrace();
+					
+				}catch(UnsupportedEncodingException ue){
+					
 				}
 			}
 			
 			if(profile.getHometown() != null){
 				try{
 					JSONObject hometownObject = new JSONObject();
-					hometownObject.put("country", profile.getHometown().getCountry());
-					hometownObject.put("states", profile.getHometown().getStates());
-					hometownObject.put("city", profile.getHometown().getCity());
-					hometownObject.put("street", profile.getHometown().getStreet());
-					hometownObject.put("spot", profile.getHometown().getSpot());
+					if(profile.getHometown().getCountry() != null){
+						if(profile.getHometown().getCountry().equals("")){
+							hometownObject.put("country", "null");
+						}else{
+							hometownObject.put("country", URLEncoder.encode(profile.getHometown().getCountry(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getStates() != null){
+						if(profile.getHometown().getStates().equals("")){
+							hometownObject.put("states", "null");
+						}else{
+							hometownObject.put("states", URLEncoder.encode(profile.getHometown().getStates(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getCity() != null){
+						if(profile.getHometown().getCity().equals("")){
+							hometownObject.put("city", "null");
+						}else{
+							hometownObject.put("city", URLEncoder.encode(profile.getHometown().getCity(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getStreet() != null){
+						if(profile.getHometown().getStreet().equals("")){
+							hometownObject.put("street", "null");
+						}else{
+							hometownObject.put("street", URLEncoder.encode(profile.getHometown().getStreet(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getSpot() != null){
+						if(profile.getHometown().getSpot().equals("")){
+							hometownObject.put("spot", "null");
+						}else{
+							hometownObject.put("spot", URLEncoder.encode(profile.getHometown().getSpot(), "UTF-8"));
+						}
+					}
 					
 					params.add(new BasicNameValuePair("hometown", hometownObject.toString()));
 				}catch(JSONException e){
-					e.printStackTrace();
+					
+				}catch(UnsupportedEncodingException ue){
+					
 				}
 			}
 			
 			if(profile.getTimezone() != null){
 				if(profile.getTimezone().equals("")){
-					params.add(new BasicNameValuePair("timezone", null));
+					params.add(new BasicNameValuePair("timezone", "null"));
 				}else{
 					params.add(new BasicNameValuePair("timezone", profile.getTimezone()));
 				}
@@ -300,7 +380,7 @@ public class ConnectService {
 			
 			if(profile.getLocale() != null){
 				if(profile.getLocale().equals("")){
-					params.add(new BasicNameValuePair("locale", null));
+					params.add(new BasicNameValuePair("locale", "null"));
 				}else{
 					params.add(new BasicNameValuePair("locale", profile.getLocale()));
 				}
@@ -521,7 +601,7 @@ public class ConnectService {
 		if(profile != null){
 			if(profile.getEmail() != null){
 				if(profile.getEmail().equals("")){
-					params.add(new BasicNameValuePair("email", null));
+					params.add(new BasicNameValuePair("email", "null"));
 				}else{
 					params.add(new BasicNameValuePair("email", profile.getEmail()));
 				}
@@ -529,15 +609,20 @@ public class ConnectService {
 			
 			if(profile.getName() != null){
 				if(profile.getName().equals("")){
-					params.add(new BasicNameValuePair("name", null));
+					params.add(new BasicNameValuePair("name", "null"));
 				}else{
-					params.add(new BasicNameValuePair("name", profile.getName()));
+					try{
+						params.add(new BasicNameValuePair("name", URLEncoder.encode(profile.getName(),"UTF-8")));
+					}catch(UnsupportedEncodingException ue){
+						ue.printStackTrace();
+					}
+					
 				}
 			}
 				
 			if(profile.getBirthday() != null){
 				if(profile.getBirthday().equals("")){
-					params.add(new BasicNameValuePair("birthday", null));
+					params.add(new BasicNameValuePair("birthday", "null"));
 				}else{
 					params.add(new BasicNameValuePair("birthday", profile.getBirthday()));
 				}
@@ -545,7 +630,7 @@ public class ConnectService {
 			
 			if(profile.getGender() != null){
 				if(profile.getGender().equals("")){
-					params.add(new BasicNameValuePair("gender", null));
+					params.add(new BasicNameValuePair("gender", "null"));
 				}else{
 					params.add(new BasicNameValuePair("gender", profile.getGender()));
 				}
@@ -554,14 +639,50 @@ public class ConnectService {
 			if(profile.getResidence() != null){
 				try{
 					JSONObject residenceObject = new JSONObject();
-					residenceObject.put("country", profile.getResidence().getCountry());
-					residenceObject.put("states", profile.getResidence().getStates());
-					residenceObject.put("city", profile.getResidence().getCity());
-					residenceObject.put("street", profile.getResidence().getStreet());
-					residenceObject.put("spot", profile.getResidence().getSpot());
+					if(profile.getResidence().getCountry() != null){
+						if(profile.getResidence().getCountry().equals("")){
+							residenceObject.put("country", "null");
+						}else{
+							residenceObject.put("country", URLEncoder.encode(profile.getResidence().getCountry(),"UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getStates() != null){
+						if(profile.getResidence().getStates().equals("")){
+							residenceObject.put("states", "null");
+						}else{
+							residenceObject.put("states", URLEncoder.encode(profile.getResidence().getStates(),"UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getCity() != null){
+						if(profile.getResidence().getCity().equals("")){
+							residenceObject.put("city", "null");
+						}else{
+							residenceObject.put("city", URLEncoder.encode(profile.getResidence().getCity(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getStreet() != null){
+						if(profile.getResidence().getStreet().equals("")){
+							residenceObject.put("street", "null");
+						}else{
+							residenceObject.put("street", URLEncoder.encode(profile.getResidence().getStreet(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getResidence().getSpot() != null){
+						if(profile.getResidence().getSpot().equals("")){
+							residenceObject.put("spot", "null");
+						}else{
+							residenceObject.put("spot", URLEncoder.encode(profile.getResidence().getSpot(), "UTF-8"));
+						}
+					}
 					
 					params.add(new BasicNameValuePair("residence", residenceObject.toString()));
 				}catch(JSONException e){
+					
+				}catch(UnsupportedEncodingException ue){
 					
 				}
 			}
@@ -569,21 +690,57 @@ public class ConnectService {
 			if(profile.getHometown() != null){
 				try{
 					JSONObject hometownObject = new JSONObject();
-					hometownObject.put("country", profile.getHometown().getCountry());
-					hometownObject.put("states", profile.getHometown().getStates());
-					hometownObject.put("city", profile.getHometown().getCity());
-					hometownObject.put("street", profile.getHometown().getStreet());
-					hometownObject.put("spot", profile.getHometown().getSpot());
+					if(profile.getHometown().getCountry() != null){
+						if(profile.getHometown().getCountry().equals("")){
+							hometownObject.put("country", "null");
+						}else{
+							hometownObject.put("country", URLEncoder.encode(profile.getHometown().getCountry(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getStates() != null){
+						if(profile.getHometown().getStates().equals("")){
+							hometownObject.put("states", "null");
+						}else{
+							hometownObject.put("states", URLEncoder.encode(profile.getHometown().getStates(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getCity() != null){
+						if(profile.getHometown().getCity().equals("")){
+							hometownObject.put("city", "null");
+						}else{
+							hometownObject.put("city", URLEncoder.encode(profile.getHometown().getCity(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getStreet() != null){
+						if(profile.getHometown().getStreet().equals("")){
+							hometownObject.put("street", "null");
+						}else{
+							hometownObject.put("street", URLEncoder.encode(profile.getHometown().getStreet(), "UTF-8"));
+						}
+					}
+					
+					if(profile.getHometown().getSpot() != null){
+						if(profile.getHometown().getSpot().equals("")){
+							hometownObject.put("spot", "null");
+						}else{
+							hometownObject.put("spot", URLEncoder.encode(profile.getHometown().getSpot(), "UTF-8"));
+						}
+					}
 					
 					params.add(new BasicNameValuePair("hometown", hometownObject.toString()));
 				}catch(JSONException e){
+					
+				}catch(UnsupportedEncodingException ue){
 					
 				}
 			}
 			
 			if(profile.getTimezone() != null){
 				if(profile.getTimezone().equals("")){
-					params.add(new BasicNameValuePair("timezone", null));
+					params.add(new BasicNameValuePair("timezone", "null"));
 				}else{
 					params.add(new BasicNameValuePair("timezone", profile.getTimezone()));
 				}
@@ -591,7 +748,7 @@ public class ConnectService {
 			
 			if(profile.getLocale() != null){
 				if(profile.getLocale().equals("")){
-					params.add(new BasicNameValuePair("locale", null));
+					params.add(new BasicNameValuePair("locale", "null"));
 				}else{
 					params.add(new BasicNameValuePair("locale", profile.getLocale()));
 				}

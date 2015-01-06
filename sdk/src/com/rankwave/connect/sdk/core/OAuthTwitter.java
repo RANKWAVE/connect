@@ -19,7 +19,7 @@ public class OAuthTwitter {
 	public static final int OAUTH_TWITTER_REQUEST_CODE = 5001;
 	public static final String PROPERTY_TWITTER_CONSUMER_KEY = "com.rankwave.connect.sdk.TwitterConsumerKey";
 	public static final String PROPERTY_TWITTER_CONSUMER_SECRET = "com.rankwave.connect.sdk.TwitterConsumerSecret";
-	public static final Uri TWIT_CALLBACK_URL = Uri.parse("http://m.rankwave.com/m/mobileTwitterCallback.do"); 
+	public static final Uri TWIT_CALLBACK_URL = Uri.parse("http://api.rank-cloud.com/login/mobileTwitterCallback.do"); 
 	
 	ConnectCallback<com.rankwave.connect.sdk.Session> connectCallback = null;
 	

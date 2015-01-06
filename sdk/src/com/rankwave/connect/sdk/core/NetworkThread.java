@@ -145,6 +145,7 @@ public class NetworkThread implements Runnable {
 				
 			} catch (JSONException e) {
 				Log.e(Connect.TAG, requestMessage);
+				Log.e(Connect.TAG, resultMessage);
 				e.printStackTrace();
 				retCd = E_INVALID_JSON_OBJECT;
 				
