@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-public class Session {
+public class ConnectSession {
 	private static final String PROPERTY_CONNECT_TOKEN = "connectToken";
 	
-	private SessionState sessionState = SessionState.CLOSED;
+	private ConnectSessionState connectSessionState = ConnectSessionState.CLOSED;
 	
 	private String connect_token;
 	private Long expires_in;
@@ -19,30 +19,30 @@ public class Session {
 	/**
 	 *  Session singleton object
 	 */
-	private static Session instance = null;
+	private static ConnectSession instance = null;
 	
-	public static Session getInstance() {
+	public static ConnectSession getInstance() {
 		if(instance == null) {
-			synchronized (Session.class) {
-				instance = new Session();
+			synchronized (ConnectSession.class) {
+				instance = new ConnectSession();
 			}
 		}
 
 		return instance;
 	}
 	
-	public Session() {
+	public ConnectSession() {
 
 		init();		
 	}
 	
 	
-	public static Session getSession(){
+	public static ConnectSession getConnectSession(){
 		return instance;
 	}
 	
 	/**
-	 * Session init
+	 * ConnectSession init
 	 * 
 	 * @Method Name   : init
 	 */
@@ -52,13 +52,13 @@ public class Session {
 	
 		
 	/**
-	 * 현재 Session의 상태를 반환한다.
+	 * 현재 ConnectSession의 상태를 반환한다.
 	 * 
-	 * @Method Name   : getState
+	 * @Method Name   : getConnectSessionState
 	 * @return SessionState 값
 	 */
-	public SessionState getState() {
-		return sessionState;
+	public ConnectSessionState getConnectSessionState() {
+		return connectSessionState;
 	}
 	
 	
@@ -68,8 +68,8 @@ public class Session {
 	 * @Method Name   : setState
 	 * @param state SessionState 값
 	 */
-	public void setState(SessionState sessionState) {
-		this.sessionState = sessionState;
+	public void setConnectSessionState(ConnectSessionState connectSessionState) {
+		this.connectSessionState = connectSessionState;
 	}
 	
 	

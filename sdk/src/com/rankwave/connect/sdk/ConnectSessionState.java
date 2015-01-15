@@ -1,6 +1,6 @@
 package com.rankwave.connect.sdk;
 
-public enum SessionState {
+public enum ConnectSessionState {
 	READY,
 	OPENED,
 	FAILED,

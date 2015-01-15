@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
+import com.rankwave.connect.sdk.ConnectSession;
 import com.rankwave.connect.sdk.OAuthLoginActivity;
 import com.rankwave.connect.sdk.SnsType;
 
@@ -21,7 +22,7 @@ public class OAuthTwitter {
 	public static final String PROPERTY_TWITTER_CONSUMER_SECRET = "com.rankwave.connect.sdk.TwitterConsumerSecret";
 	public static final Uri TWIT_CALLBACK_URL = Uri.parse("http://api.rank-cloud.com/login/mobileTwitterCallback.do"); 
 	
-	ConnectCallback<com.rankwave.connect.sdk.Session> connectCallback = null;
+	ConnectCallback<ConnectSession> connectCallback = null;
 	
 	private Twitter twitter;
 	private twitter4j.auth.RequestToken twitter_request_token;
@@ -44,7 +45,7 @@ public class OAuthTwitter {
 	}
 	
 	
-	public void connect(Activity activity, ConnectCallback<com.rankwave.connect.sdk.Session> callback) {
+	public void connect(Activity activity, ConnectCallback<ConnectSession> callback) {
 		getInstance().connectCallback = callback;
 		
 		new AsyncTask<Object, Integer, String>() {
@@ -113,14 +114,14 @@ public class OAuthTwitter {
 						String name = twitter.getScreenName();
 						
 						
-						Connect.getActiveSession().getUser().getSnsInfo().clearInfo();
-						Connect.getActiveSession().getUser().getSnsInfo().setSnsId(sns_id);
-						Connect.getActiveSession().getUser().getSnsInfo().setName(name);
-						Connect.getActiveSession().getUser().getSnsInfo().setProfileUrl(profile_url);
-						Connect.getActiveSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_TWITTER);
-						Connect.getActiveSession().getUser().getSnsInfo().setAccessToken(twitter_token);
-						Connect.getActiveSession().getUser().getSnsInfo().setTokenSecret(twitter_token_secret);
-						Connect.getActiveSession().getUser().getSnsInfo().setBirthday("");
+						Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setName(name);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_TWITTER);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(twitter_token);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret(twitter_token_secret);
+						Connect.getActiveConnectSession().getUser().getSnsInfo().setBirthday("");
 						
 						return null;
 	
@@ -137,8 +138,8 @@ public class OAuthTwitter {
 					
 					if(result == null) {
 					
-						Connect.setTwitterToken(Connect.getActiveSession().getUser().getSnsInfo().getAccessToken(),
-								Connect.getActiveSession().getUser().getSnsInfo().getTokenSecret(),
+						Connect.setTwitterToken(Connect.getActiveConnectSession().getUser().getSnsInfo().getAccessToken(),
+								Connect.getActiveConnectSession().getUser().getSnsInfo().getTokenSecret(),
 								getInstance().connectCallback);
 					} else {
 						

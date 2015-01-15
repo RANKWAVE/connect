@@ -64,7 +64,7 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void initialize(ConnectCallback<Session> callback){
+	public static void initialize(ConnectCallback<ConnectSession> callback){
 		DeviceInfo deviceInfo = DeviceInfo.getInstance();
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -81,7 +81,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -89,16 +89,16 @@ public class ConnectService {
 					try {
 						Boolean result = json.getBoolean("result");
 						if(result){
-							Session.getInstance().setState(SessionState.READY);
+							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
 							
 							if (connectCallback != null) {
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}else{
 							JSONObject error = json.getJSONObject("error");
 							Log.e(Connect.TAG, error.toString());
 							
-							Session.getInstance().setState(SessionState.FAILED);
+							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
 							
 							if (connectCallback != null) {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
@@ -108,7 +108,7 @@ public class ConnectService {
 					} catch (JSONException e) {
 						e.printStackTrace();
 						
-						Session.getInstance().setState(SessionState.FAILED);
+						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
 						if(connectCallback != null){
 							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
 						}
@@ -119,7 +119,7 @@ public class ConnectService {
 					Log.e(Connect.TAG, response.error);
 					
 					if(connectCallback != null){
-						Session.getInstance().setState(SessionState.FAILED);
+						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
 						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
 					}
 				}				
@@ -130,11 +130,11 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void token(IdType idType, SnsType snsType, HashMap<String, Object> snsInfo, ConnectCallback<Session> callback){
+	public static void token(IdType idType, SnsType snsType, HashMap<String, Object> snsInfo, ConnectCallback<ConnectSession> callback){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		Session.getInstance().getUser().setSnsType(snsType);
-		Session.getInstance().getUser().setIdType(idType);
+		ConnectSession.getInstance().getUser().setSnsType(snsType);
+		ConnectSession.getInstance().getUser().setIdType(idType);
 		
 		if(idType == IdType.ID_TYPE_SNS){
 			if (snsType == SnsType.SNS_TYPE_FACEBOOK) {
@@ -170,7 +170,7 @@ public class ConnectService {
 			@Override
 			public void onCompleted(Response response) {
 				
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == 0 && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -183,8 +183,8 @@ public class ConnectService {
 								connectCallback.onFail(ConnectCallback.FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else{
-							Session session = Session.getInstance();
-							User user = session.getUser();
+							ConnectSession connectSession = ConnectSession.getInstance();
+							User user = connectSession.getUser();
 							
 							if(json.has("joined")){
 								Boolean joined = json.getBoolean("joined");
@@ -192,12 +192,12 @@ public class ConnectService {
 							}else{
 								user.setJoined(true);
 							}
-							session.setState(SessionState.OPENED);
-							session.setConnect_token(json.getString("connect_token"));
-							session.setExpires_in(json.getLong("expires_in"));
+							connectSession.setConnectSessionState(ConnectSessionState.OPENED);
+							connectSession.setConnect_token(json.getString("connect_token"));
+							connectSession.setExpires_in(json.getLong("expires_in"));
 							
 							if (connectCallback != null) {
-								connectCallback.onSuccess(session);
+								connectCallback.onSuccess(connectSession);
 							}
 						}
 						
@@ -221,13 +221,13 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void join(Profile profile, ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void join(Profile profile, ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 				
 		if(profile != null){
 			if(profile.getEmail() != null){
@@ -391,7 +391,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -400,7 +400,7 @@ public class ConnectService {
 						Boolean result = json.getBoolean("result");
 						if(result){
 							if (connectCallback != null) {
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}else{
 							JSONObject error = json.getJSONObject("error");
@@ -433,20 +433,20 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void login(ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void login(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
 		new Request(getHttpUrl(CONNECT_LOGIN_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();					
@@ -459,7 +459,7 @@ public class ConnectService {
 							}
 						}else{
 							if(connectCallback != null){
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}
 					} catch (JSONException e) {
@@ -483,21 +483,21 @@ public class ConnectService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void logout(ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void logout(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
 		new Request(getHttpUrl(CONNECT_LOGOUT_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
-				Session.getInstance().setState(SessionState.READY);
+				ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
 				
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -510,9 +510,9 @@ public class ConnectService {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else{							
-							Session.getInstance().deleteConnectToken();
+							ConnectSession.getInstance().deleteConnectToken();
 							if(connectCallback != null){
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}
 					} catch (JSONException e) {
@@ -537,21 +537,21 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void leave(ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void leave(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
 		new Request(getHttpUrl(CONNECT_LEAVE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
-				Session.getInstance().setState(SessionState.READY);
+				ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
 				
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -565,7 +565,7 @@ public class ConnectService {
 							}
 						}else{
 							if(connectCallback != null){
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}
 					} catch (JSONException e) {
@@ -590,13 +590,13 @@ public class ConnectService {
 	
 
 	@SuppressWarnings("unchecked")
-	public static void profileUpdate(Profile profile, ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void profileUpdate(Profile profile, ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 				
 		if(profile != null){
 			if(profile.getEmail() != null){
@@ -759,7 +759,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -772,7 +772,7 @@ public class ConnectService {
 								connectCallback.onFail(ConnectCallback.FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else if(json.has("result")){
-							connectCallback.onSuccess(Session.getInstance());
+							connectCallback.onSuccess(ConnectSession.getInstance());
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -796,12 +796,12 @@ public class ConnectService {
 	
 	@SuppressWarnings("unchecked")
 	public static void profileGet(ConnectCallback<Profile> callback){
-		Session session = Session.getInstance();
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
 		new Request(getHttpUrl(CONNECT_PROFILE_GET_PATH), params, new Request.Callback() {
 			
@@ -902,13 +902,13 @@ public class ConnectService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void setGCMRegistrationId(ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void setGCMRegistrationId(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		params.add(new BasicNameValuePair("push_token", GCMManager.getInstance().getRegistrationId(Connect.getContext())));
 		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
@@ -917,7 +917,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -931,7 +931,7 @@ public class ConnectService {
 							}
 						}else{
 							if(connectCallback != null){
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}
 					} catch (JSONException e) {
@@ -955,13 +955,13 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void unsetGCMRegistrationId(ConnectCallback<Session> callback){
-		Session session = Session.getInstance();
+	public static void unsetGCMRegistrationId(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
@@ -969,7 +969,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Session> connectCallback = (ConnectCallback<Session>)response.user_obejct;
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -981,7 +981,7 @@ public class ConnectService {
 							String code = error.getString("code");
 							if(code != null && code.equals("701")){	//case by unregistered device
 								if(connectCallback != null){
-									connectCallback.onSuccess(Session.getInstance());
+									connectCallback.onSuccess(ConnectSession.getInstance());
 								}
 							}else{
 								if(connectCallback != null){
@@ -990,7 +990,7 @@ public class ConnectService {
 							}
 						}else{
 							if(connectCallback != null){
-								connectCallback.onSuccess(Session.getInstance());
+								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
 						}
 					} catch (JSONException e) {
@@ -1015,12 +1015,12 @@ public class ConnectService {
 	
 	
 	public static void action(Timestamp when, String what, Integer how, String where, JSONObject etc){
-		Session session = Session.getInstance();
+		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", session.getConnect_token()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		if(when != null)
 			params.add(new BasicNameValuePair("when", String.valueOf(when.getTime())));

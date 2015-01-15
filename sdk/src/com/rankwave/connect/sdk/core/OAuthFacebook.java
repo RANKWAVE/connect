@@ -11,11 +11,12 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
+import com.rankwave.connect.sdk.ConnectSession;
 import com.rankwave.connect.sdk.SnsType;
 
 public class OAuthFacebook {
 
-	private ConnectCallback<com.rankwave.connect.sdk.Session> connectCallback = null;
+	private ConnectCallback<ConnectSession> connectCallback = null;
 
 	private static OAuthFacebook instance = null;
 
@@ -64,15 +65,15 @@ public class OAuthFacebook {
 										birthday = birthday.substring(4, 8) + birthday.substring(0, 2) + birthday.substring(2, 4);
 									}
 									
-									Connect.getActiveSession().getUser().getSnsInfo().clearInfo();
+									Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
 									
-									Connect.getActiveSession().getUser().getSnsInfo().setSnsId(sns_id);
-									Connect.getActiveSession().getUser().getSnsInfo().setName(name);
-									Connect.getActiveSession().getUser().getSnsInfo().setProfileUrl(profile_url);
-									Connect.getActiveSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
-									Connect.getActiveSession().getUser().getSnsInfo().setAccessToken(access_token);
-									Connect.getActiveSession().getUser().getSnsInfo().setTokenSecret("");
-									Connect.getActiveSession().getUser().getSnsInfo().setBirthday(birthday);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setName(name);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(access_token);
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret("");
+									Connect.getActiveConnectSession().getUser().getSnsInfo().setBirthday(birthday);
 								}
 								
 								if (response.getError() != null) {
@@ -98,7 +99,7 @@ public class OAuthFacebook {
 	};
 
 	public void connecnt(Activity activity, List<String> permissions,
-			ConnectCallback<com.rankwave.connect.sdk.Session> callback) {
+			ConnectCallback<ConnectSession> callback) {
         
 		getInstance().connectCallback = callback;
 
