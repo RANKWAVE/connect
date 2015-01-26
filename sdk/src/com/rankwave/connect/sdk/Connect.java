@@ -1,6 +1,7 @@
 package com.rankwave.connect.sdk;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -204,7 +205,7 @@ public final class Connect {
 	 * @param permissions
 	 * @param connectCallback
 	 */
-	public static void facebookLogin(Activity activity, ConnectCallback<ConnectSession> connectCallback) {
+	public static void facebookLogin(Activity activity, List<String> permissions, ConnectCallback<ConnectSession> connectCallback) {
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession != null){
 			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
@@ -221,7 +222,7 @@ public final class Connect {
 			return;
 		}
 		
-		OAuthFacebook.getInstance().connecnt(activity, null, connectCallback);
+		OAuthFacebook.getInstance().connecnt(activity, permissions, connectCallback);
 	}
 	
 	

@@ -1,5 +1,8 @@
 package com.rankwave.sdkdemo;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +19,8 @@ import android.widget.RelativeLayout;
 
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
-import com.rankwave.connect.sdk.Session;
-import com.rankwave.connect.sdk.SessionState;
+import com.rankwave.connect.sdk.ConnectSession;
+import com.rankwave.connect.sdk.ConnectSessionState;
 import com.rankwave.connect.sdk.User;
 
 public class LoginActivity extends Activity {
@@ -32,19 +35,19 @@ public class LoginActivity extends Activity {
 
 		setContentView(R.layout.login);
 		
-		Connect.sdkInitialize(getApplicationContext(), new ConnectCallback<Session>() {
+		Connect.sdkInitialize(getApplicationContext(), new ConnectCallback<ConnectSession>() {
 			@Override
-        	public void onSuccess(Session session){
-				if(session.getState() == SessionState.READY) {
+        	public void onSuccess(ConnectSession connectSession){
+				if(connectSession.getConnectSessionState() == ConnectSessionState.READY) {
 	                Log.i(AppConst.LOG_TAG, "SDK Initialized.");
-	                Log.i(AppConst.LOG_TAG, "SessionState :: " + session.getState());
+	                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
 	                
-	                Connect.anonymousLogin(new ConnectCallback<Session>(){
+	                Connect.anonymousLogin(new ConnectCallback<ConnectSession>(){
 	                	@Override
-	                	public void onSuccess(Session session){
+	                	public void onSuccess(ConnectSession connectSession){
 	                		Log.i(AppConst.LOG_TAG, "AnonymousLogin Success.");
-	                		Log.i(AppConst.LOG_TAG, "SessionState :: " + session.getState());
-	                		Log.i(AppConst.LOG_TAG, "connect_token :: " + session.getConnect_token());
+	                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
+	                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
 	                	}
 	                	
 	                	@Override
@@ -73,13 +76,25 @@ public class LoginActivity extends Activity {
 				
 				showLoading(true);
 				
-				Connect.facebookLogin(LoginActivity.this, new ConnectCallback<Session>() {
+				List<String> permissions = Arrays.asList("user_about_me",
+						"user_activities", "user_birthday", "user_checkins",
+						"user_education_history", "user_groups",
+						"user_hometown", "user_interests", "user_likes",
+						"user_photos", "user_status", "email",
+						"user_work_history", "friends_about_me",
+						"friends_birthday", "friends_activities",
+						"friends_likes", "friends_photos", "read_friendlists",
+						"read_stream", "user_location", "user_relationships",
+						"user_subscriptions", "friends_location",
+						"friends_education_history", "friends_relationships");
+				
+				Connect.facebookLogin(LoginActivity.this, permissions, new ConnectCallback<ConnectSession>() {
 
 					@Override
-					public void onSuccess(Session session) {
+					public void onSuccess(ConnectSession connectSession) {
 						Log.i(AppConst.LOG_TAG, "facebookLogin Success");
 						
-						User user = session.getUser();
+						User user = connectSession.getUser();
 						Log.i(AppConst.LOG_TAG, user.toString());			
 						if(user.getJoined()){
 							goMainActivity();
@@ -92,9 +107,9 @@ public class LoginActivity extends Activity {
 								}
 							}, 1000);
 						}else{
-							Connect.join(null, new ConnectCallback<Session>(){
+							Connect.join(null, new ConnectCallback<ConnectSession>(){
 								@Override
-								public void onSuccess(Session session){
+								public void onSuccess(ConnectSession connectSession){
 									Log.i(AppConst.LOG_TAG, "join success");
 									
 									goMainActivity();
@@ -136,13 +151,13 @@ public class LoginActivity extends Activity {
 
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<Session>() {
+				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<ConnectSession>() {
 
 					@Override
-					public void onSuccess(Session session) {
+					public void onSuccess(ConnectSession connectSession) {
 						Log.i(AppConst.LOG_TAG, "twitterLogin Success");
 						
-						User user = session.getUser();
+						User user = connectSession.getUser();
 						
 						if(user.getJoined()){
 							goMainActivity();
@@ -155,9 +170,9 @@ public class LoginActivity extends Activity {
 								}
 							}, 1000);
 						}else{
-							Connect.join(null, new ConnectCallback<Session>(){
+							Connect.join(null, new ConnectCallback<ConnectSession>(){
 								@Override
-								public void onSuccess(Session session){
+								public void onSuccess(ConnectSession connectSession){
 									Log.i(AppConst.LOG_TAG, "join success");
 									
 									goMainActivity();
@@ -197,13 +212,25 @@ public class LoginActivity extends Activity {
 				
 				showLoading(true);
 
-				Connect.facebookLogin(LoginActivity.this, new ConnectCallback<Session>() {
+				List<String> permissions = Arrays.asList("user_about_me",
+						"user_activities", "user_birthday", "user_checkins",
+						"user_education_history", "user_groups",
+						"user_hometown", "user_interests", "user_likes",
+						"user_photos", "user_status", "email",
+						"user_work_history", "friends_about_me",
+						"friends_birthday", "friends_activities",
+						"friends_likes", "friends_photos", "read_friendlists",
+						"read_stream", "user_location", "user_relationships",
+						"user_subscriptions", "friends_location",
+						"friends_education_history", "friends_relationships");
+				
+				Connect.facebookLogin(LoginActivity.this, permissions, new ConnectCallback<ConnectSession>() {
 
 					@Override
-					public void onSuccess(Session session) {
+					public void onSuccess(ConnectSession connectSession) {
 						Log.i(AppConst.LOG_TAG, "facebookLogin Success");
 						
-						User user = session.getUser();
+						User user = connectSession.getUser();
 						
 						if(user.getJoined()){
 							goMainActivity();
@@ -247,13 +274,13 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<Session>() {
+				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<ConnectSession>() {
 
 					@Override
-					public void onSuccess(Session session) {
+					public void onSuccess(ConnectSession connectSession) {
 						Log.i(AppConst.LOG_TAG, "twitterLogin Success");
 						
-						User user = session.getUser();
+						User user = connectSession.getUser();
 						
 						if(user.getJoined()){
 							goMainActivity();
@@ -300,9 +327,9 @@ public class LoginActivity extends Activity {
 	
 	
 	public void goMainActivity(){
-		Connect.setGCMRegistrationId(new ConnectCallback<Session>(){
+		Connect.setGCMRegistrationId(new ConnectCallback<ConnectSession>(){
 			@Override
-			public void onSuccess(Session session){
+			public void onSuccess(ConnectSession connectSession){
 				Log.i(AppConst.LOG_TAG, "registerGCMRegistrationId Success");
 			}
 			
