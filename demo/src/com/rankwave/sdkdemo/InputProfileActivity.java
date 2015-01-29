@@ -68,7 +68,7 @@ public class InputProfileActivity extends Activity{
 				profile.setName(name);
 
 				/*
-				//Residense info sample
+				//Residence info sample
 				Residence residence = profile.new Residence();
 				residence.setCountry("대한민국");
 				residence.setStates("서초구");
