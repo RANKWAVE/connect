@@ -45,8 +45,8 @@ public class InputProfileActivity extends Activity{
 
 		if(requestCode == REQUEST_CODE_JOIN){			
 			//got to set Connect(SNS Login)
-			edit_name.setText(ConnectSession.getInstance().getUser().getSnsInfo().getName());
-			edit_birthday.setText(ConnectSession.getInstance().getUser().getSnsInfo().getBirthday());
+			edit_name.setText(ConnectSession.getInstance().getUser().getProfile().getName());
+			edit_birthday.setText(ConnectSession.getInstance().getUser().getProfile().getBirthday());
 			
 		}else if(requestCode == REQUEST_CODE_UPDATE){
 			
@@ -68,7 +68,7 @@ public class InputProfileActivity extends Activity{
 				profile.setName(name);
 
 				/*
-				//Residence info sample
+				//Residense info sample
 				Residence residence = profile.new Residence();
 				residence.setCountry("대한민국");
 				residence.setStates("서초구");

@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
 				// Find the user's name view
 				userNameView = (TextView) findViewById(R.id.tv_user_name);
-				userNameView.setText(connectUser.getSnsInfo().getName());
+				userNameView.setText(connectUser.getProfile().getName());
 				
 				String profile_url = connectUser.getSnsInfo().getProfileUrl();
 				displayProfileImage(profile_url);
@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
 			}
 
 			case R.id.btn_get_name: {
-				String name = connectUser.getSnsInfo().getName();
+				String name = connectUser.getProfile().getName();
 				CommonAlertDialog.showDefaultDialog(MainActivity.this, "NAME",
 						name, "OK", null);
 				break;

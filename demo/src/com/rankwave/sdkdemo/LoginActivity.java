@@ -48,6 +48,7 @@ public class LoginActivity extends Activity {
 	                		Log.i(AppConst.LOG_TAG, "AnonymousLogin Success.");
 	                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
 	                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
+	                		Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
 	                	}
 	                	
 	                	@Override
