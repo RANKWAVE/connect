@@ -63,6 +63,7 @@ public class InputProfileActivity extends Activity{
 				String birthday = edit_birthday.getText().toString();
 				
 				Profile profile = new Profile();
+				
 				profile.setEmail(email);
 				profile.setBirthday(birthday);
 				profile.setName(name);
