@@ -37,7 +37,7 @@ public final class Connect {
 	public static final String INTENT_PUSH_SEQ = "com.rankwave.connect.sdk.pushseq";
 	public static final String INTENT_PUSH_CMN = "com.rankwave.connect.sdk.pushcmn";
 	
-	public static final String CONNECT_DOMAIN = "api.rank-cloud.com";
+	public static final String CONNECT_DOMAIN = "api.rankwave.com";
 	//public static final String CONNECT_DOMAIN = "54.176.29.228";	//dev
 	
 	
@@ -262,7 +262,20 @@ public final class Connect {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							login_connect_callback.onSuccess(connectSession);
+							ConnectService.profileGet(new ConnectCallback<Profile>(){
+								@Override
+								public void onSuccess(Profile profile){
+									ConnectSession connectSession = getConnectSession();
+									connectSession.getUser().setProfile(profile);
+									
+									login_connect_callback.onSuccess(connectSession);
+								}
+								
+								@Override
+								public void onFail(FuncResult result, Exception exception){
+									login_connect_callback.onFail(result, exception);
+								}
+							});
 						}
 						
 						@Override
@@ -347,7 +360,20 @@ public final class Connect {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							login_connect_callback.onSuccess(connectSession);
+							ConnectService.profileGet(new ConnectCallback<Profile>(){
+								@Override
+								public void onSuccess(Profile profile){
+									ConnectSession connectSession = getConnectSession();
+									connectSession.getUser().setProfile(profile);
+									
+									login_connect_callback.onSuccess(connectSession);
+								}
+								
+								@Override
+								public void onFail(FuncResult result, Exception exception){
+									login_connect_callback.onFail(result, exception);
+								}
+							});
 						}
 						
 						@Override
@@ -393,7 +419,21 @@ public final class Connect {
 				ConnectService.login(new ConnectCallback<ConnectSession>(){
 					@Override
 					public void onSuccess(ConnectSession connectSession){
-						join_connect_callback.onSuccess(connectSession);
+						ConnectService.profileGet(new ConnectCallback<Profile>(){
+							@Override
+							public void onSuccess(Profile profile){
+								ConnectSession connectSession = getConnectSession();
+								connectSession.getUser().setProfile(profile);
+								
+								join_connect_callback.onSuccess(connectSession);
+							}
+							
+							@Override
+							public void onFail(FuncResult result, Exception exception){
+								join_connect_callback.onFail(result, exception);
+							}
+						});
+						
 					}
 					
 					@Override
@@ -531,7 +571,7 @@ public final class Connect {
 		ConnectService.unsetGCMRegistrationId(connectCallback);
 	}
 	
-	
+	//comming soon
 	public static void action(){
 		
 	}

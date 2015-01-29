@@ -116,12 +116,14 @@ public class OAuthTwitter {
 						
 						Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
-						Connect.getActiveConnectSession().getUser().getSnsInfo().setName(name);
+						Connect.getActiveConnectSession().getUser().getProfile().setName(name);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_TWITTER);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(twitter_token);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret(twitter_token_secret);
-						Connect.getActiveConnectSession().getUser().getSnsInfo().setBirthday("");
+						Connect.getActiveConnectSession().getUser().getProfile().setBirthday("");
+						
+						Connect.getActiveConnectSession().getUser().setId(sns_id);
 						
 						return null;
 	

@@ -77,7 +77,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("locale", deviceInfo.getLocale()));
 		params.add(new BasicNameValuePair("location", deviceInfo.getLocation()));
 		
-		new Request(getHttpUrl(CONNECT_INITIALIZE_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_INITIALIZE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -159,13 +159,16 @@ public class ConnectService {
 		}else if(idType == IdType.ID_TYPE_ANONYMOUS){
 			params.add(new BasicNameValuePair("grant_type", "authorization_anonymous"));
 			params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
+			
+			//ANONYMOUS id : device_id 
+			ConnectSession.getInstance().getUser().setId(DeviceInfo.getInstance().getDevice_id());
 		}
 
 		params.add(new BasicNameValuePair("id_type", IdType.toString(idType)));
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
 		
 		
-		new Request(getHttpUrl(CONNECT_TOKEN_PATH), params, new Callback() {
+		new Request(getHttpsUrl(CONNECT_TOKEN_PATH), params, new Callback() {
 
 			@Override
 			public void onCompleted(Response response) {
@@ -387,7 +390,7 @@ public class ConnectService {
 			}
 		}
 		
-		new Request(getHttpUrl(CONNECT_JOIN_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_JOIN_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -442,7 +445,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
-		new Request(getHttpUrl(CONNECT_LOGIN_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_LOGIN_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -491,7 +494,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
 		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
-		new Request(getHttpUrl(CONNECT_LOGOUT_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_LOGOUT_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -545,7 +548,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
 		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
-		new Request(getHttpUrl(CONNECT_LEAVE_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_LEAVE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -755,7 +758,7 @@ public class ConnectService {
 			}
 		}
 		
-		new Request(getHttpUrl(CONNECT_PROFILE_UPDATE_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_PROFILE_UPDATE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -803,7 +806,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
 		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
 		
-		new Request(getHttpUrl(CONNECT_PROFILE_GET_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_PROFILE_GET_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -913,7 +916,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
-		new Request(getHttpUrl(CONNECT_PUSH_REGISTER_DEVICE_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_PUSH_REGISTER_DEVICE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -965,7 +968,7 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
-		new Request(getHttpUrl(CONNECT_PUSH_UNREGISTER_DEVICE_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_PUSH_UNREGISTER_DEVICE_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {
@@ -1033,7 +1036,7 @@ public class ConnectService {
 			params.add(new BasicNameValuePair("etc", etc.toString()));
 		
 		
-		new Request(getHttpUrl(CONNECT_ACTION_PATH), params, new Request.Callback() {
+		new Request(getHttpsUrl(CONNECT_ACTION_PATH), params, new Request.Callback() {
 			
 			@Override
 			public void onCompleted(Response response) {

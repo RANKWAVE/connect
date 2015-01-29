@@ -2,9 +2,11 @@ package com.rankwave.connect.sdk;
 
 
 public class User {
+	private String id;
 	private IdType idType;
 	private SnsType snsType;
 	private SnsInfo snsInfo;
+	private Profile profile;
 	
 	private Boolean emailVerify;
 	private Boolean joined;
@@ -12,6 +14,16 @@ public class User {
 		
 	public User() {
 		snsInfo = new SnsInfo();
+		profile = new Profile();
+	}
+	
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public IdType getIdType() {
@@ -38,6 +50,14 @@ public class User {
 		this.snsInfo = snsInfo;
 	}
 
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
 	public Boolean getEmailVerify() {
 		return emailVerify;
 	}
@@ -62,9 +82,7 @@ public class User {
 		private String accessToken;
 		private String tokenSecret;
 		private String profileUrl;
-		private String name;
-		private String birthday;
-		
+				
 		public SnsInfo() {
 
 		}
@@ -109,28 +127,13 @@ public class User {
 			this.profileUrl = profileUrl;
 		}
 
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getBirthday() {
-			return birthday;
-		}
-
-		public void setBirthday(String birthday) {
-			this.birthday = birthday;
-		}
+		
 
 		@Override
 		public String toString() {
 			return "SnsInfo [snsId=" + snsId + ", snsType=" + snsType
 					+ ", accessToken=" + accessToken + ", tokenSecret="
-					+ tokenSecret + ", profileUrl=" + profileUrl + ", name=" + name
-					+ ", birthday=" + birthday + "]";
+					+ tokenSecret + ", profileUrl=" + profileUrl + "]";
 		}
 		
 		
@@ -139,8 +142,6 @@ public class User {
 			accessToken = "";
 			tokenSecret = "";
 			profileUrl = "";
-			name = "";
-			birthday = "";
 		}
 	}
 
@@ -148,10 +149,11 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [idType=" + idType + ", snsType=" + snsType + ", snsInfo="
-				+ snsInfo + ", emailVerify=" + emailVerify + ", joined="
-				+ joined + "]";
+		return "User [id=" + id + ", idType=" + idType + ", snsType=" + snsType
+				+ ", snsInfo=" + snsInfo + ", profile=" + profile
+				+ ", emailVerify=" + emailVerify + ", joined=" + joined + "]";
 	}
-	
+
+
 	
 }

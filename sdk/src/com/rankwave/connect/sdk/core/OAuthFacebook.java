@@ -68,12 +68,14 @@ public class OAuthFacebook {
 									Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
 									
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setName(name);
+									Connect.getActiveConnectSession().getUser().getProfile().setName(name);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(access_token);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret("");
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setBirthday(birthday);
+									Connect.getActiveConnectSession().getUser().getProfile().setBirthday(birthday);
+									
+									Connect.getActiveConnectSession().getUser().setId(sns_id);
 								}
 								
 								if (response.getError() != null) {
