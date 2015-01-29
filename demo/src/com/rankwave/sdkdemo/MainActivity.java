@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
+import com.rankwave.connect.sdk.ConnectSession;
 import com.rankwave.connect.sdk.IdType;
-import com.rankwave.connect.sdk.Session;
 import com.rankwave.connect.sdk.SnsType;
 import com.rankwave.connect.sdk.User;
 
@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	private TextView userNameView;
 	
 	public User connectUser;
-	public Session connectSession;
+	public ConnectSession connectSession;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
-		Connect.getSession(new ConnectCallback<Session>(){
+		Connect.getConnectSession(new ConnectCallback<ConnectSession>(){
 			@Override
-			public void onSuccess(Session session){
+			public void onSuccess(ConnectSession session){
 				connectSession = session;
 				connectUser = session.getUser();
 				
@@ -107,9 +107,9 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 
-			Connect.logout(new ConnectCallback<Session>() {
+			Connect.logout(new ConnectCallback<ConnectSession>() {
 				@Override
-				public void onSuccess(Session session){
+				public void onSuccess(ConnectSession connectSession){
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"Logout", "logout success", "OK",
 							new DialogInterface.OnClickListener() {
@@ -135,9 +135,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			Connect.unsetGCMRegistrationId(new ConnectCallback<Session>(){
+			Connect.unsetGCMRegistrationId(new ConnectCallback<ConnectSession>(){
 				@Override
-				public void onSuccess(Session session){
+				public void onSuccess(ConnectSession connectSession){
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"unsetGCMRegistrationId", "unsetGCMRegistrationId success", "OK", null);
 				}	
@@ -154,9 +154,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			Connect.setGCMRegistrationId(new ConnectCallback<Session>(){
+			Connect.setGCMRegistrationId(new ConnectCallback<ConnectSession>(){
 				@Override
-				public void onSuccess(Session session){
+				public void onSuccess(ConnectSession connectSession){
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"setGCMRegistrationId", "setGCMRegistrationId success", "OK", null);
 				}	
@@ -173,9 +173,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			Connect.leave(new ConnectCallback<Session>() {
+			Connect.leave(new ConnectCallback<ConnectSession>() {
 				@Override
-				public void onSuccess(Session session){
+				public void onSuccess(ConnectSession connectSession){
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"Logout", "leave success", "OK",
 							new DialogInterface.OnClickListener() {

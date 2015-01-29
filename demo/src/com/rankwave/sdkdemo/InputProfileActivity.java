@@ -12,10 +12,8 @@ import android.widget.EditText;
 
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
+import com.rankwave.connect.sdk.ConnectSession;
 import com.rankwave.connect.sdk.Profile;
-import com.rankwave.connect.sdk.Profile.Hometown;
-import com.rankwave.connect.sdk.Profile.Residence;
-import com.rankwave.connect.sdk.Session;
 
 public class InputProfileActivity extends Activity{
 
@@ -47,8 +45,8 @@ public class InputProfileActivity extends Activity{
 
 		if(requestCode == REQUEST_CODE_JOIN){			
 			//got to set Connect(SNS Login)
-			edit_name.setText(Session.getInstance().getUser().getSnsInfo().getName());
-			edit_birthday.setText(Session.getInstance().getUser().getSnsInfo().getBirthday());
+			edit_name.setText(ConnectSession.getInstance().getUser().getSnsInfo().getName());
+			edit_birthday.setText(ConnectSession.getInstance().getUser().getSnsInfo().getBirthday());
 			
 		}else if(requestCode == REQUEST_CODE_UPDATE){
 			
@@ -93,9 +91,9 @@ public class InputProfileActivity extends Activity{
 				*/
 				
 				if(requestCode == REQUEST_CODE_JOIN){
-					Connect.join(profile, new ConnectCallback<Session>(){
+					Connect.join(profile, new ConnectCallback<ConnectSession>(){
 						@Override
-						public void onSuccess(Session session){
+						public void onSuccess(ConnectSession connectSession){
 							Log.i(AppConst.LOG_TAG, "join success");
 							
 							startActivity(new Intent(
@@ -120,9 +118,9 @@ public class InputProfileActivity extends Activity{
 						}
 					});
 				}else if(requestCode == REQUEST_CODE_UPDATE){
-					Connect.profileUpdate(profile, new ConnectCallback<Session>(){
+					Connect.profileUpdate(profile, new ConnectCallback<ConnectSession>(){
 						@Override
-						public void onSuccess(Session session){
+						public void onSuccess(ConnectSession connectSession){
 							Log.i(AppConst.LOG_TAG, "pofile update success");
 
 							finish();
