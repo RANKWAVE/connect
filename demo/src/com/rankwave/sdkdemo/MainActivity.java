@@ -30,6 +30,7 @@ import com.rankwave.connect.sdk.IdType;
 import com.rankwave.connect.sdk.SnsType;
 import com.rankwave.connect.sdk.User;
 
+//test
 public class MainActivity extends Activity {
 
 	private ImageView profilePictureView;
