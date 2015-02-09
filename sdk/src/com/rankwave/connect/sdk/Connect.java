@@ -52,6 +52,8 @@ public final class Connect {
 	public static ConnectCallback<ConnectSession> join_connect_callback = null;
 	public static ConnectCallback<ConnectSession> gcm_connect_callback = null;
 	
+	private static Boolean auto_join_flag;
+	
 	
 	/**
 	 * Constructor
@@ -205,7 +207,9 @@ public final class Connect {
 	 * @param permissions
 	 * @param connectCallback
 	 */
-	public static void facebookLogin(Activity activity, List<String> permissions, ConnectCallback<ConnectSession> connectCallback) {
+	public static void facebookLogin(Activity activity, List<String> permissions, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
+		auto_join_flag = autoJoinFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession != null){
 			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
@@ -232,7 +236,20 @@ public final class Connect {
 	 * @param faceook_access_token 
 	 * @param connectCallback 
 	 */
-	public static void setFacebookToken(String faceook_access_token, ConnectCallback<com.rankwave.connect.sdk.ConnectSession> connectCallback) {
+	public static void setFacebookToken(String faceook_access_token, ConnectCallback<ConnectSession> connectCallback) {
+		setFacebookToken(faceook_access_token, getAuto_join_flag(), connectCallback);
+	}
+	
+	/**
+	 * setFacebookToken
+	 *  
+	 * @param faceook_access_token 
+	 * @param connectCallback 
+	 * @param autoJoinFlag
+	 */
+	public static void setFacebookToken(String faceook_access_token, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
+		auto_join_flag = autoJoinFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession != null){
 			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
@@ -257,20 +274,29 @@ public final class Connect {
 		ConnectService.token(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_FACEBOOK, sns_info, new ConnectCallback<ConnectSession>(){
 			@Override
         	public void onSuccess(ConnectSession connectSession){
-				Boolean join = connectSession.getUser().getJoined();
-				if(join){
+				Boolean joined = connectSession.getUser().getJoined();
+				if(joined){
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							ConnectService.profileGet(new ConnectCallback<Profile>(){
+							ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
 								@Override
-								public void onSuccess(Profile profile){
-									ConnectSession connectSession = getConnectSession();
-									connectSession.getUser().setProfile(profile);
-									
-									login_connect_callback.onSuccess(connectSession);
+								public void onSuccess(ConnectSession connectSession){
+									ConnectService.profileGet(new ConnectCallback<Profile>(){
+										@Override
+										public void onSuccess(Profile profile){
+											ConnectSession connectSession = getConnectSession();
+											connectSession.getUser().setProfile(profile);
+											
+											login_connect_callback.onSuccess(connectSession);
+										}
+										
+										@Override
+										public void onFail(FuncResult result, Exception exception){
+											login_connect_callback.onFail(result, exception);
+										}
+									});
 								}
-								
 								@Override
 								public void onFail(FuncResult result, Exception exception){
 									login_connect_callback.onFail(result, exception);
@@ -284,7 +310,34 @@ public final class Connect {
 						}
 					});
 				}else{
-					login_connect_callback.onSuccess(connectSession);
+					if(getAuto_join_flag() == null || getAuto_join_flag()){
+						join(null, new ConnectCallback<ConnectSession>(){
+							@Override
+							public void onSuccess(ConnectSession connectSession){
+								ConnectService.profileGet(new ConnectCallback<Profile>(){
+									@Override
+									public void onSuccess(Profile profile){
+										ConnectSession connectSession = getConnectSession();
+										connectSession.getUser().setProfile(profile);
+										
+										login_connect_callback.onSuccess(connectSession);
+									}
+									
+									@Override
+									public void onFail(FuncResult result, Exception exception){
+										login_connect_callback.onFail(result, exception);
+									}
+								});
+							}
+							
+							@Override
+							public void onFail(FuncResult result, Exception exception){
+								login_connect_callback.onFail(result, exception);
+							}
+						});
+					}else{
+						login_connect_callback.onSuccess(connectSession);
+					}
 				}
 			}
 			
@@ -295,13 +348,16 @@ public final class Connect {
 		});
 	}
 	
+		
 	/**
 	 * twitterLogin
 	 * 
 	 * @param activity
 	 * @param connectCallback
 	 */
-	public static void twitterLogin(Activity activity, ConnectCallback<ConnectSession> connectCallback) {
+	public static void twitterLogin(Activity activity, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
+		auto_join_flag = autoJoinFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession != null){
 			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
@@ -334,6 +390,20 @@ public final class Connect {
 	 * @param connectCallback 
 	 */
 	public static void setTwitterToken(String twitter_access_token, String twitter_token_secret, ConnectCallback<ConnectSession> connectCallback) {
+		setTwitterToken(twitter_access_token, twitter_token_secret, getAuto_join_flag(), connectCallback);
+	}
+	
+	/**
+	 * setTwitterToken
+	 *  
+	 * @param twitter_access_token
+	 * @param twitter_token_secret
+	 * @param connectCallback
+	 * @param autoJoinFlag 
+	 */
+	public static void setTwitterToken(String twitter_access_token, String twitter_token_secret, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
+		auto_join_flag = autoJoinFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession != null){
 			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
@@ -360,15 +430,25 @@ public final class Connect {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							ConnectService.profileGet(new ConnectCallback<Profile>(){
+							ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
 								@Override
-								public void onSuccess(Profile profile){
-									ConnectSession connectSession = getConnectSession();
-									connectSession.getUser().setProfile(profile);
-									
-									login_connect_callback.onSuccess(connectSession);
+								public void onSuccess(ConnectSession connectSession){
+									ConnectService.profileGet(new ConnectCallback<Profile>(){
+										@Override
+										public void onSuccess(Profile profile){
+											ConnectSession connectSession = getConnectSession();
+											connectSession.getUser().setProfile(profile);
+											
+											login_connect_callback.onSuccess(connectSession);
+										}
+										
+										@Override
+										public void onFail(FuncResult result, Exception exception){
+											login_connect_callback.onFail(result, exception);
+										}
+									});
 								}
-								
+							
 								@Override
 								public void onFail(FuncResult result, Exception exception){
 									login_connect_callback.onFail(result, exception);
@@ -382,7 +462,34 @@ public final class Connect {
 						}
 					});
 				}else{
-					login_connect_callback.onSuccess(connectSession);
+					if(getAuto_join_flag() == null || getAuto_join_flag()){
+						join(null, new ConnectCallback<ConnectSession>(){
+							@Override
+							public void onSuccess(ConnectSession connectSession){
+								ConnectService.profileGet(new ConnectCallback<Profile>(){
+									@Override
+									public void onSuccess(Profile profile){
+										ConnectSession connectSession = getConnectSession();
+										connectSession.getUser().setProfile(profile);
+										
+										login_connect_callback.onSuccess(connectSession);
+									}
+									
+									@Override
+									public void onFail(FuncResult result, Exception exception){
+										login_connect_callback.onFail(result, exception);
+									}
+								});
+							}
+							
+							@Override
+							public void onFail(FuncResult result, Exception exception){
+								login_connect_callback.onFail(result, exception);
+							}
+						});
+					}else{
+						login_connect_callback.onSuccess(connectSession);
+					}
 				}
 			}
 			
@@ -419,15 +526,24 @@ public final class Connect {
 				ConnectService.login(new ConnectCallback<ConnectSession>(){
 					@Override
 					public void onSuccess(ConnectSession connectSession){
-						ConnectService.profileGet(new ConnectCallback<Profile>(){
+						ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
 							@Override
-							public void onSuccess(Profile profile){
-								ConnectSession connectSession = getConnectSession();
-								connectSession.getUser().setProfile(profile);
-								
-								join_connect_callback.onSuccess(connectSession);
+							public void onSuccess(ConnectSession connectSession){
+								ConnectService.profileGet(new ConnectCallback<Profile>(){
+									@Override
+									public void onSuccess(Profile profile){
+										ConnectSession connectSession = getConnectSession();
+										connectSession.getUser().setProfile(profile);
+										
+										join_connect_callback.onSuccess(connectSession);
+									}
+									
+									@Override
+									public void onFail(FuncResult result, Exception exception){
+										join_connect_callback.onFail(result, exception);
+									}
+								});
 							}
-							
 							@Override
 							public void onFail(FuncResult result, Exception exception){
 								join_connect_callback.onFail(result, exception);
@@ -532,6 +648,11 @@ public final class Connect {
 			}
 		}else{
 			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(getSender_id() == null || getSender_id().equals("")){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("sender id can not be empty."));
 			return;
 		}
 		
@@ -655,5 +776,9 @@ public final class Connect {
 
 	public static String getSender_id() {
 		return sender_id;
+	}
+	
+	public static Boolean getAuto_join_flag() {
+		return auto_join_flag;
 	}
 }

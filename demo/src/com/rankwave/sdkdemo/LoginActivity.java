@@ -89,7 +89,7 @@ public class LoginActivity extends Activity {
 						"user_subscriptions", "friends_location",
 						"friends_education_history", "friends_relationships");
 				
-				Connect.facebookLogin(LoginActivity.this, permissions, new ConnectCallback<ConnectSession>() {
+				Connect.facebookLogin(LoginActivity.this, permissions, true, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -152,7 +152,7 @@ public class LoginActivity extends Activity {
 
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<ConnectSession>() {
+				Connect.twitterLogin(LoginActivity.this, true, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -225,7 +225,7 @@ public class LoginActivity extends Activity {
 						"user_subscriptions", "friends_location",
 						"friends_education_history", "friends_relationships");
 				
-				Connect.facebookLogin(LoginActivity.this, permissions, new ConnectCallback<ConnectSession>() {
+				Connect.facebookLogin(LoginActivity.this, permissions, false, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -275,7 +275,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<ConnectSession>() {
+				Connect.twitterLogin(LoginActivity.this, false, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
