@@ -160,7 +160,7 @@ public class ConnectService {
 			
 		}else if(idType == IdType.ID_TYPE_ANONYMOUS){
 			params.add(new BasicNameValuePair("grant_type", "authorization_anonymous"));
-			params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
+			//params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 			
 			//ANONYMOUS id : device_id 
 			ConnectSession.getInstance().getUser().setId(DeviceInfo.getInstance().getDevice_id());
@@ -168,6 +168,7 @@ public class ConnectService {
 
 		params.add(new BasicNameValuePair("id_type", IdType.toString(idType)));
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
+		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
 		
 		new Request(getHttpsUrl(CONNECT_TOKEN_PATH), params, new Callback() {
@@ -1066,67 +1067,4 @@ public class ConnectService {
 		}, null).execute();
 	}
 	
-	
-	
-	
-	@SuppressWarnings("unchecked")
-	public static void setDeviceInfo(ConnectCallback<ConnectSession> callback){
-		ConnectSession connectSession = ConnectSession.getInstance();
-		
-		DeviceInfo deviceInfo = DeviceInfo.getInstance();
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
-		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
-		params.add(new BasicNameValuePair("device_id", deviceInfo.getDevice_id()));
-		params.add(new BasicNameValuePair("os_type", deviceInfo.getOs_type()));
-		params.add(new BasicNameValuePair("os_version", deviceInfo.getOs_version()));
-		params.add(new BasicNameValuePair("app_version", deviceInfo.getApp_version()));
-		params.add(new BasicNameValuePair("model", deviceInfo.getDevice_model()));
-		params.add(new BasicNameValuePair("locale", deviceInfo.getLocale()));
-		params.add(new BasicNameValuePair("location", deviceInfo.getLocation()));
-		
-		new Request(getHttpsUrl(CONNECT_SET_DEVICE_INFO_PATH), params, new Request.Callback() {
-			
-			@Override
-			public void onCompleted(Response response) {
-				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
-				
-				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
-					JSONObject json = response.getJsonObject();
-					
-					try {
-						Boolean result = json.getBoolean("result");
-						if(result){
-							if (connectCallback != null) {
-								connectCallback.onSuccess(ConnectSession.getInstance());
-							}
-						}else{
-							JSONObject error = json.getJSONObject("error");
-							Log.e(Connect.TAG, error.toString());
-														
-							if (connectCallback != null) {
-								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
-							}
-						}
-												
-					} catch (JSONException e) {
-						e.printStackTrace();
-						
-						if(connectCallback != null){
-							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
-						}
-						
-						return;
-					}
-				} else {
-					Log.e(Connect.TAG, response.error);
-					
-					if(connectCallback != null){
-						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
-					}
-				}				
-			}
-		}, callback).execute();
-	}
 }

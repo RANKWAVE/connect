@@ -102,7 +102,7 @@ public final class Connect {
 		if(!push_seq.equals("")){
 			try{
 				JSONObject etc = new JSONObject();
-				etc.put(Connect.INTENT_PUSH_SEQ, push_seq);
+				etc.put("push_seq", push_seq);
 				etc.put("os_type", DeviceInfo.getInstance().getOs_type());
 				
 				ConnectService.action(null, "PUSH", 1, "CONNECT SDK", etc);
@@ -279,24 +279,15 @@ public final class Connect {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
+							ConnectService.profileGet(new ConnectCallback<Profile>(){
 								@Override
-								public void onSuccess(ConnectSession connectSession){
-									ConnectService.profileGet(new ConnectCallback<Profile>(){
-										@Override
-										public void onSuccess(Profile profile){
-											ConnectSession connectSession = getConnectSession();
-											connectSession.getUser().setProfile(profile);
-											
-											login_connect_callback.onSuccess(connectSession);
-										}
-										
-										@Override
-										public void onFail(FuncResult result, Exception exception){
-											login_connect_callback.onFail(result, exception);
-										}
-									});
+								public void onSuccess(Profile profile){
+									ConnectSession connectSession = getConnectSession();
+									connectSession.getUser().setProfile(profile);
+									
+									login_connect_callback.onSuccess(connectSession);
 								}
+								
 								@Override
 								public void onFail(FuncResult result, Exception exception){
 									login_connect_callback.onFail(result, exception);
@@ -430,25 +421,15 @@ public final class Connect {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
+							ConnectService.profileGet(new ConnectCallback<Profile>(){
 								@Override
-								public void onSuccess(ConnectSession connectSession){
-									ConnectService.profileGet(new ConnectCallback<Profile>(){
-										@Override
-										public void onSuccess(Profile profile){
-											ConnectSession connectSession = getConnectSession();
-											connectSession.getUser().setProfile(profile);
-											
-											login_connect_callback.onSuccess(connectSession);
-										}
-										
-										@Override
-										public void onFail(FuncResult result, Exception exception){
-											login_connect_callback.onFail(result, exception);
-										}
-									});
+								public void onSuccess(Profile profile){
+									ConnectSession connectSession = getConnectSession();
+									connectSession.getUser().setProfile(profile);
+									
+									login_connect_callback.onSuccess(connectSession);
 								}
-							
+								
 								@Override
 								public void onFail(FuncResult result, Exception exception){
 									login_connect_callback.onFail(result, exception);
@@ -526,24 +507,15 @@ public final class Connect {
 				ConnectService.login(new ConnectCallback<ConnectSession>(){
 					@Override
 					public void onSuccess(ConnectSession connectSession){
-						ConnectService.setDeviceInfo(new ConnectCallback<ConnectSession>(){
+						ConnectService.profileGet(new ConnectCallback<Profile>(){
 							@Override
-							public void onSuccess(ConnectSession connectSession){
-								ConnectService.profileGet(new ConnectCallback<Profile>(){
-									@Override
-									public void onSuccess(Profile profile){
-										ConnectSession connectSession = getConnectSession();
-										connectSession.getUser().setProfile(profile);
-										
-										join_connect_callback.onSuccess(connectSession);
-									}
-									
-									@Override
-									public void onFail(FuncResult result, Exception exception){
-										join_connect_callback.onFail(result, exception);
-									}
-								});
+							public void onSuccess(Profile profile){
+								ConnectSession connectSession = getConnectSession();
+								connectSession.getUser().setProfile(profile);
+								
+								join_connect_callback.onSuccess(connectSession);
 							}
+							
 							@Override
 							public void onFail(FuncResult result, Exception exception){
 								join_connect_callback.onFail(result, exception);
