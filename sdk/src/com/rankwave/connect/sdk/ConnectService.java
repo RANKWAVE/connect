@@ -202,6 +202,10 @@ public class ConnectService {
 							connectSession.setConnect_token(json.getString("connect_token"));
 							connectSession.setExpires_in(json.getLong("expires_in"));
 							
+							if(Connect.getSession_save_flag() != null && Connect.getSession_save_flag()){
+								connectSession.storeSavedConnectToken(json.getString("connect_token"));
+							}
+							
 							if (connectCallback != null) {
 								connectCallback.onSuccess(connectSession);
 							}
@@ -519,6 +523,8 @@ public class ConnectService {
 							}
 						}else{							
 							ConnectSession.getInstance().deleteConnectToken();
+							ConnectSession.getInstance().deleteSavedConnectToken();
+							
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
@@ -572,6 +578,9 @@ public class ConnectService {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else{
+							ConnectSession.getInstance().deleteConnectToken();
+							ConnectSession.getInstance().deleteSavedConnectToken();
+							
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
 							}

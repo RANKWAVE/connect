@@ -7,6 +7,7 @@ import android.util.Log;
 
 public class ConnectSession {
 	private static final String PROPERTY_CONNECT_TOKEN = "connectToken";
+	private static final String PROPERTY_SAVED_CONNECT_TOKEN = "savedConnectToken";
 	
 	private ConnectSessionState connectSessionState = ConnectSessionState.CLOSED;
 	
@@ -139,6 +140,42 @@ public class ConnectSession {
 		editor.commit();
 	}
 	
+	public String loadSavedConnectToken() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String connectToken = prefs.getString(PROPERTY_SAVED_CONNECT_TOKEN, "");
+		if (connectToken.equalsIgnoreCase("")) {
+			Log.i(Connect.TAG, "SavedConnectToken not found.");
+			return "";
+		}
+
+		return connectToken;
+	}
+
+	public void storeSavedConnectToken(String connectToken) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SAVED_CONNECT_TOKEN, connectToken);
+		editor.commit();
+	}
+
+	public void deleteSavedConnectToken() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SAVED_CONNECT_TOKEN, "");
+		editor.commit();
+	}
 	
+	
+	public void connectSessionClear(){
+		connect_token = null;
+		
+		connectSessionState = ConnectSessionState.READY;
+		
+		if(user != null){
+			user = null;
+		}
+		user = new User();
+	}
 	
 }

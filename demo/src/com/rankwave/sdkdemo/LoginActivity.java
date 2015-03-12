@@ -38,9 +38,11 @@ public class LoginActivity extends Activity {
 		Connect.sdkInitialize(getApplicationContext(), new ConnectCallback<ConnectSession>() {
 			@Override
         	public void onSuccess(ConnectSession connectSession){
-				if(connectSession.getConnectSessionState() == ConnectSessionState.READY) {
+				if(connectSession.getConnectSessionState() == ConnectSessionState.READY || 
+						connectSession.getConnectSessionState() == ConnectSessionState.OPENED) {
 	                Log.i(AppConst.LOG_TAG, "SDK Initialized.");
 	                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
+	                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
 	                
 	                Connect.anonymousLogin(new ConnectCallback<ConnectSession>(){
 	                	@Override
@@ -56,6 +58,8 @@ public class LoginActivity extends Activity {
 	                		Log.i(AppConst.LOG_TAG, "anonymousLogin Fail. : " + exception.toString());
 	                	}
 	                });
+	                
+	                Connect.connectLogin(null);
 	                
 	            } else {
 	                Log.e(AppConst.LOG_TAG, "Failed to initialize SDK.");
@@ -89,7 +93,7 @@ public class LoginActivity extends Activity {
 						"user_subscriptions", "friends_location",
 						"friends_education_history", "friends_relationships");
 				
-				Connect.facebookLogin(LoginActivity.this, permissions, true, new ConnectCallback<ConnectSession>() {
+				Connect.facebookLogin(LoginActivity.this, permissions, true, true, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -152,7 +156,7 @@ public class LoginActivity extends Activity {
 
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, true, new ConnectCallback<ConnectSession>() {
+				Connect.twitterLogin(LoginActivity.this, true, true, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -225,7 +229,7 @@ public class LoginActivity extends Activity {
 						"user_subscriptions", "friends_location",
 						"friends_education_history", "friends_relationships");
 				
-				Connect.facebookLogin(LoginActivity.this, permissions, false, new ConnectCallback<ConnectSession>() {
+				Connect.facebookLogin(LoginActivity.this, permissions, true, false, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -275,7 +279,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				showLoading(true);
 				
-				Connect.twitterLogin(LoginActivity.this, false, new ConnectCallback<ConnectSession>() {
+				Connect.twitterLogin(LoginActivity.this, true, false, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {

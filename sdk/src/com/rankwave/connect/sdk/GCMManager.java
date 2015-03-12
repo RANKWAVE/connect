@@ -55,7 +55,7 @@ public class GCMManager {
 		this.sender_id = Connect.getSender_id();
 		this.gcm = GoogleCloudMessaging.getInstance(context);
 		String regid = getRegistrationId(context);
-		System.out.println("push Id connect init :: " + regid);
+		
 		if (regid == null || regid.length() == 0) {
 			registerInBackground();
 		} else {
@@ -239,7 +239,7 @@ public class GCMManager {
 
 					String regid = gcm_manager.gcm
 							.register(gcm_manager.sender_id);
-					System.out.println("push Id connect registerInBackground :: " + regid);
+					
 					// Persist the regID - no need to register again.
 					storeRegistrationId(gcm_manager.context, regid);
 
