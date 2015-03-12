@@ -175,6 +175,7 @@ public class ConnectSession {
 		if(user != null){
 			user = null;
 		}
+		
 		user = new User();
 	}
 	

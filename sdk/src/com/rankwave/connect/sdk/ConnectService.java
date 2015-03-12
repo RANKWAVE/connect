@@ -91,6 +91,7 @@ public class ConnectService {
 					try {
 						Boolean result = json.getBoolean("result");
 						if(result){
+							
 							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
 							
 							if (connectCallback != null) {
@@ -812,7 +813,7 @@ public class ConnectService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void profileGet(ConnectCallback<Profile> callback){
+	public static void profileGet(ConnectCallback<User> callback){
 		ConnectSession connectSession = ConnectSession.getInstance();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -824,7 +825,7 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectCallback<Profile> connectCallback = (ConnectCallback<Profile>)response.user_obejct;
+				ConnectCallback<User> connectCallback = (ConnectCallback<User>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
 					JSONObject json = response.getJsonObject();
@@ -895,8 +896,24 @@ public class ConnectService {
 								if(hometownObject.has("spot") && hometownObject.getString("spot")  != null && !hometownObject.getString("spot").equals("null"))
 									profile.getHometown().setSpot(hometownObject.getString("spot"));
 							}
-
-							connectCallback.onSuccess(profile);
+							
+							User user = new User();
+							
+							user.setProfile(profile);
+							
+							String id = json.getString("id");
+							String id_type = json.getString("id_type");
+							String sns_type = json.getString("sns_type");
+							Boolean emailVerify = json.getBoolean("email_verify");
+							Boolean joined = json.getBoolean("joined");
+							
+							user.setId(id);
+							user.setIdType(IdType.toEnum(id_type));
+							user.setSnsType(SnsType.toEnum(sns_type));
+							user.setEmailVerify(emailVerify);
+							user.setJoined(joined);
+							
+							connectCallback.onSuccess(user);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();

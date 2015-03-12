@@ -24,18 +24,21 @@ public class ConnectManager {
 		ConnectService.initialize(new ConnectCallback<ConnectSession>(){
 			@Override
         	public void onSuccess(ConnectSession connectSession){
+				//session clear
+				connectSession.connectSessionClear();
+				
 				//saved session process
 				String savedConnectToken = connectSession.loadSavedConnectToken();
 				
 				Log.d(Connect.TAG, "savedConnectToken :: " + savedConnectToken);
 				
 				if(savedConnectToken != null && !"".equals(savedConnectToken)){
-					ConnectService.profileGet(new ConnectCallback<Profile>(){
+					ConnectService.profileGet(new ConnectCallback<User>(){
 						@Override
-						public void onSuccess(Profile profile){
-							ConnectSession connectSession = Connect.getConnectSession();
-							connectSession.getUser().setProfile(profile);
+						public void onSuccess(User profileUser){
+							ConnectManager.profileUserCopy(profileUser);
 							
+							ConnectSession connectSession = Connect.getConnectSession();
 							connectSession.setConnectSessionState(ConnectSessionState.OPENED);
 							
 							initialize_connect_callback.onSuccess(connectSession);
@@ -154,11 +157,12 @@ public class ConnectManager {
 						@Override
 						public void onSuccess(ConnectSession connectSession){
 							
-							ConnectService.profileGet(new ConnectCallback<Profile>(){
+							ConnectService.profileGet(new ConnectCallback<User>(){
 								@Override
-								public void onSuccess(Profile profile){
+								public void onSuccess(User profileUser){
+									ConnectManager.profileUserCopy(profileUser);
+									
 									ConnectSession connectSession = Connect.getConnectSession();
-									connectSession.getUser().setProfile(profile);
 									
 									login_connect_callback.onSuccess(connectSession);
 								}
@@ -182,12 +186,13 @@ public class ConnectManager {
 							@Override
 							public void onSuccess(ConnectSession connectSession){
 								
-								ConnectService.profileGet(new ConnectCallback<Profile>(){
+								ConnectService.profileGet(new ConnectCallback<User>(){
 									@Override
-									public void onSuccess(Profile profile){
-										ConnectSession connectSession = Connect.getConnectSession();
-										connectSession.getUser().setProfile(profile);
+									public void onSuccess(User profileUser){
+										ConnectManager.profileUserCopy(profileUser);
 										
+										ConnectSession connectSession = Connect.getConnectSession();
+																				
 										login_connect_callback.onSuccess(connectSession);
 									}
 									
@@ -254,11 +259,12 @@ public class ConnectManager {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							ConnectService.profileGet(new ConnectCallback<Profile>(){
+							ConnectService.profileGet(new ConnectCallback<User>(){
 								@Override
-								public void onSuccess(Profile profile){
+								public void onSuccess(User profileUser){
+									ConnectManager.profileUserCopy(profileUser);
+									
 									ConnectSession connectSession = Connect.getConnectSession();
-									connectSession.getUser().setProfile(profile);
 									
 									login_connect_callback.onSuccess(connectSession);
 								}
@@ -280,11 +286,12 @@ public class ConnectManager {
 						join(null, new ConnectCallback<ConnectSession>(){
 							@Override
 							public void onSuccess(ConnectSession connectSession){
-								ConnectService.profileGet(new ConnectCallback<Profile>(){
+								ConnectService.profileGet(new ConnectCallback<User>(){
 									@Override
-									public void onSuccess(Profile profile){
+									public void onSuccess(User profileUser){
+										ConnectManager.profileUserCopy(profileUser);
+										
 										ConnectSession connectSession = Connect.getConnectSession();
-										connectSession.getUser().setProfile(profile);
 										
 										login_connect_callback.onSuccess(connectSession);
 									}
@@ -324,12 +331,13 @@ public class ConnectManager {
 				ConnectService.login(new ConnectCallback<ConnectSession>(){
 					@Override
 					public void onSuccess(ConnectSession connectSession){
-						ConnectService.profileGet(new ConnectCallback<Profile>(){
+						ConnectService.profileGet(new ConnectCallback<User>(){
 							@Override
-							public void onSuccess(Profile profile){
-								ConnectSession connectSession = Connect.getConnectSession();
-								connectSession.getUser().setProfile(profile);
+							public void onSuccess(User profileUser){
+								ConnectManager.profileUserCopy(profileUser);
 								
+								ConnectSession connectSession = Connect.getConnectSession();
+																
 								join_connect_callback.onSuccess(connectSession);
 							}
 							
@@ -397,5 +405,15 @@ public class ConnectManager {
 		ConnectService.unsetGCMRegistrationId(connectCallback);
 	}
 	
-	
+
+	private static void profileUserCopy(User profileUser){
+		ConnectSession connectSession = Connect.getConnectSession();
+		connectSession.getUser().setProfile(profileUser.getProfile());
+		connectSession.getUser().setId(profileUser.getId());
+		connectSession.getUser().setIdType(profileUser.getIdType());
+		connectSession.getUser().setSnsType(profileUser.getSnsType());
+		connectSession.getUser().setEmailVerify(profileUser.getEmailVerify());
+		connectSession.getUser().setJoined(profileUser.getJoined());
+
+	}
 }

@@ -12,4 +12,12 @@ public enum SnsType {
 			return "TW";
 		return "";
 	}
+	
+	public static SnsType toEnum(String type) {
+		if(type.equals("FB"))
+			return SnsType.SNS_TYPE_FACEBOOK;
+		else if(type.equals("TW"))
+			return SnsType.SNS_TYPE_TWITTER;
+		return null;
+	}
 }

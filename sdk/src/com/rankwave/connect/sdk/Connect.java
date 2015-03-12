@@ -1,18 +1,12 @@
 package com.rankwave.connect.sdk;
 
-import java.util.HashMap;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.util.Log;
 
 import com.rankwave.connect.sdk.ConnectCallback.FuncResult;
@@ -21,8 +15,6 @@ import com.rankwave.connect.sdk.core.OAuthTwitter;
 
 
 public final class Connect {
-	private static ConnectCallback<ConnectSession> gcm_connect_callback = null;
-	
 	public static final String TAG = "Connect";
 	
 	public static final String SDK_PREFERENCES = "com.rankave.connect.sdk";
@@ -143,7 +135,9 @@ public final class Connect {
 	 * 
 	 * @param connectCallback
 	 */
-	public static void anonymousLogin(ConnectCallback<ConnectSession> connectCallback) {
+	public static void anonymousLogin(Boolean sessionSaveFlag, ConnectCallback<ConnectSession> connectCallback) {
+		session_save_flag = sessionSaveFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		
 		if(connectSession != null){
@@ -291,6 +285,9 @@ public final class Connect {
 			return;
 		}
 		
+		//session clear
+		connectSession.connectSessionClear();
+				
 		OAuthTwitter.getInstance().connect(activity, connectCallback);
 	}
 	
@@ -308,6 +305,10 @@ public final class Connect {
 	public static void twitterLogin(String twitter_access_token, String twitter_token_secret, Boolean sessionSaveFlag, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
 		session_save_flag = sessionSaveFlag;
 		auto_join_flag = autoJoinFlag;
+		
+		ConnectSession connectSession = getConnectSession();
+		//session clear
+		connectSession.connectSessionClear();
 		
 		ConnectManager.setTwitterToken(twitter_access_token, twitter_token_secret, connectCallback);
 	}
@@ -339,7 +340,7 @@ public final class Connect {
 			}
 			return;
 		}
-		
+				
 		ConnectManager.connectLogin(connectCallback);
 	}
 	
