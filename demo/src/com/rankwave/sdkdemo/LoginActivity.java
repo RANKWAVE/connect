@@ -44,22 +44,39 @@ public class LoginActivity extends Activity {
 	                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
 	                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
 	                
-	                Connect.anonymousLogin(new ConnectCallback<ConnectSession>(){
-	                	@Override
-	                	public void onSuccess(ConnectSession connectSession){
-	                		Log.i(AppConst.LOG_TAG, "AnonymousLogin Success.");
-	                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
-	                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
-	                		Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
-	                	}
-	                	
-	                	@Override
-	                	public void onFail(FuncResult funcResult, Exception exception){
-	                		Log.i(AppConst.LOG_TAG, "anonymousLogin Fail. : " + exception.toString());
-	                	}
-	                });
+	                if(connectSession.getConnectSessionState() == ConnectSessionState.OPENED){
+	                	Connect.connectLogin(new ConnectCallback<ConnectSession>(){
+		                	@Override
+		                	public void onSuccess(ConnectSession connectSession){
+		                		Log.i(AppConst.LOG_TAG, "connectLogin Success.");
+		                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
+		                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
+		                		Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
+		                	}
+		                	
+		                	@Override
+		                	public void onFail(FuncResult funcResult, Exception exception){
+		                		Log.i(AppConst.LOG_TAG, "connectLogin Fail. : " + exception.toString());
+		                	}
+		                });
+	                }else{
+	                	Connect.anonymousLogin(true, new ConnectCallback<ConnectSession>(){
+		                	@Override
+		                	public void onSuccess(ConnectSession connectSession){
+		                		Log.i(AppConst.LOG_TAG, "AnonymousLogin Success.");
+		                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
+		                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
+		                		Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
+		                	}
+		                	
+		                	@Override
+		                	public void onFail(FuncResult funcResult, Exception exception){
+		                		Log.i(AppConst.LOG_TAG, "anonymousLogin Fail. : " + exception.toString());
+		                	}
+		                });
+	                }
 	                
-	                Connect.connectLogin(null);
+	                
 	                
 	            } else {
 	                Log.e(AppConst.LOG_TAG, "Failed to initialize SDK.");
