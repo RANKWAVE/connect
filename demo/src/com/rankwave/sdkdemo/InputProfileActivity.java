@@ -62,6 +62,9 @@ public class InputProfileActivity extends Activity{
 				String name = edit_name.getText().toString();
 				String birthday = edit_birthday.getText().toString();
 				
+				/*
+				 * 회원 가입시 추가로 입력 가능한 Profile 객체를 셋팅할수 있습니다.
+				 */
 				Profile profile = new Profile();
 				profile.setEmail(email);
 				profile.setBirthday(birthday);
@@ -91,11 +94,16 @@ public class InputProfileActivity extends Activity{
 				*/
 				
 				if(requestCode == REQUEST_CODE_JOIN){
+					/*
+					 * 회원 가입하는 함수입니다.
+					 */
 					Connect.join(profile, new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							Log.i(AppConst.LOG_TAG, "join success");
-							
+							Log.i(AppConst.LOG_TAG, "========================================");
+			        		Log.i(AppConst.LOG_TAG, "join Success.");
+			        		Log.i(AppConst.LOG_TAG, "========================================");
+			        		
 							startActivity(new Intent(
 									InputProfileActivity.this,
 									MainActivity.class));
@@ -113,15 +121,23 @@ public class InputProfileActivity extends Activity{
 						
 						@Override
 						public void onFail(FuncResult funcResult, Exception exception){
-							Log.i(AppConst.LOG_TAG, "join fail :: " + funcResult);
-							Log.i(AppConst.LOG_TAG, "join fail :: " + exception.getMessage());
+							Log.e(AppConst.LOG_TAG, "========================================");
+			        		Log.e(AppConst.LOG_TAG, "join Fail.");
+			        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+			        		Log.e(AppConst.LOG_TAG, exception.toString());
+			        		Log.e(AppConst.LOG_TAG, "========================================");
 						}
 					});
 				}else if(requestCode == REQUEST_CODE_UPDATE){
+					/*
+					 * Profile 를 수정하는 함수입니다.
+					 */
 					Connect.profileUpdate(profile, new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							Log.i(AppConst.LOG_TAG, "pofile update success");
+							Log.i(AppConst.LOG_TAG, "========================================");
+			        		Log.i(AppConst.LOG_TAG, "profileUpdate Success.");
+			        		Log.i(AppConst.LOG_TAG, "========================================");
 
 							finish();
 							
@@ -138,8 +154,11 @@ public class InputProfileActivity extends Activity{
 						
 						@Override
 						public void onFail(FuncResult funcResult, Exception exception){
-							Log.i(AppConst.LOG_TAG, "pofile update fail :: " + funcResult);
-							Log.i(AppConst.LOG_TAG, "pofile update fail :: " + exception.getMessage());
+							Log.e(AppConst.LOG_TAG, "========================================");
+			        		Log.e(AppConst.LOG_TAG, "profileUpdate Fail.");
+			        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+			        		Log.e(AppConst.LOG_TAG, exception.toString());
+			        		Log.e(AppConst.LOG_TAG, "========================================");
 						}
 					});
 				}

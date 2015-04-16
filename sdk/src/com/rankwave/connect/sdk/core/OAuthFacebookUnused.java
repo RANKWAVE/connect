@@ -28,7 +28,7 @@ public class OAuthFacebookUnused {
 	}
 
 
-	public void connecnt(Activity activity, List<String> permissions,
+	public void connect(Activity activity, List<String> permissions,
 			ConnectCallback<com.rankwave.connect.sdk.ConnectSession> callback) {
        
 	}

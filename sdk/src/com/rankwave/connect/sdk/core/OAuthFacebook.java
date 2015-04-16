@@ -101,7 +101,7 @@ public class OAuthFacebook {
 		}
 	};
 
-	public void connecnt(Activity activity, List<String> permissions,
+	public void connect(Activity activity, List<String> permissions,
 			ConnectCallback<ConnectSession> callback) {
         
 		getInstance().connectCallback = callback;

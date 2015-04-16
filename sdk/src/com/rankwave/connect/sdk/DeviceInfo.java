@@ -2,10 +2,16 @@ package com.rankwave.connect.sdk;
 
 import java.util.Locale;
 
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
+
 import android.content.Context;
+import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class DeviceInfo {
+	protected Context context;
 
 	private final String os_type = "android";
 	private String device_id;
@@ -14,6 +20,9 @@ public class DeviceInfo {
 	private String device_model;
 	private String locale;
 	private String location;
+	
+	private String ad_id;
+	
 	
 	private static DeviceInfo instance;
 	
@@ -32,6 +41,8 @@ public class DeviceInfo {
 	}
 	
 	public void init(Context context) {
+		this.context = context;
+		
 		device_id = Util.getDeviceId(context);
 		os_version = Util.getOsVersion();
 		app_version = Util.getAppVersion(context);
@@ -42,8 +53,57 @@ public class DeviceInfo {
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	    String countryCode = tm.getSimCountryIso();
 	    this.location = countryCode;
+	    
+	    
+	    getAdvertisingId(context);
+	}
+	
+	
+	// Do not call this function from the main thread. Otherwise, 
+	// an IllegalStateException will be thrown.
+	private void getAdvertisingId(Context context) {
+		new AsyncTask<DeviceInfo, Integer, Info>() {
+			@Override
+			protected Info doInBackground(DeviceInfo... params) {
+				DeviceInfo deviceInfo = params[0];
+			
+				Info adInfo = null;
+				try {
+				    adInfo = AdvertisingIdClient.getAdvertisingIdInfo(deviceInfo.context);
+				    
+				    if(adInfo != null){
+				    	String id = adInfo.getId();
+						Boolean isLAT = adInfo.isLimitAdTrackingEnabled();
+						
+						Log.d(Connect.TAG, adInfo.toString());
+						if(!isLAT){
+							setAd_id(id);
+						}
+				    }
+				} catch (Exception e) {
+				    // Unrecoverable error connecting to Google Play services (e.g.,
+				    // the old version of the service doesn't support getting AdvertisingId).
+					  e.printStackTrace();
+				}
+				  
+				return adInfo;
+			}
+			
+			@Override
+			protected void onPostExecute(Info adInfo) {
+				if (adInfo == null) {
+					// retry??
+					
+				} else {
+					
+				}
+				super.onPostExecute(adInfo);
+			}
+		}.execute(DeviceInfo.getInstance(), null, null);
 	}
 
+	
+	
 	public String getDevice_id() {
 		return device_id;
 	}
@@ -95,5 +155,15 @@ public class DeviceInfo {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+
+	public String getAd_id() {
+		return ad_id;
+	}
+
+	private void setAd_id(String ad_id) {
+		this.ad_id = ad_id;
+	}
+	
+	
 	
 }

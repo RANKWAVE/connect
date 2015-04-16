@@ -171,6 +171,8 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
 		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
 		
+		params.add(new BasicNameValuePair("ad_id_type", DeviceInfo.getInstance().getOs_type()));	//현재는 device에 따라 수집하기 때문에 os_type 를 사용하지만 추후 facebook_user_id도 수집할 경우에는 수정이 필요. 
+		params.add(new BasicNameValuePair("ad_id", DeviceInfo.getInstance().getAd_id()));
 		
 		new Request(getHttpsUrl(CONNECT_TOKEN_PATH), params, new Callback() {
 

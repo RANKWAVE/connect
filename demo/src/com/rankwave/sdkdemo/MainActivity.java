@@ -44,17 +44,24 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-
+		
+		/*
+		 * ConnectSession 객체 조회를 하여 User 정보를 얻을 수 있습니다.
+		 */
 		Connect.getConnectSession(new ConnectCallback<ConnectSession>(){
 			@Override
 			public void onSuccess(ConnectSession session){
 				connectSession = session;
 				connectUser = session.getUser();
 				
-				Log.i(AppConst.LOG_TAG, "connect_token :: " + session.getConnect_token());
-				User user = session.getUser();
-				Log.i(AppConst.LOG_TAG, user.toString());	
+				Log.i(AppConst.LOG_TAG, "========================================");
+        		Log.i(AppConst.LOG_TAG, "getConnectSession Success.");
+        		Log.i(AppConst.LOG_TAG, "----------------------------------------");
+        		Log.i(AppConst.LOG_TAG, "connect_token :: " + session.getConnect_token());
+        		Log.i(AppConst.LOG_TAG, connectUser.toString());
+        		Log.i(AppConst.LOG_TAG, "========================================");
 				
+								
 				// Find the user's profile picture custom view
 				profilePictureView = (ImageView) findViewById(R.id.iv_profile_pic);
 
@@ -75,7 +82,7 @@ public class MainActivity extends Activity {
 				
 				findViewById(R.id.btn_profile_update).setOnClickListener(onProfileUpdate);
 				findViewById(R.id.btn_logout).setOnClickListener(onLogout);
-				findViewById(R.id.btn_unregist).setOnClickListener(onUnregist);
+				findViewById(R.id.btn_unregist).setOnClickListener(onLeave);
 				
 				findViewById(R.id.btn_unset_gcm_id).setOnClickListener(onUnsetGCMRegistrationId);
 				findViewById(R.id.btn_set_gcm_id).setOnClickListener(onSetGCMRegistrationId);
@@ -83,14 +90,19 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onFail(FuncResult funcResult, Exception exception){
+				Log.e(AppConst.LOG_TAG, "========================================");
+        		Log.e(AppConst.LOG_TAG, "getConnectSession Fail.");
+        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+        		Log.e(AppConst.LOG_TAG, exception.toString());
+        		Log.e(AppConst.LOG_TAG, "========================================");
+        		
+        		/*
+        		 * 데모에서는 dialog 를 보여주고 있습니다.
+        		 */
 				CommonAlertDialog.showDefaultDialog(MainActivity.this,
-						"getUser", "getUser Fail :: " + exception.getMessage(), "OK", null);
+						"getConnectSession", "getConnectSession Fail :: " + exception.getMessage(), "OK", null);
 			}
 		});
-				
-				
-		
-		
 	}
 
 	View.OnClickListener onProfileUpdate = new View.OnClickListener() {
@@ -106,10 +118,19 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-
+			/*
+			 * 로그아웃을 수행하는 함수입니다. 
+			 */
 			Connect.logout(new ConnectCallback<ConnectSession>() {
 				@Override
 				public void onSuccess(ConnectSession connectSession){
+					Log.i(AppConst.LOG_TAG, "========================================");
+	        		Log.i(AppConst.LOG_TAG, "logout Success.");
+	        		Log.i(AppConst.LOG_TAG, "========================================");
+	        		
+	        		/*
+	        		 * 데모에서는 Dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"Logout", "logout success", "OK",
 							new DialogInterface.OnClickListener() {
@@ -124,25 +145,53 @@ public class MainActivity extends Activity {
 				
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception) {
+					Log.e(AppConst.LOG_TAG, "========================================");
+	        		Log.e(AppConst.LOG_TAG, "logout Fail.");
+	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+	        		Log.e(AppConst.LOG_TAG, exception.toString());
+	        		Log.e(AppConst.LOG_TAG, "========================================");
+	        		
+					/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"Logout", "logout fail :: " + exception.getMessage(), "OK", null);
 				}
 			});
 		}
 	};
-
+	
 	View.OnClickListener onUnsetGCMRegistrationId = new View.OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
+			/*
+			 * Push 전송 해지를 위해 GCM registration ID 를 등록 해제하는 함수입니다.
+			 */
 			Connect.unsetGCMRegistrationId(new ConnectCallback<ConnectSession>(){
 				@Override
 				public void onSuccess(ConnectSession connectSession){
+					Log.i(AppConst.LOG_TAG, "========================================");
+	        		Log.i(AppConst.LOG_TAG, "unsetGCMRegistrationId Success.");
+	        		Log.i(AppConst.LOG_TAG, "========================================");
+					
+					/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"unsetGCMRegistrationId", "unsetGCMRegistrationId success", "OK", null);
-				}	
+				}
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception){
+					Log.e(AppConst.LOG_TAG, "========================================");
+	        		Log.e(AppConst.LOG_TAG, "unsetGCMRegistrationId Fail.");
+	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+	        		Log.e(AppConst.LOG_TAG, exception.toString());
+	        		Log.e(AppConst.LOG_TAG, "========================================");
+	        		
+	        		/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"unsetGCMRegistrationId", "unsetGCMRegistrationId fail :: " + exception.getMessage(), "OK", null);
 				}
@@ -154,14 +203,33 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			/*
+			 * Push를 받기위해 GCM registration ID 를 등록 함수입니다.
+			 */
 			Connect.setGCMRegistrationId(new ConnectCallback<ConnectSession>(){
 				@Override
 				public void onSuccess(ConnectSession connectSession){
+					Log.i(AppConst.LOG_TAG, "========================================");
+	        		Log.i(AppConst.LOG_TAG, "setGCMRegistrationId Success.");
+	        		Log.i(AppConst.LOG_TAG, "========================================");
+					
+					/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"setGCMRegistrationId", "setGCMRegistrationId success", "OK", null);
 				}	
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception){
+					Log.e(AppConst.LOG_TAG, "========================================");
+	        		Log.e(AppConst.LOG_TAG, "setGCMRegistrationId Fail.");
+	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+	        		Log.e(AppConst.LOG_TAG, exception.toString());
+	        		Log.e(AppConst.LOG_TAG, "========================================");
+	        		
+	        		/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
 							"setGCMRegistrationId", "setGCMRegistrationId fail :: " + exception.getMessage(), "OK", null);
 				}
@@ -169,15 +237,25 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	View.OnClickListener onUnregist = new View.OnClickListener() {
+	View.OnClickListener onLeave = new View.OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
+			/*
+    		 * 회원 탈퇴시 사용되는 함수입니다.
+    		 */
 			Connect.leave(new ConnectCallback<ConnectSession>() {
 				@Override
 				public void onSuccess(ConnectSession connectSession){
+					Log.i(AppConst.LOG_TAG, "========================================");
+	        		Log.i(AppConst.LOG_TAG, "leave Success.");
+	        		Log.i(AppConst.LOG_TAG, "========================================");
+	        		
+	        		/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"Logout", "leave success", "OK",
+							"Leave", "leave success", "OK",
 							new DialogInterface.OnClickListener() {
 
 								@Override
@@ -190,8 +268,17 @@ public class MainActivity extends Activity {
 				
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception) {
+					Log.e(AppConst.LOG_TAG, "========================================");
+	        		Log.e(AppConst.LOG_TAG, "leave Fail.");
+	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+	        		Log.e(AppConst.LOG_TAG, exception.toString());
+	        		Log.e(AppConst.LOG_TAG, "========================================");
+					
+					/*
+	        		 * 데모에서는 dialog 를 보여주고 있습니다.
+	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"Logout", "leave fail :: " + exception.getMessage(), "OK", null);
+							"Leave", "leave fail :: " + exception.getMessage(), "OK", null);
 				}
 			});
 		}

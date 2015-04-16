@@ -133,6 +133,7 @@ public final class Connect {
 	/**
 	 * anonymousLogin
 	 * 
+	 * @param sessionSaveFlag
 	 * @param connectCallback
 	 */
 	public static void anonymousLogin(Boolean sessionSaveFlag, ConnectCallback<ConnectSession> connectCallback) {
@@ -211,7 +212,7 @@ public final class Connect {
 		//session clear
 		connectSession.connectSessionClear();
 				
-		OAuthFacebook.getInstance().connecnt(activity, permissions, connectCallback);
+		OAuthFacebook.getInstance().connect(activity, permissions, connectCallback);
 	}
 	
 	
