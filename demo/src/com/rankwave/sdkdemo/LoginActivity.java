@@ -455,7 +455,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onSuccess(ConnectSession connectSession){
 				Log.i(AppConst.LOG_TAG, "========================================");
-        		Log.i(AppConst.LOG_TAG, "twitterLogin Success.");        		
+        		Log.i(AppConst.LOG_TAG, "setGCMRegistrationId Success.");        		
         		Log.i(AppConst.LOG_TAG, "========================================");
 			}
 			
