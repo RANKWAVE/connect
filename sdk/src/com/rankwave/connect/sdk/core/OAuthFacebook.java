@@ -59,6 +59,11 @@ public class OAuthFacebook {
 								if (user != null) {
 									String sns_id = user.getId();
 									String name = user.getName();
+									String email = "";
+									if(user.getProperty("email") != null){
+										email = (String)user.getProperty("email");
+									}
+									
 									String profile_url = "https://graph.facebook.com/" + sns_id + "/picture?type=large";
 									String birthday = user.getBirthday();
 									if(birthday != null && !birthday.equals("")){
@@ -70,6 +75,7 @@ public class OAuthFacebook {
 									
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
 									Connect.getActiveConnectSession().getUser().getProfile().setName(name);
+									Connect.getActiveConnectSession().getUser().getProfile().setEmail(email);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
 									Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(access_token);
