@@ -125,7 +125,7 @@ public class LoginActivity extends Activity {
 				 * 
 				 */
 				List<String> permissions = Arrays.asList(
-						 "email", "read_stream");
+						"public_profile", "email", "user_friends");
 				
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
@@ -236,7 +236,7 @@ public class LoginActivity extends Activity {
 				 * 또한, 2015/04/30 이후 부터는 모든 Facebook App 이 기본 권한을 제외한 권한에 대해서는 Facebook 의 승인을 받아야만 합니다.
 				 */
 				List<String> permissions = Arrays.asList(
-						"user_birthday", "user_photos", "user_status", "email");
+						"public_profile", "email", "user_friends");
 				
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
