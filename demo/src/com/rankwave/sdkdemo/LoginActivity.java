@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
 import com.rankwave.connect.sdk.ConnectSession;
-import com.rankwave.connect.sdk.ConnectSessionState;
 import com.rankwave.connect.sdk.User;
 
 public class LoginActivity extends Activity {
@@ -41,61 +40,61 @@ public class LoginActivity extends Activity {
 		Connect.sdkInitialize(getApplicationContext(), new ConnectCallback<ConnectSession>() {
 			@Override
         	public void onSuccess(ConnectSession connectSession){
+				showLoading(true);
 				
 				/*
-				 * SDK 를 이용할 수 있는 준비가 되었고 로그인 이벤트 시 SDK 에서 제공하는 facebookLogin,twitterLogin,anonymousLogin 을 이용하시면 됩니다.
+				 * 이전에 facebookLogin 이나 twitterLogin 을 sessionSaveFlag 파라미터를 true 로 호출한 경우, 마지막으로 로그인한 세션이 저장되게 됩니다. 
+				 * 마지막으로 로그인한 세션이 저장된 상태에서, autoLogin 을 호출하면, 사용자에게 별도 인증 과정을 노출하지 않고서, 로그인 처리를 할 수 있게 됩니다.
 				 */
-				if(connectSession.getConnectSessionState() == ConnectSessionState.READY){
-					Log.i(AppConst.LOG_TAG, "========================================");
-	                Log.i(AppConst.LOG_TAG, "sdkInitialize success.");
-	                Log.i(AppConst.LOG_TAG, "----------------------------------------");
-	                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
-	                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
-	                Log.i(AppConst.LOG_TAG, "========================================");
-                /*
-				 * SDK 에서 제공하는 Login시 sessionSaveFlag를 true로 설정 하였을 경우 다음 앱 실행 시 ConnectSessionState가 OPENED가 됩니다.(마지막으로 로그인한 Session 으로 처리됩니다.)
-				 */
-				}else if(connectSession.getConnectSessionState() == ConnectSessionState.OPENED){
-					Log.i(AppConst.LOG_TAG, "========================================");
-	                Log.i(AppConst.LOG_TAG, "sdkInitialize success.");
-	                Log.i(AppConst.LOG_TAG, "----------------------------------------");
-	                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
-	                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
-	                Log.i(AppConst.LOG_TAG, "========================================");
-	                
-	                /*
-					 * Login시 sessionSaveFlag를 true로 설정 하였을 시 다음 앱 실행 시 ConnectSessionState가 OPENED가 된경우 다음 앱 실행 시 Login 호출을 다시 안하는 경우(자동로그인 시)
-					 * 즉, 가입시만 소셜 로그인을 처리 하는 경우 connectLogin 을 호출 하여 Login 되었다는 통계를 수집하기 위해 사용됩니다.
-					 * 앱 실행시마다 소셜로그인을 호출하는 경우는 connectLogin 을 호출 안하셔도 됩니다.
-					 */
-					Connect.connectLogin(new ConnectCallback<ConnectSession>(){
-	                	@Override
-	                	public void onSuccess(ConnectSession connectSession){
-	                		Log.i(AppConst.LOG_TAG, "========================================");
-	                		Log.i(AppConst.LOG_TAG, "connectLogin Success.");
-	                		Log.i(AppConst.LOG_TAG, "----------------------------------------");
-	                		Log.i(AppConst.LOG_TAG, "SessionState :: " + connectSession.getConnectSessionState());
-	                		Log.i(AppConst.LOG_TAG, "connect_token :: " + connectSession.getConnect_token());
-	                		Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
-	                		Log.i(AppConst.LOG_TAG, "========================================");
-	                	}
-	                	
-	                	@Override
-	                	public void onFail(FuncResult funcResult, Exception exception){
-	                		Log.e(AppConst.LOG_TAG, "========================================");
-	                		Log.e(AppConst.LOG_TAG, "connectLogin Fail.");
-	                		Log.e(AppConst.LOG_TAG, "----------------------------------------");
-	                		Log.e(AppConst.LOG_TAG, exception.toString());
-	                		Log.e(AppConst.LOG_TAG, "========================================");
-	                	}
-	                });
-				}else{
-					Log.e(AppConst.LOG_TAG, "========================================");
-	                Log.e(AppConst.LOG_TAG, "sdkInitialize Exception.");
-	                Log.e(AppConst.LOG_TAG, "----------------------------------------");
-	                Log.e(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
-	                Log.e(AppConst.LOG_TAG, "========================================");
-				}
+				Connect.autoLogin(new ConnectCallback<ConnectSession>() {
+					@Override
+                	public void onSuccess(ConnectSession connectSession){
+						Log.i(AppConst.LOG_TAG, "========================================");
+		                Log.i(AppConst.LOG_TAG, "autoLogin success.");
+		                Log.i(AppConst.LOG_TAG, "----------------------------------------");
+		                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
+		                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
+		                Log.i(AppConst.LOG_TAG, "========================================");
+		                
+		                /*
+		                 * 데모 프로젝트에서는 로그인 성공시 아래와 같이 Loading 처리 후 MainActivity 로 보내고 있습니다. 서비스에 맞게 처리 하시면 됩니다.
+						 */
+						goMainActivity();
+						
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								showLoading(false);											
+							}
+						}, 1000);
+						
+					}
+					@Override
+					public void onFail(FuncResult funcResult, Exception exception){
+						Log.e(AppConst.LOG_TAG, "========================================");
+                		Log.e(AppConst.LOG_TAG, "autoLogin Fail.");
+                		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+                		Log.e(AppConst.LOG_TAG, funcResult.toString() + " : " + exception.toString());
+                		Log.e(AppConst.LOG_TAG, "========================================");
+                		
+                		/*
+                		 * 저장된 세션이 없을 경우의 처리를 합니다.
+                		 * 데모에서는 로그인 화면을 보여주고자 loading만 hide 하고 현재 Activity 에 그대로 둡니다.                		
+                		*/
+                		if(funcResult == FuncResult.E_NOT_EXIST_SAVED_SESSION){
+                			showLoading(false);
+            			/*
+                		 * SNS Token이 만료된 경우의 처리르 합니다.
+                		 * 데모에서는 다시 로그인을 하여 SNS token 을 갱신하고자 loading만 hide 하고 현재 Activity 에 그대로 둡니다.                		
+                		*/
+                		}else if(funcResult == FuncResult.E_INVALID_SNS_TOKEN){
+                			showLoading(false);
+                		}else{
+                			showLoading(false);
+                		}
+					}
+				});
 			}
 			
 			@Override
@@ -103,7 +102,7 @@ public class LoginActivity extends Activity {
 				Log.e(AppConst.LOG_TAG, "========================================");
         		Log.e(AppConst.LOG_TAG, "sdkInitialize Fail.");
         		Log.e(AppConst.LOG_TAG, "----------------------------------------");
-        		Log.e(AppConst.LOG_TAG, exception.toString());
+        		Log.e(AppConst.LOG_TAG, funcResult.toString() + " : " + exception.toString());
         		Log.e(AppConst.LOG_TAG, "========================================");
         	}
 		});
@@ -123,17 +122,13 @@ public class LoginActivity extends Activity {
 				 * permissions 변수는 페이스북에서 얻고자 하는 권한을 지정하는 변수입니다. 앱에서 필요로 하는 권한으로 수정 하시면 됩니다.
 				 * 2014/04/30 이후에 생성된 App 의 경우, Facebook 의 승인을 얻지 못한 권한은 사용자에게 권한 승인 요청되지 않습니다. 
 				 * 또한, 2015/04/30 이후 부터는 모든 Facebook App 이 기본 권한을 제외한 권한에 대해서는 Facebook 의 승인을 받아야만 합니다.
+				 * 
 				 */
 				List<String> permissions = Arrays.asList(
-						"user_birthday", "user_photos", "user_status", "email");
+						 "email", "read_stream");
 				
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
-				 * Activity activity : 현재 자신의 Activity
-				 * List<String> permissions : 페이스북에서 얻고자 하는 변수
-				 * Boolean sessionSaveFlag : 회원가입시만 로그인 하는 경우 ConnectSession을 저장하고 앱 실행시 connectLogin 을 호출 하여 로그인 통계를 수집할 경우 true 로 설정
-				 * Boolean autoJoinFlag : 자동 회원가입을 하고자 할 경우 true로 설정하고 false 로 설정 할 시 user객체의 joined(user.getJoined)가 false 인 경우 별도 join 함수를 호출 하여야 합니다.하단(btn_facebook_profile 참고)
-				 * ConnectCallback<ConnectSession> connectCallback
 				 */
 				Connect.facebookLogin(LoginActivity.this, permissions, true, true, new ConnectCallback<ConnectSession>() {
 					@Override
@@ -185,10 +180,6 @@ public class LoginActivity extends Activity {
 				
 				/*
 				 * Twitter 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 twitterLogin 을 호출합니다.
-				 * Activity activity : 현재 자신의 Activity
-				 * Boolean sessionSaveFlag : 회원가입시만 로그인 하는 경우 ConnectSession을 저장하고 앱 실행시 connectLogin 을 호출 하여 로그인 통계를 수집할 경우 true 로 설정
-				 * Boolean autoJoinFlag : 자동 회원가입을 하고자 할 경우 true로 설정하고 false 로 설정 할 시 user객체의 joined(user.getJoined)가 false 인 경우 별도 join 함수를 호출 하여야 합니다.하단(btn_twitter_profile 참고)
-				 * ConnectCallback<ConnectSession> connectCallback
 				 */
 				Connect.twitterLogin(LoginActivity.this, true, true, new ConnectCallback<ConnectSession>() {
 
@@ -249,11 +240,6 @@ public class LoginActivity extends Activity {
 				
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
-				 * Activity activity : 현재 자신의 Activity
-				 * List<String> permissions : 페이스북에서 얻고자 하는 변수
-				 * Boolean sessionSaveFlag : 회원가입시만 로그인 하는 경우 ConnectSession을 저장하고 앱 실행시 connectLogin 을 호출 하여 로그인 통계를 수집할 경우 true 로 설정
-				 * Boolean autoJoinFlag : 약관동의 또는 다른 프로필 정보를 받고 회원가입을 원할 경우 false 로 설정. user객체의 joined(user.getJoined)가 false 인 경우 별도 join 함수를 호출 하여야 합니다.
-				 * ConnectCallback<ConnectSession> connectCallback
 				 */
 				Connect.facebookLogin(LoginActivity.this, permissions, true, false, new ConnectCallback<ConnectSession>() {
 
@@ -323,13 +309,8 @@ public class LoginActivity extends Activity {
 				
 				/*
 				 * Twitter 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 twitterLogin 을 호출합니다.
-				 * Activity activity : 현재 자신의 Activity
-				 * Boolean sessionSaveFlag : 회원가입시만 로그인 하는 경우 ConnectSession을 저장하고 앱 실행시 connectLogin 을 호출 하여 로그인 통계를 수집할 경우 true 로 설정 
-				 * Boolean autoJoinFlag : 약관동의 또는 다른 프로필 정보를 받고 회원가입을 원할 경우 false 로 설정. user객체의 joined(user.getJoined)가 false 인 경우 별도 join 함수를 호출 하여야 합니다.
-				 * ConnectCallback<ConnectSession> connectCallback
 				 */
 				Connect.twitterLogin(LoginActivity.this, true, false, new ConnectCallback<ConnectSession>() {
-
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
 						User user = connectSession.getUser();
@@ -399,8 +380,6 @@ public class LoginActivity extends Activity {
 				
 				/*
 				 * 무인증 서비스를 위해, 제공되는 로그인 함수입니다. Device ID 로 사용자를 구분할 수 있게 해줍니다.
-				 * Boolean sessionSaveFlag : 회원가입시만 로그인 하는 경우 ConnectSession을 저장하고 앱 실행시 connectLogin 을 호출 하여 로그인 통계를 수집할 경우 true 로 설정
-				 * ConnectCallback<ConnectSession> connectCallback
 				 */
 				Connect.anonymousLogin(true, new ConnectCallback<ConnectSession>() {
 					@Override

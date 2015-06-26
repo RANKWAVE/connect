@@ -3,11 +3,15 @@ package com.rankwave.connect.sdk;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class ConnectSession {
 	private static final String PROPERTY_CONNECT_TOKEN = "connectToken";
 	private static final String PROPERTY_SAVED_CONNECT_TOKEN = "savedConnectToken";
+	
+	private static final String PROPERTY_ID_TYPE = "idType";
+	private static final String PROPERTY_SNS_TYPE = "snsType";
+	private static final String PROPERTY_SNS_ACCESS_TOKEN = "snsAccessToken";
+	private static final String PROPERTY_SNS_TOKEN_SECRET = "snsTokenSecret";
 	
 	private ConnectSessionState connectSessionState = ConnectSessionState.CLOSED;
 	
@@ -117,11 +121,7 @@ public class ConnectSession {
 	public String loadConnectToken() {
 		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
 		String connectToken = prefs.getString(PROPERTY_CONNECT_TOKEN, "");
-		if (connectToken.equalsIgnoreCase("")) {
-			Log.i(Connect.TAG, "ConnectToken not found.");
-			return "";
-		}
-
+		
 		return connectToken;
 	}
 
@@ -143,11 +143,7 @@ public class ConnectSession {
 	public String loadSavedConnectToken() {
 		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
 		String connectToken = prefs.getString(PROPERTY_SAVED_CONNECT_TOKEN, "");
-		if (connectToken.equalsIgnoreCase("")) {
-			Log.i(Connect.TAG, "SavedConnectToken not found.");
-			return "";
-		}
-
+		
 		return connectToken;
 	}
 
@@ -166,11 +162,98 @@ public class ConnectSession {
 		editor.commit();
 	}
 	
+	public String loadIdType() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String idType = prefs.getString(PROPERTY_ID_TYPE, "");
+		
+		return idType;
+	}
+
+	public void storeIdType(String idType) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_ID_TYPE, idType);
+		editor.commit();
+	}
+
+	public void deleteIdType() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_ID_TYPE, "");
+		editor.commit();
+	}
+	
+	public String loadSnsType() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String snsType = prefs.getString(PROPERTY_SNS_TYPE, "");
+		
+		return snsType;
+	}
+
+	public void storeSnsType(String snsType) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_TYPE, snsType);
+		editor.commit();
+	}
+
+	public void deleteSnsType() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_TYPE, "");
+		editor.commit();
+	}
+	
+	public String loadSnsAccessToken() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String snsAccessToken = prefs.getString(PROPERTY_SNS_ACCESS_TOKEN, "");
+		
+		return snsAccessToken;
+	}
+
+	public void storeSnsAccessToken(String snsAccessToken) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_ACCESS_TOKEN, snsAccessToken);
+		editor.commit();
+	}
+
+	public void deleteSnsAccessToken() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_ACCESS_TOKEN, "");
+		editor.commit();
+	}
+
+	public String loadSnsTokenSecret() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String snsTokenSecret = prefs.getString(PROPERTY_SNS_TOKEN_SECRET, "");
+		
+		return snsTokenSecret;
+	}
+
+	public void storeSnsTokenSecret(String snsTokenSecret) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_TOKEN_SECRET, snsTokenSecret);
+		editor.commit();
+	}
+
+	public void deleteSnsTokenSecret() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_SNS_TOKEN_SECRET, "");
+		editor.commit();
+	}
 	
 	public void connectSessionClear(){
 		connect_token = null;
 		
-		connectSessionState = ConnectSessionState.READY;
+		connectSessionState = ConnectSessionState.CLOSED;
 		
 		if(user != null){
 			user = null;
@@ -179,4 +262,12 @@ public class ConnectSession {
 		user = new User();
 	}
 	
+	public void deleteSavedSession(){
+		ConnectSession.getInstance().deleteConnectToken();
+		ConnectSession.getInstance().deleteSavedConnectToken();
+		ConnectSession.getInstance().deleteIdType();
+		ConnectSession.getInstance().deleteSnsType();
+		ConnectSession.getInstance().deleteSnsAccessToken();
+		ConnectSession.getInstance().deleteSnsTokenSecret();
+	}
 }

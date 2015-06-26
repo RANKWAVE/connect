@@ -1,5 +1,6 @@
 package com.rankwave.connect.sdk;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -30,6 +31,11 @@ public final class Connect {
 	public static final String INTENT_PUSH_PAYLOAD = "com.rankwave.connect.sdk.pushpayload";
 	public static final String INTENT_PUSH_SEQ = "com.rankwave.connect.sdk.pushseq";
 	public static final String INTENT_PUSH_CMN = "com.rankwave.connect.sdk.pushcmn";
+	public static final String INTENT_PUSH_OPEN_URL = "com.rankwave.connect.sdk.pushopenurl";
+	
+	
+	public static final String ACTION_PUSH_CLICK = "com.rankwave.connect.sdk.PUSH_CLICK";
+	public static final String ACTION_SEND_PAYLOAD = "com.rankwave.connect.sdk.SEND_PAYLOAD";
 	
 	public static final String CONNECT_DOMAIN = "api.rankwave.com";
 	//public static final String CONNECT_DOMAIN = "54.176.29.228";	//dev
@@ -90,6 +96,7 @@ public final class Connect {
 		DeviceInfo.getInstance().init(context);
 		
 		ConnectManager.sdkInitialize(connectCallback);	
+		
 	}
 	
 	
@@ -128,34 +135,19 @@ public final class Connect {
     }
 	
 	
-	
-	
 	/**
-	 * anonymousLogin
+	 * autoLogin
 	 * 
-	 * @param sessionSaveFlag
-	 * @param connectCallback
+	 * @param connectCallback 
 	 */
-	public static void anonymousLogin(Boolean sessionSaveFlag, ConnectCallback<ConnectSession> connectCallback) {
-		session_save_flag = sessionSaveFlag;
-		
+	public static void autoLogin(ConnectCallback<ConnectSession> connectCallback) {
 		ConnectSession connectSession = getConnectSession();
 		
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				Log.e(Connect.TAG, "Session's sessionState not Ready or not Open");
-				
-				if(connectCallback != null){
-					connectCallback.onFail(FuncResult.E_FAIL, new Exception("Session's sessionState not Ready or not Open"));
-				}
-				
-				return;
-			}
-		}else{
-			Log.e(Connect.TAG, "ConnectSession is null");
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
 			return;
 		}
@@ -163,7 +155,7 @@ public final class Connect {
 		//session clear
 		connectSession.connectSessionClear();
 		
-		ConnectManager.anonymousLogin(connectCallback);
+		ConnectManager.autoLogin(connectCallback);
 	}
 	
 	
@@ -182,20 +174,11 @@ public final class Connect {
 		
 		ConnectSession connectSession = getConnectSession();
 						
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				Log.e(Connect.TAG, "ConnectSession's sessionState not Ready or not Open");
-				
-				if(connectCallback != null){
-					connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Ready or not Open"));
-				}
-				return;
-			}
-		}else{
-			Log.e(Connect.TAG, "ConnectSession is null");
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
 			return;
 		}
@@ -211,7 +194,11 @@ public final class Connect {
 		
 		//session clear
 		connectSession.connectSessionClear();
-				
+		
+		if(permissions == null){
+			permissions = Arrays.asList(
+					"public_profile", "email", "user_friends");
+		}
 		OAuthFacebook.getInstance().connect(activity, permissions, connectCallback);
 	}
 	
@@ -229,13 +216,27 @@ public final class Connect {
 		auto_join_flag = autoJoinFlag;
 		
 		ConnectSession connectSession = getConnectSession();
+		
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+		
+		if(faceook_access_token == null || faceook_access_token.equals("")){
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("faceook_access_token can not be empty."));
+			}
+			return;
+		}
 		//session clear
 		connectSession.connectSessionClear();
 		
 		ConnectManager.setFacebookToken(faceook_access_token, connectCallback);
 	}
-	
-	
 	
 		
 	/**
@@ -251,20 +252,11 @@ public final class Connect {
 		auto_join_flag = autoJoinFlag;
 		
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.READY && connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				Log.e(Connect.TAG, "ConnectSession's sessionState not Ready or not Open");
-				
-				if(connectCallback != null){
-					connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Ready or not Open"));
-				}
-				return;
-			}
-		}else{
-			Log.e(Connect.TAG, "ConnectSession is null");
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
 			return;
 		}
@@ -273,7 +265,7 @@ public final class Connect {
 			Log.e(Connect.TAG, "Twitter Consumer Key is null");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Twitter Consumer Key is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Twitter Consumer Key can not be empty."));
 			}
 			return;
 		}
@@ -281,7 +273,7 @@ public final class Connect {
 			Log.e(Connect.TAG, "Twitter Consumer Secret is null");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Twitter Consumer Secret is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("Twitter Consumer Secret can not be empty."));
 			}
 			return;
 		}
@@ -291,7 +283,6 @@ public final class Connect {
 				
 		OAuthTwitter.getInstance().connect(activity, connectCallback);
 	}
-	
 	
 	
 	/**
@@ -308,6 +299,32 @@ public final class Connect {
 		auto_join_flag = autoJoinFlag;
 		
 		ConnectSession connectSession = getConnectSession();
+		
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+		
+		if(twitter_access_token == null || twitter_access_token.equals("")){
+			Log.e(Connect.TAG, "Twitter Consumer Key is null");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("twitter_access_token can not be empty."));
+			}
+			return;
+		}
+		if(twitter_token_secret == null || twitter_token_secret.equals("")){
+			Log.e(Connect.TAG, "Twitter Consumer Secret is null");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("twitter_token_secret can not be empty."));
+			}
+			return;
+		}
 		//session clear
 		connectSession.connectSessionClear();
 		
@@ -315,36 +332,31 @@ public final class Connect {
 	}
 	
 	
-	
 	/**
-	 * connectLogin
-	 *  
-	 * @param connectCallback 
+	 * anonymousLogin
+	 * 
+	 * @param sessionSaveFlag
+	 * @param connectCallback
 	 */
-	public static void connectLogin(ConnectCallback<ConnectSession> connectCallback){
+	public static void anonymousLogin(Boolean sessionSaveFlag, ConnectCallback<ConnectSession> connectCallback) {
+		session_save_flag = sessionSaveFlag;
+		
 		ConnectSession connectSession = getConnectSession();
 		
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				Log.e(Connect.TAG, "ConnectSession's sessionState not Open");
-				
-				if(connectCallback != null){
-					connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				}
-				return;
-			}
-		}else{
-			Log.e(Connect.TAG, "ConnectSession is null");
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
 			return;
 		}
-				
-		ConnectManager.connectLogin(connectCallback);
+		
+		//session clear
+		connectSession.connectSessionClear();
+		
+		ConnectManager.anonymousLogin(connectCallback);
 	}
-	
 	
 	
 	/**
@@ -355,21 +367,20 @@ public final class Connect {
 	 */
 	public static void join(Profile profile, ConnectCallback<ConnectSession> connectCallback) {
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				Log.e(Connect.TAG, "ConnectSession's sessionState not Open");
-				
-				if(connectCallback != null){
-					connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				}
-				
-				return;
-			}
-		}else{
-			Log.e(Connect.TAG, "ConnectSession is null");
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
 			
 			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+		
+		if(connectSession.getConnect_token() == null){
+			Log.e(Connect.TAG, "connectSession.getConnect_token() is null");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("connectSession.getConnect_token() is null"));
 			}
 			return;
 		}
@@ -385,13 +396,17 @@ public final class Connect {
 	 */
 	public static void logout(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				return;
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
 			return;
 		}
 		
@@ -406,13 +421,17 @@ public final class Connect {
 	 */
 	public static void leave(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				return;
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
 			return;
 		}
 		
@@ -428,13 +447,17 @@ public final class Connect {
 	 */
 	public static void profileUpdate(Profile profile, ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				return;
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
 			return;
 		}
 		
@@ -449,13 +472,17 @@ public final class Connect {
 	 */
 	public static void setGCMRegistrationId(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				return;
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
 			return;
 		}
 		
@@ -465,7 +492,6 @@ public final class Connect {
 		}
 		
 		ConnectManager.setGCMRegistrationId(connectCallback);
-		
 	}
 	
 	
@@ -476,13 +502,17 @@ public final class Connect {
 	 */
 	public static void unsetGCMRegistrationId(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
-				return;
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
 			}
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+			return;
+		}
+		
+		if(connectSession.getConnectSessionState() != ConnectSessionState.OPENED){
+			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession's sessionState not Open"));
 			return;
 		}
 		
@@ -497,13 +527,18 @@ public final class Connect {
 	
 	public static void getConnectSession(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
-		if(connectSession != null){
-			connectCallback.onSuccess(connectSession);
-		}else{
-			connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null"));
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
 			return;
 		}
+			
+		connectCallback.onSuccess(connectSession);
 	}
+	
 	
 	/**
 	 * getVersion

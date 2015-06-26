@@ -43,6 +43,8 @@ public class ConnectService {
 	public static final String CONNECT_PROFILE_UPDATE_PATH = PREFIX_USER_PATH + "/profile/update.do";
 	
 	public static final String CONNECT_PROFILE_GET_PATH = PREFIX_USER_PATH + "/profile/get.do";
+	
+	public static final String CONNECT_SNS_INFO_PATH = PREFIX_USER_PATH + "/getSnsInfo.do";
 		
 	public static final String CONNECT_PUSH_REGISTER_DEVICE_PATH = PREFIX_PUSH_PATH + "/register_device.do";
 	
@@ -91,9 +93,6 @@ public class ConnectService {
 					try {
 						Boolean result = json.getBoolean("result");
 						if(result){
-							
-							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
-							
 							if (connectCallback != null) {
 								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
@@ -101,7 +100,7 @@ public class ConnectService {
 							JSONObject error = json.getJSONObject("error");
 							Log.e(Connect.TAG, error.toString());
 							
-							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
+							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 							
 							if (connectCallback != null) {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
@@ -111,7 +110,7 @@ public class ConnectService {
 					} catch (JSONException e) {
 						e.printStackTrace();
 						
-						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
+						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 						if(connectCallback != null){
 							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
 						}
@@ -122,7 +121,7 @@ public class ConnectService {
 					Log.e(Connect.TAG, response.error);
 					
 					if(connectCallback != null){
-						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.FAILED);
+						ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
 					}
 				}				
@@ -189,10 +188,19 @@ public class ConnectService {
 							JSONObject error = json.getJSONObject("error");
 							
 							if (connectCallback != null) {
-								connectCallback.onFail(ConnectCallback.FuncResult.E_FAIL, new Exception(error.toString()));
+								String code = error.getString("code");
+								if(code.equals("403")){
+									connectCallback.onFail(FuncResult.E_INVALID_SNS_TOKEN, new Exception(error.toString()));
+								}else{
+									connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+								}
+								
 							}
 						}else{
 							ConnectSession connectSession = ConnectSession.getInstance();
+							connectSession.setConnect_token(json.getString("connect_token"));
+							connectSession.setExpires_in(json.getLong("expires_in"));
+							
 							User user = connectSession.getUser();
 							
 							if(json.has("joined")){
@@ -200,13 +208,6 @@ public class ConnectService {
 								user.setJoined(joined);
 							}else{
 								user.setJoined(true);
-							}
-							connectSession.setConnectSessionState(ConnectSessionState.OPENED);
-							connectSession.setConnect_token(json.getString("connect_token"));
-							connectSession.setExpires_in(json.getLong("expires_in"));
-							
-							if(Connect.getSession_save_flag() != null && Connect.getSession_save_flag()){
-								connectSession.storeSavedConnectToken(json.getString("connect_token"));
 							}
 							
 							if (connectCallback != null) {
@@ -218,7 +219,7 @@ public class ConnectService {
 						e.printStackTrace();
 						
 						if (connectCallback != null) {
-							connectCallback.onFail(ConnectCallback.FuncResult.E_FAIL, new Exception(e.getMessage()));
+							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
 						}
 					}
 				} else {
@@ -510,8 +511,6 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
-				
 				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
@@ -524,10 +523,11 @@ public class ConnectService {
 							if(connectCallback != null){
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
 							}
-						}else{							
-							ConnectSession.getInstance().deleteConnectToken();
-							ConnectSession.getInstance().deleteSavedConnectToken();
+						}else{
+							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 							
+							ConnectSession.getConnectSession().deleteSavedConnectToken();
+														
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
@@ -566,8 +566,6 @@ public class ConnectService {
 			
 			@Override
 			public void onCompleted(Response response) {
-				ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.READY);
-				
 				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
 				
 				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
@@ -581,8 +579,9 @@ public class ConnectService {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else{
-							ConnectSession.getInstance().deleteConnectToken();
-							ConnectSession.getInstance().deleteSavedConnectToken();
+							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
+							
+							ConnectSession.getConnectSession().deleteSavedConnectToken();
 							
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
@@ -899,9 +898,31 @@ public class ConnectService {
 									profile.getHometown().setSpot(hometownObject.getString("spot"));
 							}
 							
+							SnsInfo snsInfo = new SnsInfo();
+							if(json.has("sns_info")){
+								JSONObject snsInfoObject = json.getJSONObject("sns_info");
+								
+								if(snsInfoObject.has("sns_id") && snsInfoObject.getString("sns_id")  != null && !snsInfoObject.getString("sns_id").equals("null"))
+									snsInfo.setSnsId(snsInfoObject.getString("sns_id"));
+								
+								if(snsInfoObject.has("sns_type") && snsInfoObject.getString("sns_type")  != null && !snsInfoObject.getString("sns_type").equals("null"))
+									snsInfo.setSnsType(SnsType.toEnum(snsInfoObject.getString("sns_type")));
+								
+								if(snsInfoObject.has("access_token") && snsInfoObject.getString("access_token")  != null && !snsInfoObject.getString("access_token").equals("null"))
+									snsInfo.setAccessToken(snsInfoObject.getString("access_token"));
+								
+								if(snsInfoObject.has("token_secret") && snsInfoObject.getString("token_secret")  != null && !snsInfoObject.getString("token_secret").equals("null"))
+									snsInfo.setTokenSecret(snsInfoObject.getString("token_secret"));
+								
+								if(snsInfoObject.has("profile_url") && snsInfoObject.getString("profile_url")  != null && !snsInfoObject.getString("profile_url").equals("null"))
+									snsInfo.setProfileUrl(snsInfoObject.getString("profile_url"));
+								
+							}
+							
 							User user = new User();
 							
 							user.setProfile(profile);
+							user.setSnsInfo(snsInfo);
 							
 							String id = json.getString("id");
 							String id_type = json.getString("id_type");
@@ -1093,6 +1114,91 @@ public class ConnectService {
 				}
 			}
 		}, null).execute();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public static void getSnsInfo(SnsType snsType, HashMap<String, Object> snsInfo, ConnectCallback<ConnectSession> callback){
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
+		params.add(new BasicNameValuePair("sns_type", SnsType.toString(snsType)));
+		
+		if (snsType == SnsType.SNS_TYPE_FACEBOOK) {
+			String faceook_access_token = (String) snsInfo.get("facebook_access_token");
+
+			params.add(new BasicNameValuePair("access_token", faceook_access_token));
+		} else if (snsType == SnsType.SNS_TYPE_TWITTER) {
+			String twitter_access_token = (String) snsInfo.get("twitter_access_token");
+			String twitter_token_secret = (String) snsInfo.get("twitter_token_secret");
+
+			params.add(new BasicNameValuePair("access_token", twitter_access_token));
+			params.add(new BasicNameValuePair("token_secret", twitter_token_secret));
+		}
+				
+		
+		new Request(getHttpsUrl(CONNECT_SNS_INFO_PATH), params, new Request.Callback() {
+			
+			@Override
+			public void onCompleted(Response response) {
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
+				
+				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
+					JSONObject json = response.getJsonObject();
+					
+					try {
+						if(json.has("error")){
+							JSONObject error = json.getJSONObject("error");
+							
+							if(connectCallback != null){
+								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+							}
+							
+						}else{
+							JSONObject snsInfoObject = json.getJSONObject("sns_info");
+							
+							if(snsInfoObject.has("sns_id") && snsInfoObject.getString("sns_id") != null && !snsInfoObject.getString("sns_id").equals("null")){
+								Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(snsInfoObject.getString("sns_id"));
+								Connect.getActiveConnectSession().getUser().setId(snsInfoObject.getString("sns_id"));
+							}
+							
+							if(snsInfoObject.has("name") && snsInfoObject.getString("name") != null && !snsInfoObject.getString("name").equals("null"))
+								Connect.getActiveConnectSession().getUser().getProfile().setName(snsInfoObject.getString("name"));
+							
+							if(snsInfoObject.has("email") && snsInfoObject.getString("email") != null && !snsInfoObject.getString("email").equals("null"))
+								Connect.getActiveConnectSession().getUser().getProfile().setEmail(snsInfoObject.getString("email"));
+							
+							if(snsInfoObject.has("profile_url") && snsInfoObject.getString("profile_url") != null && !snsInfoObject.getString("profile_url").equals("null"))
+								Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(snsInfoObject.getString("profile_url"));
+							
+							if(snsInfoObject.has("birthday") && snsInfoObject.getString("birthday") != null && !snsInfoObject.getString("birthday").equals("null"))
+								Connect.getActiveConnectSession().getUser().getProfile().setBirthday(snsInfoObject.getString("birthday"));
+
+							if(snsInfoObject.has("gender") && snsInfoObject.getString("gender") != null && !snsInfoObject.getString("gender").equals("null"))
+								Connect.getActiveConnectSession().getUser().getProfile().setGender(snsInfoObject.getString("gender"));
+							
+							
+							if(connectCallback != null){
+								connectCallback.onSuccess(ConnectSession.getInstance());
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+						if(connectCallback != null){
+							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
+						}
+						
+						return;
+					}
+				} else {
+					Log.e(Connect.TAG, response.error);
+					
+					if(connectCallback != null){
+						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
+					}
+				}
+			}
+		}, callback).execute();
 	}
 	
 }

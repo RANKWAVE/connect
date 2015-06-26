@@ -37,12 +37,7 @@ public class OAuthLoginActivity extends Activity {
 			public void onPageFinished(WebView view, String url) {
 
 				super.onPageFinished(view, url);
-
-				if (url != null && url.equals("http://mobile.twitter.com/")) {
-					finish();
-				} else if (url != null
-						&& url.startsWith(OAuthTwitter.TWIT_CALLBACK_URL
-								.toString())) {
+				if(url != null && url.startsWith(OAuthTwitter.TWIT_CALLBACK_URL.toString())){
 					String[] params = url.split("\\?")[1].split("&");
 					String oauthToken = "";
 					String oauthVerifier = "";
@@ -83,6 +78,7 @@ public class OAuthLoginActivity extends Activity {
 						finish();
 					}
 				}
+				
 			}
 
 		});

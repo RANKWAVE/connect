@@ -1,11 +1,11 @@
 package com.rankwave.connect.sdk.core;
 
 
-import com.rankwave.connect.sdk.GCMManager;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.rankwave.connect.sdk.GCMManager;
 
 public class GCMReceiver extends BroadcastReceiver {
 
@@ -14,7 +14,6 @@ public class GCMReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
 		boolean flag = true;
 		flag = GCMManager.getInstance().onReceive(context, intent);		
 		

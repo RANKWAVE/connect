@@ -1,18 +1,18 @@
 package com.rankwave.connect.sdk;
 
-public interface ConnectCallback<T> {
+public abstract class ConnectCallback<T> {
 		
-	public void onSuccess(T resultObj);
+	abstract public void onSuccess(T resultObj);
 	
-	public void onFail(FuncResult result, Exception exception);
+	abstract public void onFail(FuncResult result, Exception exception);
+	
 	
 	public enum FuncResult {
-		
 		E_SUCCEED,
 		E_FAIL,
-		E_ALREADY_REGISTED_EMAIL,
-		E_INVALID_EMAIL,
-		E_INVALID_PASSWORD,
+		E_INVALID_SNS_TOKEN,
+		E_NOT_JOINED,
+		E_NOT_EXIST_SAVED_SESSION
 	}
 }
 

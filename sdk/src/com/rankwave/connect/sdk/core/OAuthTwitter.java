@@ -21,7 +21,7 @@ public class OAuthTwitter {
 	public static final int OAUTH_TWITTER_REQUEST_CODE = 5001;
 	public static final String PROPERTY_TWITTER_CONSUMER_KEY = "com.rankwave.connect.sdk.TwitterConsumerKey";
 	public static final String PROPERTY_TWITTER_CONSUMER_SECRET = "com.rankwave.connect.sdk.TwitterConsumerSecret";
-	public static final Uri TWIT_CALLBACK_URL = Uri.parse("http://api.rankwave.com/login/mobileTwitterCallback.do"); 
+	public static final Uri TWIT_CALLBACK_URL = Uri.parse("oauth://");
 	
 	ConnectCallback<ConnectSession> connectCallback = null;
 	
@@ -109,22 +109,10 @@ public class OAuthTwitter {
 						String twitter_token = twitter_access_token.getToken(); 
 						String twitter_token_secret = twitter_access_token.getTokenSecret();
 						
-						twitter4j.User user = twitter.showUser(twitter.getId());
-						String sns_id = String.valueOf(twitter.getId());
-						String profile_url = user.getProfileImageURL();
-						String name = twitter.getScreenName();
-						
-						
 						Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
-						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
-						Connect.getActiveConnectSession().getUser().getProfile().setName(name);
-						Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_TWITTER);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(twitter_token);
 						Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret(twitter_token_secret);
-						Connect.getActiveConnectSession().getUser().getProfile().setBirthday("");
-						
-						Connect.getActiveConnectSession().getUser().setId(sns_id);
 						
 						return null;
 	
@@ -162,9 +150,8 @@ public class OAuthTwitter {
 		}
 	}
 	
-	
 	public void close() {
 		
 	}
-
+	
 }

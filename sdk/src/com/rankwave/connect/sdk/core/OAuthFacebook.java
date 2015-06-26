@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
 import com.rankwave.connect.sdk.ConnectManager;
@@ -46,57 +45,15 @@ public class OAuthFacebook {
 			if (state == SessionState.OPENED
 					|| state == SessionState.OPENED_TOKEN_UPDATED) {
 
-				Log.i(Connect.TAG, session.getAccessToken());
+				//Log.i(Connect.TAG, session.getAccessToken());
 
 				final String access_token = session.getAccessToken();
 				
-				com.facebook.Request request = com.facebook.Request.newMeRequest(session,
-						new com.facebook.Request.GraphUserCallback() {
-							@Override
-							public void onCompleted(GraphUser user, com.facebook.Response response) {
-								// If the response is successful
+				Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
+				Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
+				Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(access_token);
+				ConnectManager.setFacebookToken(access_token, getInstance().connectCallback);
 								
-								if (user != null) {
-									String sns_id = user.getId();
-									String name = user.getName();
-									String email = "";
-									if(user.getProperty("email") != null){
-										email = (String)user.getProperty("email");
-									}
-									
-									String profile_url = "https://graph.facebook.com/" + sns_id + "/picture?type=large";
-									String birthday = user.getBirthday();
-									if(birthday != null && !birthday.equals("")){
-										birthday = birthday.replaceAll("/", "");
-										birthday = birthday.substring(4, 8) + birthday.substring(0, 2) + birthday.substring(2, 4);
-									}
-									
-									Connect.getActiveConnectSession().getUser().getSnsInfo().clearInfo();
-									
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsId(sns_id);
-									Connect.getActiveConnectSession().getUser().getProfile().setName(name);
-									Connect.getActiveConnectSession().getUser().getProfile().setEmail(email);
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setProfileUrl(profile_url);
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setSnsType(SnsType.SNS_TYPE_FACEBOOK);
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setAccessToken(access_token);
-									Connect.getActiveConnectSession().getUser().getSnsInfo().setTokenSecret("");
-									Connect.getActiveConnectSession().getUser().getProfile().setBirthday(birthday);
-									
-									Connect.getActiveConnectSession().getUser().setId(sns_id);
-								}
-								
-								if (response.getError() != null) {
-									// Handle errors, will do so later.
-								}
-								
-								ConnectManager.setFacebookToken(access_token, getInstance().connectCallback);
-							}
-						});
-				request.executeAsync();
-				
-				
-				//Connect.setFacebookToken(access_token, getInstance().connectCallback);
-				
 			} else if (state == SessionState.CLOSED_LOGIN_FAILED) {
 				
 				if (getInstance().connectCallback != null) {
@@ -158,4 +115,5 @@ public class OAuthFacebook {
         }
 	}
 
+	
 }

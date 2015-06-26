@@ -1,7 +1,5 @@
 package com.rankwave.sdkdemo;
 
-import com.rankwave.connect.sdk.Connect;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +11,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+
+import com.rankwave.connect.sdk.Connect;
 
 public class IntroActivity extends Activity {
 
@@ -47,7 +47,7 @@ public class IntroActivity extends Activity {
 				startActivity(new Intent(IntroActivity.this, LoginActivity.class));
 				finish();
 			}
-		}, 2000);
+		}, 1000);
 	}
 	
 	public void translateAnimation(int formX, int toX, int duration, View view) {
@@ -76,5 +76,13 @@ public class IntroActivity extends Activity {
 		if (payload != null) {
 			Log.d(AppConst.LOG_TAG, "Connect push notification with payload " + payload);
 		}
+	}
+	
+	
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		
+		finish();
 	}
 }
