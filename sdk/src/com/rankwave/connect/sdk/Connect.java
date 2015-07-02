@@ -333,6 +333,41 @@ public final class Connect {
 	
 	
 	/**
+	 * emailLogin
+	 *  
+	 * @param email 
+	 * @param sessionSaveFlag
+	 * @param autoJoinFlag
+	 * @param connectCallback 
+	 */
+	public static void emailLogin(String email, Boolean sessionSaveFlag, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
+		session_save_flag = sessionSaveFlag;
+		auto_join_flag = autoJoinFlag;
+		
+		ConnectSession connectSession = getConnectSession();
+		
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+		
+		if(email == null || email.equals("")){
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("email can not be empty."));
+			}
+			return;
+		}
+		//session clear
+		connectSession.connectSessionClear();
+		
+		ConnectManager.emailLogin(email, connectCallback);
+	}
+	
+	/**
 	 * anonymousLogin
 	 * 
 	 * @param sessionSaveFlag

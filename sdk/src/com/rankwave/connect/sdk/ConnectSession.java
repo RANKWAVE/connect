@@ -12,6 +12,7 @@ public class ConnectSession {
 	private static final String PROPERTY_SNS_TYPE = "snsType";
 	private static final String PROPERTY_SNS_ACCESS_TOKEN = "snsAccessToken";
 	private static final String PROPERTY_SNS_TOKEN_SECRET = "snsTokenSecret";
+	private static final String PROPERTY_ID = "id";
 	
 	private ConnectSessionState connectSessionState = ConnectSessionState.CLOSED;
 	
@@ -250,6 +251,29 @@ public class ConnectSession {
 		editor.commit();
 	}
 	
+	
+	public String loadId() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		String id = prefs.getString(PROPERTY_ID, "");
+		
+		return id;
+	}
+
+	public void storeId(String id) {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_ID, id);
+		editor.commit();
+	}
+
+	public void deleteId() {
+		final SharedPreferences prefs = getUserPreferences(Connect.getContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(PROPERTY_ID, "");
+		editor.commit();
+	}
+	
 	public void connectSessionClear(){
 		connect_token = null;
 		
@@ -269,5 +293,6 @@ public class ConnectSession {
 		ConnectSession.getInstance().deleteSnsType();
 		ConnectSession.getInstance().deleteSnsAccessToken();
 		ConnectSession.getInstance().deleteSnsTokenSecret();
+		ConnectSession.getInstance().deleteId();
 	}
 }

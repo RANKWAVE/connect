@@ -86,6 +86,8 @@ public class MainActivity extends Activity {
 				
 				findViewById(R.id.btn_unset_gcm_id).setOnClickListener(onUnsetGCMRegistrationId);
 				findViewById(R.id.btn_set_gcm_id).setOnClickListener(onSetGCMRegistrationId);
+				findViewById(R.id.btn_get_email).setOnClickListener(onGetUserInfo);
+				
 			}
 			
 			@Override
@@ -361,29 +363,58 @@ public class MainActivity extends Activity {
 				break;
 			}
 			
+			case R.id.btn_get_email: {
+				String sns_id = connectUser.getProfile().getEmail();
+				CommonAlertDialog.showDefaultDialog(MainActivity.this, "EMAIL",
+						sns_id, "OK", null);
+				break;
 			}
-			
-			
-
+			}
 		}
 	};
 
 	public void displayProfileImage(String profile_url) {
+		if(profile_url == null || profile_url.equals("")){
+			profilePictureView.setImageResource(R.drawable.loading_logo);
+		}else{
+			String cacheDir = cacheDirPath(MainActivity.this);
+			String savePath = cacheDir + connectUser.getSnsType() + connectUser.getSnsInfo().getSnsId();
+							
+			File local = new File(savePath);
 
-		String cacheDir = cacheDirPath(MainActivity.this);
-		String savePath = cacheDir + connectUser.getSnsType() + connectUser.getSnsInfo().getSnsId();
-						
-		File local = new File(savePath);
+			if (local.exists() && local.length() > 0) {
 
-		if (local.exists() && local.length() > 0) {
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				BitmapFactory.decodeFile(savePath, options);
 
-			BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeFile(savePath, options);
+				if (options.outWidth < 0 || options.outHeight < 0) {
 
-			if (options.outWidth < 0 || options.outHeight < 0) {
+					local.delete();
 
-				local.delete();
+					ImageDownloadThread downThread = new ImageDownloadThread(
+							imageDownloadHandler, profile_url, savePath, "");
+
+					Thread thread = new Thread(downThread);
+					thread.setDaemon(true);
+					thread.start();
+
+				} else {
+
+					Bitmap bitmap = BitmapFactory.decodeFile(savePath);
+					Bitmap maskBitmap = BitmapFactory.decodeResource(
+							getResources(), R.drawable.alpha_mask);
+
+					Bitmap targetBitmap = makeCircleImage(bitmap, maskBitmap, 150,
+							150);
+
+					profilePictureView.setImageBitmap(targetBitmap);
+				}
+
+			} else {
+
+				if (local.exists())
+					local.delete();
 
 				ImageDownloadThread downThread = new ImageDownloadThread(
 						imageDownloadHandler, profile_url, savePath, "");
@@ -391,31 +422,9 @@ public class MainActivity extends Activity {
 				Thread thread = new Thread(downThread);
 				thread.setDaemon(true);
 				thread.start();
-
-			} else {
-
-				Bitmap bitmap = BitmapFactory.decodeFile(savePath);
-				Bitmap maskBitmap = BitmapFactory.decodeResource(
-						getResources(), R.drawable.alpha_mask);
-
-				Bitmap targetBitmap = makeCircleImage(bitmap, maskBitmap, 150,
-						150);
-
-				profilePictureView.setImageBitmap(targetBitmap);
 			}
-
-		} else {
-
-			if (local.exists())
-				local.delete();
-
-			ImageDownloadThread downThread = new ImageDownloadThread(
-					imageDownloadHandler, profile_url, savePath, "");
-
-			Thread thread = new Thread(downThread);
-			thread.setDaemon(true);
-			thread.start();
 		}
+		
 	}
 
 	@SuppressLint("HandlerLeak")

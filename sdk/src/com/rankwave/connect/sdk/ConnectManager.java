@@ -17,7 +17,7 @@ public class ConnectManager {
 	
 	private static Thread thread = null;
 	
-	static HashMap<String, Object> sns_info = new HashMap<String, Object>();
+	static HashMap<String, Object> info = new HashMap<String, Object>();
 	
 	public static void sdkInitialize(ConnectCallback<ConnectSession> connectCallback) {
 		initialize_connect_callback = connectCallback;
@@ -50,8 +50,7 @@ public class ConnectManager {
 		String snsType = connectSession.loadSnsType();
 		
 		if(savedConnectToken != null && !"".equals(savedConnectToken) &&
-				idType != null && !"".equals(idType) &&
-						snsType != null && !"".equals(snsType)){
+				idType != null && !"".equals(idType)){
 			
 			if(IdType.toEnum(idType).equals(IdType.ID_TYPE_SNS)){
 				String accessToken = connectSession.loadSnsAccessToken();
@@ -88,6 +87,38 @@ public class ConnectManager {
 						}
 					});
 				}
+			}else if(IdType.toEnum(idType).equals(IdType.ID_TYPE_EMAIL)){
+				String email = connectSession.loadId();
+				
+				emailLogin(email, new ConnectCallback<ConnectSession>(){
+						@Override
+						public void onSuccess(ConnectSession connectSession){
+							
+							auto_login_connect_callback.onSuccess(connectSession);
+						}
+						
+						@Override
+						public void onFail(FuncResult result, Exception exception){
+							Connect.getConnectSession().deleteSavedConnectToken();
+							
+							auto_login_connect_callback.onFail(result, exception);
+						}
+					});
+			}else if(IdType.toEnum(idType).equals(IdType.ID_TYPE_ANONYMOUS)){
+				anonymousLogin(new ConnectCallback<ConnectSession>(){
+					@Override
+					public void onSuccess(ConnectSession connectSession){
+						
+						auto_login_connect_callback.onSuccess(connectSession);
+					}
+					
+					@Override
+					public void onFail(FuncResult result, Exception exception){
+						Connect.getConnectSession().deleteSavedConnectToken();
+						
+						auto_login_connect_callback.onFail(result, exception);
+					}
+				});
 			}
 			
 		}else{
@@ -122,9 +153,9 @@ public class ConnectManager {
 			return;
 		}
 		
-		sns_info.put("facebook_access_token", faceook_access_token);
+		info.put("facebook_access_token", faceook_access_token);
 		
-		ConnectService.token(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_FACEBOOK, sns_info, new ConnectCallback<ConnectSession>(){
+		ConnectService.token(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_FACEBOOK, info, new ConnectCallback<ConnectSession>(){
 			@Override
         	public void onSuccess(ConnectSession connectSession){
 				Boolean joined = connectSession.getUser().getJoined();
@@ -147,7 +178,7 @@ public class ConnectManager {
 										connectSession.storeSavedConnectToken(connectSession.getConnect_token());
 										connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_SNS));
 										connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_FACEBOOK));
-										connectSession.storeSnsAccessToken(sns_info.get("facebook_access_token").toString());
+										connectSession.storeSnsAccessToken(info.get("facebook_access_token").toString());
 									}
 									
 									login_connect_callback.onSuccess(connectSession);
@@ -185,7 +216,7 @@ public class ConnectManager {
 						});
 					}else{
 						//SNS 정보를 조회하여 셋팅.
-						ConnectService.getSnsInfo(SnsType.SNS_TYPE_FACEBOOK, sns_info, new ConnectCallback<ConnectSession>(){
+						ConnectService.getSnsInfo(SnsType.SNS_TYPE_FACEBOOK, info, new ConnectCallback<ConnectSession>(){
 							@Override
 							public void onSuccess(ConnectSession connectSession){
 								connectSession.storeConnectToken(connectSession.getConnect_token());	//join 시 connect_token 이 필요하기 때문에 저장해둔다.
@@ -246,10 +277,10 @@ public class ConnectManager {
 		
 		login_connect_callback = connectCallback;
 		
-		sns_info.put("twitter_access_token", twitter_access_token);
-		sns_info.put("twitter_token_secret", twitter_token_secret);
+		info.put("twitter_access_token", twitter_access_token);
+		info.put("twitter_token_secret", twitter_token_secret);
 		
-		ConnectService.token(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_TWITTER, sns_info, new ConnectCallback<ConnectSession>(){
+		ConnectService.token(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_TWITTER, info, new ConnectCallback<ConnectSession>(){
 			@Override
         	public void onSuccess(ConnectSession connectSession){
 				Boolean join = connectSession.getUser().getJoined();
@@ -271,8 +302,8 @@ public class ConnectManager {
 										connectSession.storeSavedConnectToken(connectSession.getConnect_token());
 										connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_SNS));
 										connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_TWITTER));
-										connectSession.storeSnsAccessToken(sns_info.get("twitter_access_token").toString());
-										connectSession.storeSnsTokenSecret(sns_info.get("twitter_token_secret").toString());
+										connectSession.storeSnsAccessToken(info.get("twitter_access_token").toString());
+										connectSession.storeSnsTokenSecret(info.get("twitter_token_secret").toString());
 									}
 																		
 									login_connect_callback.onSuccess(connectSession);
@@ -303,8 +334,8 @@ public class ConnectManager {
 									connectSession.storeSavedConnectToken(connectSession.getConnect_token());
 									connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_SNS));
 									connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_TWITTER));
-									connectSession.storeSnsAccessToken(sns_info.get("twitter_access_token").toString());
-									connectSession.storeSnsTokenSecret(sns_info.get("twitter_token_secret").toString());
+									connectSession.storeSnsAccessToken(info.get("twitter_access_token").toString());
+									connectSession.storeSnsTokenSecret(info.get("twitter_token_secret").toString());
 								}
 								
 								login_connect_callback.onSuccess(connectSession);
@@ -317,10 +348,114 @@ public class ConnectManager {
 						});
 					}else{
 						//SNS 정보를 조회하여 셋팅.
-						ConnectService.getSnsInfo(SnsType.SNS_TYPE_TWITTER, sns_info, new ConnectCallback<ConnectSession>(){
+						ConnectService.getSnsInfo(SnsType.SNS_TYPE_TWITTER, info, new ConnectCallback<ConnectSession>(){
 							@Override
 							public void onSuccess(ConnectSession connectSession){
 								connectSession.storeConnectToken(connectSession.getConnect_token());	//join 시 connect_token 이 필요하기 때문에 저장해둔다.
+								login_connect_callback.onSuccess(connectSession);
+							}
+							
+							@Override
+							public void onFail(FuncResult result, Exception exception){
+								login_connect_callback.onFail(result, exception);
+							}
+						});
+					}
+				}
+			}
+			
+			@Override
+			public void onFail(FuncResult result, Exception exception){
+				login_connect_callback.onFail(result, exception);
+			}
+		});
+	}
+	
+	
+	/**
+	 * emailLogin
+	 * @param email
+	 * @param connectCallback
+	 */
+	public static void emailLogin(String email, ConnectCallback<ConnectSession> connectCallback) {
+		login_connect_callback = connectCallback;
+		
+		ConnectSession connectSession = Connect.getConnectSession();
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+			
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+		
+		if(email == null || email.equals("")){
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("email can not be empty."));
+			}
+			return;
+		}
+		
+		
+		login_connect_callback = connectCallback;
+		
+		info.put("email", email);
+		
+		ConnectService.token(IdType.ID_TYPE_EMAIL, null, info, new ConnectCallback<ConnectSession>(){
+			@Override
+        	public void onSuccess(ConnectSession connectSession){
+				Boolean join = connectSession.getUser().getJoined();
+				if(join){
+					ConnectService.login(new ConnectCallback<ConnectSession>(){
+						@Override
+						public void onSuccess(ConnectSession connectSession){
+							ConnectService.profileGet(new ConnectCallback<User>(){
+								@Override
+								public void onSuccess(User profileUser){
+									ConnectManager.profileUserCopy(profileUser);
+									
+									ConnectSession connectSession = Connect.getConnectSession();
+									
+									connectSession.storeConnectToken(connectSession.getConnect_token());
+									connectSession.setConnectSessionState(ConnectSessionState.OPENED);
+									
+									if(Connect.getSession_save_flag() == null || Connect.getSession_save_flag()){
+										connectSession.storeSavedConnectToken(connectSession.getConnect_token());
+										connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_EMAIL));
+										connectSession.storeId(info.get("email").toString());
+									}
+																		
+									login_connect_callback.onSuccess(connectSession);
+								}
+								
+								@Override
+								public void onFail(FuncResult result, Exception exception){
+									login_connect_callback.onFail(result, exception);
+								}
+							});
+						}
+						
+						@Override
+						public void onFail(FuncResult result, Exception exception){
+							login_connect_callback.onFail(result, exception);
+						}
+					});
+				}else{
+					if(Connect.getAuto_join_flag() == null || Connect.getAuto_join_flag()){
+						join(null, new ConnectCallback<ConnectSession>(){
+							@Override
+							public void onSuccess(ConnectSession connectSession){
+
+								connectSession.storeConnectToken(connectSession.getConnect_token());
+								connectSession.setConnectSessionState(ConnectSessionState.OPENED);
+								
+								if(Connect.getSession_save_flag() == null || Connect.getSession_save_flag()){
+									connectSession.storeSavedConnectToken(connectSession.getConnect_token());
+									connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_EMAIL));
+									connectSession.storeId(info.get("email").toString());
+								}
+								
 								login_connect_callback.onSuccess(connectSession);
 							}
 							
@@ -353,6 +488,12 @@ public class ConnectManager {
 						@Override
 						public void onSuccess(ConnectSession connectSession){
 							connectSession.setConnectSessionState(ConnectSessionState.OPENED);
+							
+							if(Connect.getSession_save_flag() == null || Connect.getSession_save_flag()){
+								connectSession.storeSavedConnectToken(connectSession.getConnect_token());
+								connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_ANONYMOUS));
+							}
+							
 							login_connect_callback.onSuccess(connectSession);
 						}
 						
@@ -366,6 +507,12 @@ public class ConnectManager {
 						@Override
 						public void onSuccess(ConnectSession connectSession){
 							connectSession.setConnectSessionState(ConnectSessionState.OPENED);
+							
+							if(Connect.getSession_save_flag() == null || Connect.getSession_save_flag()){
+								connectSession.storeSavedConnectToken(connectSession.getConnect_token());
+								connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_ANONYMOUS));
+							}
+							
 							login_connect_callback.onSuccess(connectSession);
 						}
 						
@@ -407,9 +554,14 @@ public class ConnectManager {
 								if(Connect.getSession_save_flag() == null || Connect.getSession_save_flag()){
 									connectSession.storeSavedConnectToken(connectSession.getConnect_token());
 									connectSession.storeIdType(IdType.toString(connectSession.getUser().getIdType()));
-									connectSession.storeSnsType(SnsType.toString(connectSession.getUser().getSnsType()));
-									connectSession.storeSnsAccessToken(connectSession.getUser().getSnsInfo().getAccessToken());
-									connectSession.storeSnsTokenSecret(connectSession.getUser().getSnsInfo().getTokenSecret());
+									
+									if(connectSession.getUser().getIdType() == IdType.ID_TYPE_SNS){
+										connectSession.storeSnsType(SnsType.toString(connectSession.getUser().getSnsType()));
+										connectSession.storeSnsAccessToken(connectSession.getUser().getSnsInfo().getAccessToken());
+										connectSession.storeSnsTokenSecret(connectSession.getUser().getSnsInfo().getTokenSecret());
+									}else if(connectSession.getUser().getIdType() == IdType.ID_TYPE_EMAIL){
+										connectSession.storeId(connectSession.getUser().getId());
+									}
 								}
 								
 								join_connect_callback.onSuccess(connectSession);

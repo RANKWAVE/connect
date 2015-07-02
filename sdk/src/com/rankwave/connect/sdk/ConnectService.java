@@ -132,7 +132,7 @@ public class ConnectService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void token(IdType idType, SnsType snsType, HashMap<String, Object> snsInfo, ConnectCallback<ConnectSession> callback){
+	public static void token(IdType idType, SnsType snsType, HashMap<String, Object> info, ConnectCallback<ConnectSession> callback){
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		ConnectSession.getInstance().getUser().setSnsType(snsType);
@@ -140,12 +140,12 @@ public class ConnectService {
 		
 		if(idType == IdType.ID_TYPE_SNS){
 			if (snsType == SnsType.SNS_TYPE_FACEBOOK) {
-				String faceook_access_token = (String) snsInfo.get("facebook_access_token");
+				String faceook_access_token = (String) info.get("facebook_access_token");
 
 				params.add(new BasicNameValuePair("access_token", faceook_access_token));
 			} else if (snsType == SnsType.SNS_TYPE_TWITTER) {
-				String twitter_access_token = (String) snsInfo.get("twitter_access_token");
-				String twitter_token_secret = (String) snsInfo.get("twitter_token_secret");
+				String twitter_access_token = (String) info.get("twitter_access_token");
+				String twitter_token_secret = (String) info.get("twitter_token_secret");
 
 				params.add(new BasicNameValuePair("access_token", twitter_access_token));
 				params.add(new BasicNameValuePair("token_secret", twitter_token_secret));
@@ -155,8 +155,11 @@ public class ConnectService {
 			params.add(new BasicNameValuePair("sns_type", SnsType.toString(snsType)));
 			
 		}else if(idType == IdType.ID_TYPE_EMAIL){
-			params.add(new BasicNameValuePair("grant_type", "authorization_email "));
-			return;
+			params.add(new BasicNameValuePair("grant_type", "authorization_email"));
+			params.add(new BasicNameValuePair("email", (String)info.get("email")));
+			
+			ConnectSession.getInstance().getUser().setId((String)info.get("email"));
+			
 			
 		}else if(idType == IdType.ID_TYPE_ANONYMOUS){
 			params.add(new BasicNameValuePair("grant_type", "authorization_anonymous"));

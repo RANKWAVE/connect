@@ -371,6 +371,58 @@ public class LoginActivity extends Activity {
 		});
 
 		
+		Button btn_login_email = (Button) findViewById(R.id.btn_email_login);
+		
+		btn_login_email.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				showLoading(true);
+				
+				/*
+				 * Email 로그인과 관련된 UI 를 구현하고, email를 입력받아 emailLogin 을 호출하면됩니다.
+				 */
+				Connect.emailLogin("user_email@email.net",true, true, new ConnectCallback<ConnectSession>() {
+					@Override
+					public void onSuccess(ConnectSession connectSession) {						
+						User user = connectSession.getUser();
+						
+						Log.i(AppConst.LOG_TAG, "========================================");
+		        		Log.i(AppConst.LOG_TAG, "email Success.");
+		        		Log.i(AppConst.LOG_TAG, "----------------------------------------");
+		        		Log.i(AppConst.LOG_TAG, user.toString());
+		        		Log.i(AppConst.LOG_TAG, "========================================");
+						
+		        		/*
+						 * 데모 프로젝트에서는 로그인 성공시 아래와 같이 Loading 처리 후 MainActivity 로 보내고 있습니다. 서비스에 맞게 처리 하시면 됩니다.
+						 */
+						goMainActivity();
+						
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								showLoading(false);											
+							}
+						}, 1000);
+					}
+					
+					@Override
+					public void onFail(FuncResult funcResult, Exception exception) {
+						Log.e(AppConst.LOG_TAG, "========================================");
+		        		Log.e(AppConst.LOG_TAG, "emailLogin Fail.");
+		        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
+		        		Log.e(AppConst.LOG_TAG, exception.toString());
+		        		Log.e(AppConst.LOG_TAG, "========================================");
+						showLoading(false);
+					}
+				});
+			}
+
+		});
+		
+		
 		Button btn_login_anonymous = (Button) findViewById(R.id.btn_anonymous_login);
 		
 		btn_login_anonymous.setOnClickListener(new OnClickListener() {
@@ -395,12 +447,17 @@ public class LoginActivity extends Activity {
 		        		Log.i(AppConst.LOG_TAG, "========================================");
 						
 		        		/*
-		        		 * 데모에서는 dialog 를 보여주고 있습니다. 서비스에 맞게 처리 하시면 됩니다.
-		        		 */
-						CommonAlertDialog.showDefaultDialog(LoginActivity.this,
-								"anonymousLogin", "anonymousLogin success", "OK", null);
-		        		
-						showLoading(false);
+						 * 데모 프로젝트에서는 로그인 성공시 아래와 같이 Loading 처리 후 MainActivity 로 보내고 있습니다. 서비스에 맞게 처리 하시면 됩니다.
+						 */
+						goMainActivity();
+						
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								showLoading(false);											
+							}
+						}, 1000);
 					}
 					
 					@Override
