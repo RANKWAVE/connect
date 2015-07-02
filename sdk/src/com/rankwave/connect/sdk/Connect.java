@@ -27,7 +27,7 @@ public final class Connect {
 	public static final String PROPERTY_TWITTER_CONSUMER_SECRET = "com.rankwave.connect.sdk.TwitterConsumerSecret";
 	public static final String PROPERTY_SENDER_ID = "com.rankwave.connect.sdk.SenderId";
 	
-	public static final String SDK_VERISON = "0.0.1";
+	public static final String SDK_VERISON = "2.0.0";
 	public static final String INTENT_PUSH_PAYLOAD = "com.rankwave.connect.sdk.pushpayload";
 	public static final String INTENT_PUSH_SEQ = "com.rankwave.connect.sdk.pushseq";
 	public static final String INTENT_PUSH_CMN = "com.rankwave.connect.sdk.pushcmn";

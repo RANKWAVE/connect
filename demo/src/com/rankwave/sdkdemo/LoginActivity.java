@@ -122,6 +122,7 @@ public class LoginActivity extends Activity {
 				 * permissions 변수는 페이스북에서 얻고자 하는 권한을 지정하는 변수입니다. 앱에서 필요로 하는 권한으로 수정 하시면 됩니다.
 				 * 2014/04/30 이후에 생성된 App 의 경우, Facebook 의 승인을 얻지 못한 권한은 사용자에게 권한 승인 요청되지 않습니다. 
 				 * 또한, 2015/04/30 이후 부터는 모든 Facebook App 이 기본 권한을 제외한 권한에 대해서는 Facebook 의 승인을 받아야만 합니다.
+				 * null 로 호출하면, 페이스북 리뷰 없이 추가할 수 있는 권한인, public_profile, email, user_friends 로 설정됩니다.
 				 * 
 				 */
 				List<String> permissions = Arrays.asList(
@@ -234,9 +235,10 @@ public class LoginActivity extends Activity {
 				 * permissions 변수는 페이스북에서 얻고자 하는 권한을 지정하는 변수입니다. 앱에서 필요로 하는 권한으로 수정 하시면 됩니다.
 				 * 2014/04/30 이후에 생성된 App 의 경우, Facebook 의 승인을 얻지 못한 권한은 사용자에게 권한 승인 요청되지 않습니다. 
 				 * 또한, 2015/04/30 이후 부터는 모든 Facebook App 이 기본 권한을 제외한 권한에 대해서는 Facebook 의 승인을 받아야만 합니다.
+				 * null 로 호출하면, 페이스북 리뷰 없이 추가할 수 있는 권한인, public_profile, email, user_friends 로 설정됩니다.
 				 */
 				List<String> permissions = Arrays.asList(
-						"public_profile", "email", "user_friends");
+						"public_profile", "email", "user_friends", "user_posts", "user_birthday");
 				
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
