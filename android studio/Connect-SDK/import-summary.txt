@@ -1,0 +1,210 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From Connect:
+* doc\
+* doc\allclasses-frame.html
+* doc\allclasses-noframe.html
+* doc\com\
+* doc\com\rankwave\
+* doc\com\rankwave\connect\
+* doc\com\rankwave\connect\sdk\
+* doc\com\rankwave\connect\sdk\AsyncCallback.FuncResult.html
+* doc\com\rankwave\connect\sdk\AsyncCallback.html
+* doc\com\rankwave\connect\sdk\BuildConfig.html
+* doc\com\rankwave\connect\sdk\Connect.html
+* doc\com\rankwave\connect\sdk\GCMManager.html
+* doc\com\rankwave\connect\sdk\LoginType.html
+* doc\com\rankwave\connect\sdk\NotificationActivity.html
+* doc\com\rankwave\connect\sdk\OAuthLoginActivity.html
+* doc\com\rankwave\connect\sdk\R.attr.html
+* doc\com\rankwave\connect\sdk\R.color.html
+* doc\com\rankwave\connect\sdk\R.dimen.html
+* doc\com\rankwave\connect\sdk\R.drawable.html
+* doc\com\rankwave\connect\sdk\R.html
+* doc\com\rankwave\connect\sdk\R.id.html
+* doc\com\rankwave\connect\sdk\R.integer.html
+* doc\com\rankwave\connect\sdk\R.layout.html
+* doc\com\rankwave\connect\sdk\R.string.html
+* doc\com\rankwave\connect\sdk\R.style.html
+* doc\com\rankwave\connect\sdk\R.styleable.html
+* doc\com\rankwave\connect\sdk\Session.SessionCallback.html
+* doc\com\rankwave\connect\sdk\Session.html
+* doc\com\rankwave\connect\sdk\SessionInfo.html
+* doc\com\rankwave\connect\sdk\SessionState.html
+* doc\com\rankwave\connect\sdk\User.html
+* doc\com\rankwave\connect\sdk\Util.html
+* doc\com\rankwave\connect\sdk\class-use\
+* doc\com\rankwave\connect\sdk\class-use\AsyncCallback.FuncResult.html
+* doc\com\rankwave\connect\sdk\class-use\AsyncCallback.html
+* doc\com\rankwave\connect\sdk\class-use\BuildConfig.html
+* doc\com\rankwave\connect\sdk\class-use\Connect.html
+* doc\com\rankwave\connect\sdk\class-use\GCMManager.html
+* doc\com\rankwave\connect\sdk\class-use\LoginType.html
+* doc\com\rankwave\connect\sdk\class-use\NotificationActivity.html
+* doc\com\rankwave\connect\sdk\class-use\OAuthLoginActivity.html
+* doc\com\rankwave\connect\sdk\class-use\R.attr.html
+* doc\com\rankwave\connect\sdk\class-use\R.color.html
+* doc\com\rankwave\connect\sdk\class-use\R.dimen.html
+* doc\com\rankwave\connect\sdk\class-use\R.drawable.html
+* doc\com\rankwave\connect\sdk\class-use\R.html
+* doc\com\rankwave\connect\sdk\class-use\R.id.html
+* doc\com\rankwave\connect\sdk\class-use\R.integer.html
+* doc\com\rankwave\connect\sdk\class-use\R.layout.html
+* doc\com\rankwave\connect\sdk\class-use\R.string.html
+* doc\com\rankwave\connect\sdk\class-use\R.style.html
+* doc\com\rankwave\connect\sdk\class-use\R.styleable.html
+* doc\com\rankwave\connect\sdk\class-use\Session.SessionCallback.html
+* doc\com\rankwave\connect\sdk\class-use\Session.html
+* doc\com\rankwave\connect\sdk\class-use\SessionInfo.html
+* doc\com\rankwave\connect\sdk\class-use\SessionState.html
+* doc\com\rankwave\connect\sdk\class-use\User.html
+* doc\com\rankwave\connect\sdk\class-use\Util.html
+* doc\com\rankwave\connect\sdk\core\
+* doc\com\rankwave\connect\sdk\core\ConnectReceiver.html
+* doc\com\rankwave\connect\sdk\core\GCMReceiver.html
+* doc\com\rankwave\connect\sdk\core\NetworkThread.html
+* doc\com\rankwave\connect\sdk\core\OAuthFacebook.html
+* doc\com\rankwave\connect\sdk\core\OAuthTwitter.html
+* doc\com\rankwave\connect\sdk\core\Request.Callback.html
+* doc\com\rankwave\connect\sdk\core\Request.html
+* doc\com\rankwave\connect\sdk\core\Response.html
+* doc\com\rankwave\connect\sdk\core\class-use\
+* doc\com\rankwave\connect\sdk\core\class-use\ConnectReceiver.html
+* doc\com\rankwave\connect\sdk\core\class-use\GCMReceiver.html
+* doc\com\rankwave\connect\sdk\core\class-use\NetworkThread.html
+* doc\com\rankwave\connect\sdk\core\class-use\OAuthFacebook.html
+* doc\com\rankwave\connect\sdk\core\class-use\OAuthTwitter.html
+* doc\com\rankwave\connect\sdk\core\class-use\Request.Callback.html
+* doc\com\rankwave\connect\sdk\core\class-use\Request.html
+* doc\com\rankwave\connect\sdk\core\class-use\Response.html
+* doc\com\rankwave\connect\sdk\core\package-frame.html
+* doc\com\rankwave\connect\sdk\core\package-summary.html
+* doc\com\rankwave\connect\sdk\core\package-tree.html
+* doc\com\rankwave\connect\sdk\core\package-use.html
+* doc\com\rankwave\connect\sdk\package-frame.html
+* doc\com\rankwave\connect\sdk\package-summary.html
+* doc\com\rankwave\connect\sdk\package-tree.html
+* doc\com\rankwave\connect\sdk\package-use.html
+* doc\constant-values.html
+* doc\deprecated-list.html
+* doc\help-doc.html
+* doc\index-files\
+* doc\index-files\index-1.html
+* doc\index-files\index-10.html
+* doc\index-files\index-11.html
+* doc\index-files\index-12.html
+* doc\index-files\index-13.html
+* doc\index-files\index-14.html
+* doc\index-files\index-15.html
+* doc\index-files\index-16.html
+* doc\index-files\index-17.html
+* doc\index-files\index-18.html
+* doc\index-files\index-19.html
+* doc\index-files\index-2.html
+* doc\index-files\index-20.html
+* doc\index-files\index-21.html
+* doc\index-files\index-3.html
+* doc\index-files\index-4.html
+* doc\index-files\index-5.html
+* doc\index-files\index-6.html
+* doc\index-files\index-7.html
+* doc\index-files\index-8.html
+* doc\index-files\index-9.html
+* doc\index.html
+* doc\overview-frame.html
+* doc\overview-summary.html
+* doc\overview-tree.html
+* doc\package-list
+* doc\resources\
+* doc\resources\background.gif
+* doc\resources\tab.gif
+* doc\resources\titlebar.gif
+* doc\resources\titlebar_end.gif
+* doc\stylesheet.css
+* proguard-project.txt
+From Connect-Demo:
+* ic_launcher-web.png
+* proguard-project.txt
+From FacebookSDK:
+* build.gradle
+* build.xml
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:18.0.0
+
+Replaced Libraries with Dependencies:
+-------------------------------------
+The importer recognized the following library projects as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the source files in your project were of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the library replacement in the import wizard and try
+again:
+
+google-play-services_lib => [com.google.android.gms:play-services:+]
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In FacebookSDK:
+* AndroidManifest.xml => facebookSDK\src\main\AndroidManifest.xml
+* libs\bolts-android-1.1.2.jar => facebookSDK\libs\bolts-android-1.1.2.jar
+* lint.xml => facebookSDK\lint.xml
+* res\ => facebookSDK\src\main\res\
+* src\ => facebookSDK\src\main\java\
+In Connect:
+* AndroidManifest.xml => connect\src\main\AndroidManifest.xml
+* assets\ => connect\src\main\assets
+* libs\twitter4j-core-4.0.2.jar => connect\libs\twitter4j-core-4.0.2.jar
+* res\ => connect\src\main\res\
+* src\ => connect\src\main\java\
+In Connect-Demo:
+* AndroidManifest.xml => connectDemo\src\main\AndroidManifest.xml
+* assets\ => connectDemo\src\main\assets
+* libs\twitter4j-core-4.0.2.jar => connectDemo\libs\twitter4j-core-4.0.2.jar
+* res\ => connectDemo\src\main\res\
+* src\ => connectDemo\src\main\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
