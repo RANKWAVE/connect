@@ -163,7 +163,7 @@ public class ConnectManager {
 					ConnectService.login(new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							
+														
 							ConnectService.profileGet(new ConnectCallback<User>(){
 								@Override
 								public void onSuccess(User profileUser){
@@ -612,7 +612,7 @@ public class ConnectManager {
 				@Override
 				public void run() {
 					
-					ConnectService.setGCMRegistrationId(gcm_connect_callback);
+					setGCMRegistrationId(gcm_connect_callback);
 					
 				}
 			}, 1000);
@@ -626,7 +626,29 @@ public class ConnectManager {
 		ConnectService.unsetGCMRegistrationId(connectCallback);
 	}
 	
+	public static void pushOn(ConnectCallback<ConnectSession> connectCallback){
+		gcm_connect_callback = connectCallback;
+		
+		String regid = GCMManager.getInstance().getRegistrationId(Connect.getContext());
+		if (regid == null || regid.length() == 0) {
+			new Handler().postDelayed(new Runnable() {
 
+				@Override
+				public void run() {
+					
+					pushOn(gcm_connect_callback);
+					
+				}
+			}, 1000);
+		}else{
+			ConnectService.pushOn(connectCallback);
+		}
+	}
+	
+	public static void pushOff(ConnectCallback<ConnectSession> connectCallback){
+		ConnectService.pushOff(connectCallback);
+	}
+	
 	private static void profileUserCopy(User profileUser){
 		ConnectSession connectSession = Connect.getConnectSession();
 		connectSession.getUser().setProfile(profileUser.getProfile());

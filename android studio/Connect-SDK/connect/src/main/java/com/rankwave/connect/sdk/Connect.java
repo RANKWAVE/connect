@@ -158,7 +158,6 @@ public final class Connect {
 		ConnectManager.autoLogin(connectCallback);
 	}
 	
-	
 	/**
 	 * facebookLogin
 	 * 
@@ -166,6 +165,17 @@ public final class Connect {
 	 * @param permissions
 	 * @param sessionSaveFlag
 	 * @param autoJoinFlag
+	 * @param connectCallback
+	 */
+	public static void facebookLogin(Activity activity, List<String> permissions, ConnectCallback<ConnectSession> connectCallback) {
+		facebookLogin(activity, permissions, true, true, connectCallback);
+	}
+	
+	/**
+	 * facebookLogin
+	 * 
+	 * @param activity
+	 * @param permissions
 	 * @param connectCallback
 	 */
 	public static void facebookLogin(Activity activity, List<String> permissions, Boolean sessionSaveFlag, Boolean autoJoinFlag, ConnectCallback<ConnectSession> connectCallback) {
@@ -207,6 +217,16 @@ public final class Connect {
 	 * facebookLogin
 	 *  
 	 * @param faceook_access_token 
+	 * @param connectCallback 
+	 */
+	public static void facebookLogin(String faceook_access_token, ConnectCallback<ConnectSession> connectCallback) {
+		facebookLogin(faceook_access_token, true, true, connectCallback);
+	}
+	
+	/**
+	 * facebookLogin
+	 *  
+	 * @param faceook_access_token 
 	 * @param sessionSaveFlag
 	 * @param autoJoinFlag
 	 * @param connectCallback 
@@ -239,6 +259,16 @@ public final class Connect {
 	}
 	
 		
+	/**
+	 * twitterLogin
+	 * 
+	 * @param activity
+	 * @param connectCallback
+	 */
+	public static void twitterLogin(Activity activity, ConnectCallback<ConnectSession> connectCallback) {
+		twitterLogin(activity, true, true, connectCallback);
+	}
+	
 	/**
 	 * twitterLogin
 	 * 
@@ -290,6 +320,17 @@ public final class Connect {
 	 *  
 	 * @param twitter_access_token
 	 * @param twitter_token_secret
+	 * @param connectCallback 
+	 */
+	public static void twitterLogin(String twitter_access_token, String twitter_token_secret, ConnectCallback<ConnectSession> connectCallback) {
+		twitterLogin(twitter_access_token, twitter_token_secret, true, true, connectCallback);
+	}
+	
+	/**
+	 * twitterLogin
+	 *  
+	 * @param twitter_access_token
+	 * @param twitter_token_secret
 	 * @param sessionSaveFlag
 	 * @param autoJoinFlag
 	 * @param connectCallback 
@@ -331,6 +372,16 @@ public final class Connect {
 		ConnectManager.setTwitterToken(twitter_access_token, twitter_token_secret, connectCallback);
 	}
 	
+	
+	/**
+	 * emailLogin
+	 *  
+	 * @param email 
+	 * @param connectCallback 
+	 */
+	public static void emailLogin(String email, ConnectCallback<ConnectSession> connectCallback) {
+		emailLogin(email, true, true, connectCallback);
+	}
 	
 	/**
 	 * emailLogin
@@ -501,11 +552,11 @@ public final class Connect {
 	
 	
 	/**
-	 * setGCMRegistrationId
+	 * pushOn
 	 * 
 	 * @param connectCallback
 	 */
-	public static void setGCMRegistrationId(ConnectCallback<ConnectSession> connectCallback){
+	public static void pushOn(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession == null){
 			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
@@ -526,16 +577,16 @@ public final class Connect {
 			return;
 		}
 		
-		ConnectManager.setGCMRegistrationId(connectCallback);
+		ConnectManager.pushOn(connectCallback);
 	}
 	
 	
 	/**
-	 * unsetGCMRegistrationId
+	 * pushOff
 	 * 
 	 * @param connectCallback
 	 */
-	public static void unsetGCMRegistrationId(ConnectCallback<ConnectSession> connectCallback){
+	public static void pushOff(ConnectCallback<ConnectSession> connectCallback){
 		ConnectSession connectSession = getConnectSession();
 		if(connectSession == null){
 			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
@@ -551,7 +602,7 @@ public final class Connect {
 			return;
 		}
 		
-		ConnectManager.unsetGCMRegistrationId(connectCallback);
+		ConnectManager.pushOff(connectCallback);
 	}
 	
 	

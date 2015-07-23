@@ -5,8 +5,6 @@ public class Profile {
 	private String name;
 	private String birthday;
 	private String gender;
-	private Residence residence = new Residence();
-	private Hometown hometown = new Hometown();
 	private String timezone;
 	private String locale;
 	
@@ -43,21 +41,6 @@ public class Profile {
 		this.gender = gender;
 	}
 
-	public Residence getResidence() {
-		return residence;
-	}
-
-	public void setResidence(Residence residence) {
-		this.residence = residence;
-	}
-
-	public Hometown getHometown() {
-		return hometown;
-	}
-
-	public void setHometown(Hometown hometown) {
-		this.hometown = hometown;
-	}
 
 	public String getTimezone() {
 		return timezone;
@@ -80,8 +63,7 @@ public class Profile {
 	@Override
 	public String toString() {
 		return "Profile [email=" + email + ", name=" + name + ", birthday="
-				+ birthday + ", gender=" + gender + ", residence=" + residence
-				+ ", hometown=" + hometown + ", timezone=" + timezone
+				+ birthday + ", gender=" + gender + ", timezone=" + timezone
 				+ ", locale=" + locale + "]";
 	}
 

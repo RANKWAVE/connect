@@ -50,6 +50,10 @@ public class ConnectService {
 	
 	public static final String CONNECT_PUSH_UNREGISTER_DEVICE_PATH = PREFIX_PUSH_PATH + "/unregister_device.do";
 	
+	public static final String CONNECT_PUSH_ON_PATH = PREFIX_PUSH_PATH + "/pushOn.do";
+	
+	public static final String CONNECT_PUSH_OFF_PATH = PREFIX_PUSH_PATH + "/pushOff.do";
+	
 	public static final String CONNECT_ACTION_PATH = PREFIX_APP_PATH + "/action.do";
 	
 	public static final String CONNECT_SET_DEVICE_INFO_PATH = PREFIX_APP_PATH + "/setDeviceInfo.do";
@@ -285,108 +289,6 @@ public class ConnectService {
 			}
 			
 			
-			if(profile.getResidence() != null){
-				try{
-					JSONObject residenceObject = new JSONObject();
-					if(profile.getResidence().getCountry() != null){
-						if(profile.getResidence().getCountry().equals("")){
-							residenceObject.put("country", "null");
-						}else{
-							residenceObject.put("country", URLEncoder.encode(profile.getResidence().getCountry(),"UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getStates() != null){
-						if(profile.getResidence().getStates().equals("")){
-							residenceObject.put("states", "null");
-						}else{
-							residenceObject.put("states", URLEncoder.encode(profile.getResidence().getStates(),"UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getCity() != null){
-						if(profile.getResidence().getCity().equals("")){
-							residenceObject.put("city", "null");
-						}else{
-							residenceObject.put("city", URLEncoder.encode(profile.getResidence().getCity(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getStreet() != null){
-						if(profile.getResidence().getStreet().equals("")){
-							residenceObject.put("street", "null");
-						}else{
-							residenceObject.put("street", URLEncoder.encode(profile.getResidence().getStreet(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getSpot() != null){
-						if(profile.getResidence().getSpot().equals("")){
-							residenceObject.put("spot", "null");
-						}else{
-							residenceObject.put("spot", URLEncoder.encode(profile.getResidence().getSpot(), "UTF-8"));
-						}
-					}
-					
-					params.add(new BasicNameValuePair("residence", residenceObject.toString()));
-				}catch(JSONException e){
-					
-				}catch(UnsupportedEncodingException ue){
-					
-				}
-			}
-			
-			if(profile.getHometown() != null){
-				try{
-					JSONObject hometownObject = new JSONObject();
-					if(profile.getHometown().getCountry() != null){
-						if(profile.getHometown().getCountry().equals("")){
-							hometownObject.put("country", "null");
-						}else{
-							hometownObject.put("country", URLEncoder.encode(profile.getHometown().getCountry(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getStates() != null){
-						if(profile.getHometown().getStates().equals("")){
-							hometownObject.put("states", "null");
-						}else{
-							hometownObject.put("states", URLEncoder.encode(profile.getHometown().getStates(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getCity() != null){
-						if(profile.getHometown().getCity().equals("")){
-							hometownObject.put("city", "null");
-						}else{
-							hometownObject.put("city", URLEncoder.encode(profile.getHometown().getCity(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getStreet() != null){
-						if(profile.getHometown().getStreet().equals("")){
-							hometownObject.put("street", "null");
-						}else{
-							hometownObject.put("street", URLEncoder.encode(profile.getHometown().getStreet(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getSpot() != null){
-						if(profile.getHometown().getSpot().equals("")){
-							hometownObject.put("spot", "null");
-						}else{
-							hometownObject.put("spot", URLEncoder.encode(profile.getHometown().getSpot(), "UTF-8"));
-						}
-					}
-					
-					params.add(new BasicNameValuePair("hometown", hometownObject.toString()));
-				}catch(JSONException e){
-					
-				}catch(UnsupportedEncodingException ue){
-					
-				}
-			}
-			
 			if(profile.getTimezone() != null){
 				if(profile.getTimezone().equals("")){
 					params.add(new BasicNameValuePair("timezone", "null"));
@@ -477,6 +379,9 @@ public class ConnectService {
 								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
 							}
 						}else{
+							//login 성공하면 push_token 을 올린다.
+							setGCMRegistrationId(null);
+							
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
 							}
@@ -657,109 +562,7 @@ public class ConnectService {
 					params.add(new BasicNameValuePair("gender", profile.getGender()));
 				}
 			}
-			
-			if(profile.getResidence() != null){
-				try{
-					JSONObject residenceObject = new JSONObject();
-					if(profile.getResidence().getCountry() != null){
-						if(profile.getResidence().getCountry().equals("")){
-							residenceObject.put("country", "null");
-						}else{
-							residenceObject.put("country", URLEncoder.encode(profile.getResidence().getCountry(),"UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getStates() != null){
-						if(profile.getResidence().getStates().equals("")){
-							residenceObject.put("states", "null");
-						}else{
-							residenceObject.put("states", URLEncoder.encode(profile.getResidence().getStates(),"UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getCity() != null){
-						if(profile.getResidence().getCity().equals("")){
-							residenceObject.put("city", "null");
-						}else{
-							residenceObject.put("city", URLEncoder.encode(profile.getResidence().getCity(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getStreet() != null){
-						if(profile.getResidence().getStreet().equals("")){
-							residenceObject.put("street", "null");
-						}else{
-							residenceObject.put("street", URLEncoder.encode(profile.getResidence().getStreet(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getResidence().getSpot() != null){
-						if(profile.getResidence().getSpot().equals("")){
-							residenceObject.put("spot", "null");
-						}else{
-							residenceObject.put("spot", URLEncoder.encode(profile.getResidence().getSpot(), "UTF-8"));
-						}
-					}
-					
-					params.add(new BasicNameValuePair("residence", residenceObject.toString()));
-				}catch(JSONException e){
-					
-				}catch(UnsupportedEncodingException ue){
-					
-				}
-			}
-			
-			if(profile.getHometown() != null){
-				try{
-					JSONObject hometownObject = new JSONObject();
-					if(profile.getHometown().getCountry() != null){
-						if(profile.getHometown().getCountry().equals("")){
-							hometownObject.put("country", "null");
-						}else{
-							hometownObject.put("country", URLEncoder.encode(profile.getHometown().getCountry(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getStates() != null){
-						if(profile.getHometown().getStates().equals("")){
-							hometownObject.put("states", "null");
-						}else{
-							hometownObject.put("states", URLEncoder.encode(profile.getHometown().getStates(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getCity() != null){
-						if(profile.getHometown().getCity().equals("")){
-							hometownObject.put("city", "null");
-						}else{
-							hometownObject.put("city", URLEncoder.encode(profile.getHometown().getCity(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getStreet() != null){
-						if(profile.getHometown().getStreet().equals("")){
-							hometownObject.put("street", "null");
-						}else{
-							hometownObject.put("street", URLEncoder.encode(profile.getHometown().getStreet(), "UTF-8"));
-						}
-					}
-					
-					if(profile.getHometown().getSpot() != null){
-						if(profile.getHometown().getSpot().equals("")){
-							hometownObject.put("spot", "null");
-						}else{
-							hometownObject.put("spot", URLEncoder.encode(profile.getHometown().getSpot(), "UTF-8"));
-						}
-					}
-					
-					params.add(new BasicNameValuePair("hometown", hometownObject.toString()));
-				}catch(JSONException e){
-					
-				}catch(UnsupportedEncodingException ue){
-					
-				}
-			}
-			
+		
 			if(profile.getTimezone() != null){
 				if(profile.getTimezone().equals("")){
 					params.add(new BasicNameValuePair("timezone", "null"));
@@ -862,45 +665,7 @@ public class ConnectService {
 							
 							if(profileObject.has("locale") && profileObject.getString("locale")  != null && !profileObject.getString("locale").equals("null"))
 								profile.setLocale(profileObject.getString("locale"));
-							
-							if(profileObject.has("residence") && profileObject.getString("residence")  != null && !profileObject.getString("residence").equals("null")){
-								JSONObject residencObject = profileObject.getJSONObject("residence");
-								
-								if(residencObject.has("country") && residencObject.getString("country")  != null && !residencObject.getString("country").equals("null"))
-									profile.getResidence().setCountry(residencObject.getString("country"));
-								
-								if(residencObject.has("states") && residencObject.getString("states")  != null && !residencObject.getString("states").equals("null"))
-									profile.getResidence().setStates(residencObject.getString("states"));
-								
-								if(residencObject.has("city") && residencObject.getString("city")  != null && !residencObject.getString("city").equals("null"))
-									profile.getResidence().setCity(residencObject.getString("city"));
-								
-								if(residencObject.has("street") && residencObject.getString("street")  != null && !residencObject.getString("street").equals("null"))
-									profile.getResidence().setStreet(residencObject.getString("street"));
-								
-								if(residencObject.has("spot") && residencObject.getString("spot")  != null && !residencObject.getString("spot").equals("null"))
-									profile.getResidence().setSpot(residencObject.getString("spot"));
-							}
-							
-							if(profileObject.has("hometown") && profileObject.getString("hometown")  != null && !profileObject.getString("hometown").equals("null")){
-								JSONObject hometownObject = profileObject.getJSONObject("hometown");
-								
-								if(hometownObject.has("country") && hometownObject.getString("country")  != null && !hometownObject.getString("country").equals("null"))
-									profile.getHometown().setCountry(hometownObject.getString("country"));
-								
-								if(hometownObject.has("states") && hometownObject.getString("states")  != null && !hometownObject.getString("states").equals("null"))
-									profile.getHometown().setStates(hometownObject.getString("states"));
-								
-								if(hometownObject.has("city") && hometownObject.getString("city")  != null && !hometownObject.getString("city").equals("null"))
-									profile.getHometown().setCity(hometownObject.getString("city"));
-								
-								if(hometownObject.has("street") && hometownObject.getString("street")  != null && !hometownObject.getString("street").equals("null"))
-									profile.getHometown().setStreet(hometownObject.getString("street"));
-								
-								if(hometownObject.has("spot") && hometownObject.getString("spot")  != null && !hometownObject.getString("spot").equals("null"))
-									profile.getHometown().setSpot(hometownObject.getString("spot"));
-							}
-							
+						
 							SnsInfo snsInfo = new SnsInfo();
 							if(json.has("sns_info")){
 								JSONObject snsInfoObject = json.getJSONObject("sns_info");
@@ -1073,6 +838,108 @@ public class ConnectService {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	public static void pushOn(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
+		params.add(new BasicNameValuePair("push_token", GCMManager.getInstance().getRegistrationId(Connect.getContext())));
+		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
+		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
+		
+		new Request(getHttpsUrl(CONNECT_PUSH_ON_PATH), params, new Request.Callback() {
+			
+			@Override
+			public void onCompleted(Response response) {
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
+				
+				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
+					JSONObject json = response.getJsonObject();
+					
+					try {
+						if(json.has("error")){
+							JSONObject error = json.getJSONObject("error");
+							
+							if(connectCallback != null){
+								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+							}
+						}else{
+							if(connectCallback != null){
+								connectCallback.onSuccess(ConnectSession.getInstance());
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+						if(connectCallback != null){
+							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
+						}
+						
+						return;
+					}
+				} else {
+					Log.e(Connect.TAG, response.error);
+					
+					if(connectCallback != null){
+						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
+					}
+				}
+			}
+		}, callback).execute();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void pushOff(ConnectCallback<ConnectSession> callback){
+		ConnectSession connectSession = ConnectSession.getInstance();
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("connect_id", Connect.getConnectId()));
+		params.add(new BasicNameValuePair("connect_token", connectSession.getConnect_token()));
+		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
+		params.add(new BasicNameValuePair("device_id", DeviceInfo.getInstance().getDevice_id()));
+		
+		new Request(getHttpsUrl(CONNECT_PUSH_OFF_PATH), params, new Request.Callback() {
+			
+			@Override
+			public void onCompleted(Response response) {
+				ConnectCallback<ConnectSession> connectCallback = (ConnectCallback<ConnectSession>)response.user_obejct;
+				
+				if (response.error_code == NetworkThread.E_SUCCESS && response.error.equals("OK")) {
+					JSONObject json = response.getJsonObject();
+					
+					try {
+						if(json.has("error")){
+							JSONObject error = json.getJSONObject("error");
+							
+							if(connectCallback != null){
+								connectCallback.onFail(FuncResult.E_FAIL, new Exception(error.toString()));
+							}
+						}else{
+							if(connectCallback != null){
+								connectCallback.onSuccess(ConnectSession.getInstance());
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+						if(connectCallback != null){
+							connectCallback.onFail(FuncResult.E_FAIL, new Exception(e.getMessage()));
+						}
+						
+						return;
+					}
+				} else {
+					Log.e(Connect.TAG, response.error);
+					
+					if(connectCallback != null){
+						connectCallback.onFail(FuncResult.E_FAIL, new Exception("fail to connect connection :: " + response.error));
+					}
+				}
+			}
+		}, callback).execute();
+	}
 	
 	public static void action(Timestamp when, String what, Integer how, String where, JSONObject etc){
 		ConnectSession connectSession = ConnectSession.getInstance();

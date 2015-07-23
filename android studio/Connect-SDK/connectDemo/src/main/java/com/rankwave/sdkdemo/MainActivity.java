@@ -84,8 +84,8 @@ public class MainActivity extends Activity {
 				findViewById(R.id.btn_logout).setOnClickListener(onLogout);
 				findViewById(R.id.btn_unregist).setOnClickListener(onLeave);
 				
-				findViewById(R.id.btn_unset_gcm_id).setOnClickListener(onUnsetGCMRegistrationId);
-				findViewById(R.id.btn_set_gcm_id).setOnClickListener(onSetGCMRegistrationId);
+				findViewById(R.id.btn_push_off).setOnClickListener(onPushOff);
+				findViewById(R.id.btn_push_on).setOnClickListener(onPushOn);
 				findViewById(R.id.btn_get_email).setOnClickListener(onGetUserInfo);
 				
 			}
@@ -163,30 +163,30 @@ public class MainActivity extends Activity {
 		}
 	};
 	
-	View.OnClickListener onUnsetGCMRegistrationId = new View.OnClickListener() {
+	View.OnClickListener onPushOff = new View.OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			/*
 			 * Push 전송 해지를 위해 GCM registration ID 를 등록 해제하는 함수입니다.
 			 */
-			Connect.unsetGCMRegistrationId(new ConnectCallback<ConnectSession>(){
+			Connect.pushOff(new ConnectCallback<ConnectSession>(){
 				@Override
 				public void onSuccess(ConnectSession connectSession){
 					Log.i(AppConst.LOG_TAG, "========================================");
-	        		Log.i(AppConst.LOG_TAG, "unsetGCMRegistrationId Success.");
+	        		Log.i(AppConst.LOG_TAG, "pushOff Success.");
 	        		Log.i(AppConst.LOG_TAG, "========================================");
 					
 					/*
 	        		 * 데모에서는 dialog 를 보여주고 있습니다.
 	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"unsetGCMRegistrationId", "unsetGCMRegistrationId success", "OK", null);
+							"pushOff", "pushOff success", "OK", null);
 				}
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception){
 					Log.e(AppConst.LOG_TAG, "========================================");
-	        		Log.e(AppConst.LOG_TAG, "unsetGCMRegistrationId Fail.");
+	        		Log.e(AppConst.LOG_TAG, "pushOff Fail.");
 	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
 	        		Log.e(AppConst.LOG_TAG, exception.toString());
 	        		Log.e(AppConst.LOG_TAG, "========================================");
@@ -195,36 +195,36 @@ public class MainActivity extends Activity {
 	        		 * 데모에서는 dialog 를 보여주고 있습니다.
 	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"unsetGCMRegistrationId", "unsetGCMRegistrationId fail :: " + exception.getMessage(), "OK", null);
+							"pushOff", "pushOff fail :: " + exception.getMessage(), "OK", null);
 				}
 			});
 		}
 	};
 	
-	View.OnClickListener onSetGCMRegistrationId = new View.OnClickListener() {
+	View.OnClickListener onPushOn = new View.OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			/*
 			 * Push를 받기위해 GCM registration ID 를 등록 함수입니다.
 			 */
-			Connect.setGCMRegistrationId(new ConnectCallback<ConnectSession>(){
+			Connect.pushOn(new ConnectCallback<ConnectSession>(){
 				@Override
 				public void onSuccess(ConnectSession connectSession){
 					Log.i(AppConst.LOG_TAG, "========================================");
-	        		Log.i(AppConst.LOG_TAG, "setGCMRegistrationId Success.");
+	        		Log.i(AppConst.LOG_TAG, "pushOn Success.");
 	        		Log.i(AppConst.LOG_TAG, "========================================");
 					
 					/*
 	        		 * 데모에서는 dialog 를 보여주고 있습니다.
 	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"setGCMRegistrationId", "setGCMRegistrationId success", "OK", null);
+							"pushOn", "pushOn success", "OK", null);
 				}	
 				@Override
 				public void onFail(FuncResult funcResult, Exception exception){
 					Log.e(AppConst.LOG_TAG, "========================================");
-	        		Log.e(AppConst.LOG_TAG, "setGCMRegistrationId Fail.");
+	        		Log.e(AppConst.LOG_TAG, "pushOn Fail.");
 	        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
 	        		Log.e(AppConst.LOG_TAG, exception.toString());
 	        		Log.e(AppConst.LOG_TAG, "========================================");
@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
 	        		 * 데모에서는 dialog 를 보여주고 있습니다.
 	        		 */
 					CommonAlertDialog.showDefaultDialog(MainActivity.this,
-							"setGCMRegistrationId", "setGCMRegistrationId fail :: " + exception.getMessage(), "OK", null);
+							"pushOn", "pushOn fail :: " + exception.getMessage(), "OK", null);
 				}
 			});
 		}

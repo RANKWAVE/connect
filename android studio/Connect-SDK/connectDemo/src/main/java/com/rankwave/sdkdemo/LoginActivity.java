@@ -131,7 +131,7 @@ public class LoginActivity extends Activity {
 				/*
 				 * Facebook 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 facebookLogin 을 호출합니다.
 				 */
-				Connect.facebookLogin(LoginActivity.this, permissions, true, true, new ConnectCallback<ConnectSession>() {
+				Connect.facebookLogin(LoginActivity.this, permissions, new ConnectCallback<ConnectSession>() {
 					@Override
 					public void onSuccess(ConnectSession connectSession) {						
 						User user = connectSession.getUser();
@@ -182,7 +182,7 @@ public class LoginActivity extends Activity {
 				/*
 				 * Twitter 로그인과 관련된 UI 를 구현하고, 로그인에 대한 Event handler 에서 twitterLogin 을 호출합니다.
 				 */
-				Connect.twitterLogin(LoginActivity.this, true, true, new ConnectCallback<ConnectSession>() {
+				Connect.twitterLogin(LoginActivity.this, new ConnectCallback<ConnectSession>() {
 
 					@Override
 					public void onSuccess(ConnectSession connectSession) {
@@ -483,31 +483,6 @@ public class LoginActivity extends Activity {
 	
 	
 	public void goMainActivity(){
-		/*
-		 * Push 전송을 위해, 현재 Device 에 할당된 GCM registration ID 를 Connect 시스템에 등록합니다.
-		 * 데모 프로젝트에서는 MainActivity로 이동할때 setGCMRegistrationId 를 호출 하고 있습니다.
-		 * 등록 후 각 서비스에 따라 Push 전송을 안받아야 할 경우 설정에서 Push 해제 or Logout 시 안받고 싶은 경우에는
-		 * unsetGCMRegistrationId 함수를 호출하면 됩니다.
-		 */
-		Connect.setGCMRegistrationId(new ConnectCallback<ConnectSession>(){
-			@Override
-			public void onSuccess(ConnectSession connectSession){
-				Log.i(AppConst.LOG_TAG, "========================================");
-        		Log.i(AppConst.LOG_TAG, "setGCMRegistrationId Success.");        		
-        		Log.i(AppConst.LOG_TAG, "========================================");
-			}
-			
-			@Override
-			public void onFail(FuncResult funcResult, Exception exception){
-				Log.e(AppConst.LOG_TAG, "========================================");
-        		Log.e(AppConst.LOG_TAG, "setGCMRegistrationId Fail.");
-        		Log.e(AppConst.LOG_TAG, "----------------------------------------");
-        		Log.e(AppConst.LOG_TAG, exception.toString());
-        		Log.e(AppConst.LOG_TAG, "========================================");
-			}
-			
-		});
-		
 		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 		startActivity(intent);
 	}

@@ -71,24 +71,6 @@ public class InputProfileActivity extends Activity{
 				profile.setName(name);
 
 				/*
-				//Residence info sample
-				Residence residence = profile.new Residence();
-				residence.setCountry("대한민국");
-				residence.setStates("서초구");
-				residence.setCity("서울");
-				residence.setStreet("방배로");
-				residence.setSpot("사무실");
-				profile.setResidence(residence);
-				
-				//Hometown info sample
-				Hometown hometown = profile.new Hometown();
-				hometown.setCountry("대한민국");
-				hometown.setStates("남양주");
-				hometown.setCity("경기도");
-				hometown.setStreet("늘을길");
-				hometown.setSpot("");
-				profile.setHometown(hometown);
-				
 				profile.setLocale("ko_kr");
 				profile.setTimezone("9.5");
 				*/

@@ -192,25 +192,25 @@
             android:orientation="horizontal" >
             
             <Button                
-                android:id="@+id/btn_set_gcm_id"
+                android:id="@+id/btn_push_on"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Set GCM Registration ID"
+                android:text="PushOn"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_white"
                 android:textSize="18sp" />
             
            <Button
-                android:id="@+id/btn_unset_gcm_id"
+                android:id="@+id/btn_push_off"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Unset GCM Registration ID"
+                android:text="PushOff"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_gray"
                 android:textSize="18sp" />
