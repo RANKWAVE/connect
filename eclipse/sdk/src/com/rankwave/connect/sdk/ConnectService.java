@@ -85,6 +85,25 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("locale", deviceInfo.getLocale()));
 		params.add(new BasicNameValuePair("location", deviceInfo.getLocation()));
 		
+		
+		//20150922 추가
+		params.add(new BasicNameValuePair("ad_id_type", DeviceInfo.getInstance().getOs_type()));	//현재는 device에 따라 수집하기 때문에 os_type 를 사용하지만 추후 facebook_user_id도 수집할 경우에는 수정이 필요. 
+		params.add(new BasicNameValuePair("ad_id", DeviceInfo.getInstance().getAd_id()));
+		String savedId = ConnectSession.getInstance().loadId();
+		String savedIdType = ConnectSession.getInstance().loadIdType();
+		String savedSnsType = ConnectSession.getInstance().loadSnsType();
+		
+		if(savedId != null && !"".equals(savedId)){
+			params.add(new BasicNameValuePair("saved_id", savedId));
+		}
+		if(savedIdType != null && !"".equals(savedIdType)){
+			params.add(new BasicNameValuePair("saved_id_type", savedIdType));
+		}
+		if(savedSnsType != null && !"".equals(savedSnsType)){
+			params.add(new BasicNameValuePair("saved_sns_type", savedSnsType));
+		}
+		
+		
 		new Request(getHttpsUrl(CONNECT_INITIALIZE_PATH), params, new Request.Callback() {
 			
 			@Override
@@ -180,6 +199,25 @@ public class ConnectService {
 		params.add(new BasicNameValuePair("ad_id_type", DeviceInfo.getInstance().getOs_type()));	//현재는 device에 따라 수집하기 때문에 os_type 를 사용하지만 추후 facebook_user_id도 수집할 경우에는 수정이 필요. 
 		params.add(new BasicNameValuePair("ad_id", DeviceInfo.getInstance().getAd_id()));
 		
+		//20150922 추가
+		params.add(new BasicNameValuePair("os_type", DeviceInfo.getInstance().getOs_type()));
+		
+		String savedId = ConnectSession.getInstance().loadId();
+		String savedIdType = ConnectSession.getInstance().loadIdType();
+		String savedSnsType = ConnectSession.getInstance().loadSnsType();
+		
+		if(savedId != null && !"".equals(savedId)){
+			params.add(new BasicNameValuePair("saved_id", savedId));
+		}
+		if(savedIdType != null && !"".equals(savedIdType)){
+			params.add(new BasicNameValuePair("saved_id_type", savedIdType));
+		}
+		if(savedSnsType != null && !"".equals(savedSnsType)){
+			params.add(new BasicNameValuePair("saved_sns_type", savedSnsType));
+		}
+		
+		
+		
 		new Request(getHttpsUrl(CONNECT_TOKEN_PATH), params, new Callback() {
 
 			@Override
@@ -215,6 +253,13 @@ public class ConnectService {
 								user.setJoined(joined);
 							}else{
 								user.setJoined(true);
+							}
+							
+							if(json.has("user")){
+								JSONObject userJson = json.getJSONObject("user");
+								if(userJson.has("sns_id")){
+									userJson.getString("sns_id");
+								}
 							}
 							
 							if (connectCallback != null) {
@@ -435,6 +480,7 @@ public class ConnectService {
 							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 							
 							ConnectSession.getConnectSession().deleteSavedConnectToken();
+							ConnectSession.getConnectSession().deleteSavedSession();
 														
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());
@@ -490,6 +536,7 @@ public class ConnectService {
 							ConnectSession.getInstance().setConnectSessionState(ConnectSessionState.CLOSED);
 							
 							ConnectSession.getConnectSession().deleteSavedConnectToken();
+							ConnectSession.getConnectSession().deleteSavedSession();
 							
 							if(connectCallback != null){
 								connectCallback.onSuccess(ConnectSession.getInstance());

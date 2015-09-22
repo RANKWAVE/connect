@@ -60,30 +60,30 @@ public class ConnectManager {
 					setFacebookToken(accessToken, new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							
-							auto_login_connect_callback.onSuccess(connectSession);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onSuccess(connectSession);
 						}
 						
 						@Override
 						public void onFail(FuncResult result, Exception exception){
 							Connect.getConnectSession().deleteSavedConnectToken();
-							
-							auto_login_connect_callback.onFail(result, exception);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onFail(result, exception);
 						}
 					});
 				}else if(SnsType.toEnum(snsType).equals(SnsType.SNS_TYPE_TWITTER)){
 					setTwitterToken(accessToken, tokenSecret, new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							
-							auto_login_connect_callback.onSuccess(connectSession);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onSuccess(connectSession);
 						}
 						
 						@Override
 						public void onFail(FuncResult result, Exception exception){
 							Connect.getConnectSession().deleteSavedConnectToken();
-							
-							auto_login_connect_callback.onFail(result, exception);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onFail(result, exception);
 						}
 					});
 				}
@@ -93,36 +93,37 @@ public class ConnectManager {
 				emailLogin(email, new ConnectCallback<ConnectSession>(){
 						@Override
 						public void onSuccess(ConnectSession connectSession){
-							
-							auto_login_connect_callback.onSuccess(connectSession);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onSuccess(connectSession);
 						}
 						
 						@Override
 						public void onFail(FuncResult result, Exception exception){
 							Connect.getConnectSession().deleteSavedConnectToken();
-							
-							auto_login_connect_callback.onFail(result, exception);
+							if(auto_login_connect_callback != null)
+								auto_login_connect_callback.onFail(result, exception);
 						}
 					});
 			}else if(IdType.toEnum(idType).equals(IdType.ID_TYPE_ANONYMOUS)){
 				anonymousLogin(new ConnectCallback<ConnectSession>(){
 					@Override
 					public void onSuccess(ConnectSession connectSession){
-						
-						auto_login_connect_callback.onSuccess(connectSession);
+						if(auto_login_connect_callback != null)
+							auto_login_connect_callback.onSuccess(connectSession);
 					}
 					
 					@Override
 					public void onFail(FuncResult result, Exception exception){
 						Connect.getConnectSession().deleteSavedConnectToken();
-						
-						auto_login_connect_callback.onFail(result, exception);
+						if(auto_login_connect_callback != null)
+							auto_login_connect_callback.onFail(result, exception);
 					}
 				});
 			}
 			
 		}else{
-			auto_login_connect_callback.onFail(FuncResult.E_NOT_EXIST_SAVED_SESSION, new Exception("saved Session not exist."));
+			if(auto_login_connect_callback != null)
+				auto_login_connect_callback.onFail(FuncResult.E_NOT_EXIST_SAVED_SESSION, new Exception("saved Session not exist."));
 		}
 	}
 	
@@ -179,6 +180,7 @@ public class ConnectManager {
 										connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_SNS));
 										connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_FACEBOOK));
 										connectSession.storeSnsAccessToken(info.get("facebook_access_token").toString());
+										connectSession.storeId(connectSession.getUser().getId());
 									}
 									
 									login_connect_callback.onSuccess(connectSession);
@@ -304,6 +306,7 @@ public class ConnectManager {
 										connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_TWITTER));
 										connectSession.storeSnsAccessToken(info.get("twitter_access_token").toString());
 										connectSession.storeSnsTokenSecret(info.get("twitter_token_secret").toString());
+										connectSession.storeId(connectSession.getUser().getId());
 									}
 																		
 									login_connect_callback.onSuccess(connectSession);
@@ -336,6 +339,7 @@ public class ConnectManager {
 									connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_TWITTER));
 									connectSession.storeSnsAccessToken(info.get("twitter_access_token").toString());
 									connectSession.storeSnsTokenSecret(info.get("twitter_token_secret").toString());
+									connectSession.storeId(connectSession.getUser().getId());
 								}
 								
 								login_connect_callback.onSuccess(connectSession);
@@ -559,6 +563,7 @@ public class ConnectManager {
 										connectSession.storeSnsType(SnsType.toString(connectSession.getUser().getSnsType()));
 										connectSession.storeSnsAccessToken(connectSession.getUser().getSnsInfo().getAccessToken());
 										connectSession.storeSnsTokenSecret(connectSession.getUser().getSnsInfo().getTokenSecret());
+										connectSession.storeId(connectSession.getUser().getId());
 									}else if(connectSession.getUser().getIdType() == IdType.ID_TYPE_EMAIL){
 										connectSession.storeId(connectSession.getUser().getId());
 									}

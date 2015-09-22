@@ -40,61 +40,9 @@ public class LoginActivity extends Activity {
 		Connect.sdkInitialize(getApplicationContext(), new ConnectCallback<ConnectSession>() {
 			@Override
         	public void onSuccess(ConnectSession connectSession){
-				showLoading(true);
-				
-				/*
-				 * 이전에 facebookLogin 이나 twitterLogin 을 sessionSaveFlag 파라미터를 true 로 호출한 경우, 마지막으로 로그인한 세션이 저장되게 됩니다. 
-				 * 마지막으로 로그인한 세션이 저장된 상태에서, autoLogin 을 호출하면, 사용자에게 별도 인증 과정을 노출하지 않고서, 로그인 처리를 할 수 있게 됩니다.
-				 */
-				Connect.autoLogin(new ConnectCallback<ConnectSession>() {
-					@Override
-                	public void onSuccess(ConnectSession connectSession){
-						Log.i(AppConst.LOG_TAG, "========================================");
-		                Log.i(AppConst.LOG_TAG, "autoLogin success.");
-		                Log.i(AppConst.LOG_TAG, "----------------------------------------");
-		                Log.i(AppConst.LOG_TAG, "ConnectSessionState :: " + connectSession.getConnectSessionState());
-		                Log.i(AppConst.LOG_TAG, "user :: " + connectSession.getUser().toString());
-		                Log.i(AppConst.LOG_TAG, "========================================");
-		                
-		                /*
-		                 * 데모 프로젝트에서는 로그인 성공시 아래와 같이 Loading 처리 후 MainActivity 로 보내고 있습니다. 서비스에 맞게 처리 하시면 됩니다.
-						 */
-						goMainActivity();
-						
-						new Handler().postDelayed(new Runnable() {
-							
-							@Override
-							public void run() {
-								showLoading(false);											
-							}
-						}, 1000);
-						
-					}
-					@Override
-					public void onFail(FuncResult funcResult, Exception exception){
-						Log.e(AppConst.LOG_TAG, "========================================");
-                		Log.e(AppConst.LOG_TAG, "autoLogin Fail.");
-                		Log.e(AppConst.LOG_TAG, "----------------------------------------");
-                		Log.e(AppConst.LOG_TAG, funcResult.toString() + " : " + exception.toString());
-                		Log.e(AppConst.LOG_TAG, "========================================");
-                		
-                		/*
-                		 * 저장된 세션이 없을 경우의 처리를 합니다.
-                		 * 데모에서는 로그인 화면을 보여주고자 loading만 hide 하고 현재 Activity 에 그대로 둡니다.                		
-                		*/
-                		if(funcResult == FuncResult.E_NOT_EXIST_SAVED_SESSION){
-                			showLoading(false);
-            			/*
-                		 * SNS Token이 만료된 경우의 처리르 합니다.
-                		 * 데모에서는 다시 로그인을 하여 SNS token 을 갱신하고자 loading만 hide 하고 현재 Activity 에 그대로 둡니다.                		
-                		*/
-                		}else if(funcResult == FuncResult.E_INVALID_SNS_TOKEN){
-                			showLoading(false);
-                		}else{
-                			showLoading(false);
-                		}
-					}
-				});
+				Log.i(AppConst.LOG_TAG, "========================================");
+                Log.i(AppConst.LOG_TAG, "sdkInitialize success.");
+                Log.i(AppConst.LOG_TAG, "----------------------------------------");
 			}
 			
 			@Override
