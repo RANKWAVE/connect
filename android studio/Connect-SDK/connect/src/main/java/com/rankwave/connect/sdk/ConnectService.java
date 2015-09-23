@@ -92,6 +92,7 @@ public class ConnectService {
 		String savedId = ConnectSession.getInstance().loadId();
 		String savedIdType = ConnectSession.getInstance().loadIdType();
 		String savedSnsType = ConnectSession.getInstance().loadSnsType();
+		String savedConnectToken = ConnectSession.getInstance().loadSavedConnectToken();
 		
 		if(savedId != null && !"".equals(savedId)){
 			params.add(new BasicNameValuePair("saved_id", savedId));
@@ -102,7 +103,9 @@ public class ConnectService {
 		if(savedSnsType != null && !"".equals(savedSnsType)){
 			params.add(new BasicNameValuePair("saved_sns_type", savedSnsType));
 		}
-		
+		if(savedConnectToken != null && !"".equals(savedConnectToken)){
+			params.add(new BasicNameValuePair("saved_connect_token", savedConnectToken));
+		}
 		
 		new Request(getHttpsUrl(CONNECT_INITIALIZE_PATH), params, new Request.Callback() {
 			
@@ -205,6 +208,7 @@ public class ConnectService {
 		String savedId = ConnectSession.getInstance().loadId();
 		String savedIdType = ConnectSession.getInstance().loadIdType();
 		String savedSnsType = ConnectSession.getInstance().loadSnsType();
+		String savedConnectToken = ConnectSession.getInstance().loadSavedConnectToken();
 		
 		if(savedId != null && !"".equals(savedId)){
 			params.add(new BasicNameValuePair("saved_id", savedId));
@@ -215,7 +219,9 @@ public class ConnectService {
 		if(savedSnsType != null && !"".equals(savedSnsType)){
 			params.add(new BasicNameValuePair("saved_sns_type", savedSnsType));
 		}
-		
+		if(savedConnectToken != null && !"".equals(savedConnectToken)){
+			params.add(new BasicNameValuePair("saved_connect_token", savedConnectToken));
+		}
 		
 		
 		new Request(getHttpsUrl(CONNECT_TOKEN_PATH), params, new Callback() {
