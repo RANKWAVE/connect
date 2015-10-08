@@ -15,7 +15,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils.TruncateAt;
@@ -83,8 +82,7 @@ public class GCMManager {
 			return "";
 		}
 
-		int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION,
-				Integer.MIN_VALUE);
+		int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
 		int currentVersion = Util.getAppVersionCode(context);
 		if (registeredVersion != currentVersion) {
 			Log.i(Connect.TAG, "App version changed.");
@@ -207,7 +205,7 @@ public class GCMManager {
 					registerInBackground();
 				} else {
 					// upload regID
-					//uploadRegistrationId();
+					uploadRegistrationId();
 				}
 				super.onPostExecute(result);
 			}
@@ -216,21 +214,7 @@ public class GCMManager {
 	}
 
 	public void uploadRegistrationId() {
-
-		if (Connect.getActiveConnectSession().getConnectSessionState() == ConnectSessionState.OPENED) {
-			ConnectService.setGCMRegistrationId(null);
-
-		} else {
-
-			new Handler().postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-
-					uploadRegistrationId();
-				}
-			}, 1000);
-		}
+		ConnectService.pushRegisterDevice(null);
 	}
 
 	public void uploadPushAction(String push_seq) {

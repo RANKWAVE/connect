@@ -3,9 +3,7 @@ package com.rankwave.connect.sdk;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -32,11 +30,10 @@ public class ConnectPollingThread extends Thread{
 								editor.putString(Connect.INTENT_PUSH_SEQ, "");
 								editor.commit();
 								
-								JSONObject etc = new JSONObject();
-								etc.put("push_seq", push_seq);
-								etc.put("os_type", DeviceInfo.getInstance().getOs_type());
+								JSONObject object = new JSONObject();
+								object.put("push_seq", push_seq);
 								
-								ConnectService.action(null, "PUSH", 1, "CONNECT SDK", etc);
+								ConnectService.action(null, "PUSH EVENT CLICK", 1, "CONNECT SDK", object);
 							}catch(Exception e){
 								e.printStackTrace();
 							}
@@ -44,34 +41,6 @@ public class ConnectPollingThread extends Thread{
 					}, 0);
 				}
 				
-				
-				String open_url = prefs.getString(Connect.INTENT_PUSH_OPEN_URL, "");
-				
-				if(!open_url.equals("")){
-					new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							try{
-								String open_url = prefs.getString(Connect.INTENT_PUSH_OPEN_URL, "");
-								
-								SharedPreferences.Editor editor = prefs.edit();
-								editor.putString(Connect.INTENT_PUSH_OPEN_URL, "");
-								editor.commit();
-								
-								String connectToken = "";
-								if(ConnectSession.getConnectSession() != null){
-									connectToken = ConnectSession.getConnectSession().getConnect_token();
-								}
-								Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(open_url + "?connect_token=" + connectToken));
-								browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-								Connect.getContext().startActivity(browserIntent);
-								
-							}catch(Exception e){
-								e.printStackTrace();
-							}
-						}
-					}, 1000);
-				}
 
 				SystemClock.sleep(3000);
 			}

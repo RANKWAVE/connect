@@ -2,13 +2,8 @@ package com.rankwave.connect.sdk;
 
 import java.util.Locale;
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
-
 import android.content.Context;
-import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 public class DeviceInfo {
 	protected Context context;
@@ -20,6 +15,7 @@ public class DeviceInfo {
 	private String device_model;
 	private String locale;
 	private String location;
+	private String network_operation_name;
 	
 	private String ad_id;
 	
@@ -47,61 +43,16 @@ public class DeviceInfo {
 		os_version = Util.getOsVersion();
 		app_version = Util.getAppVersion(context);
 		device_model = Util.getDeviceModel();
+		
 		Locale locale    = context.getResources().getConfiguration().locale;
 		this.locale = locale.toString();
 		
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	    String countryCode = tm.getSimCountryIso();
 	    this.location = countryCode;
+	    this.network_operation_name = tm.getNetworkOperatorName();
 	    
-	    
-	    getAdvertisingId(context);
 	}
-	
-	
-	// Do not call this function from the main thread. Otherwise, 
-	// an IllegalStateException will be thrown.
-	private void getAdvertisingId(Context context) {
-		new AsyncTask<DeviceInfo, Integer, Info>() {
-			@Override
-			protected Info doInBackground(DeviceInfo... params) {
-				DeviceInfo deviceInfo = params[0];
-			
-				Info adInfo = null;
-				try {
-				    adInfo = AdvertisingIdClient.getAdvertisingIdInfo(deviceInfo.context);
-				    
-				    if(adInfo != null){
-				    	String id = adInfo.getId();
-						Boolean isLAT = adInfo.isLimitAdTrackingEnabled();
-						
-						Log.d(Connect.TAG, adInfo.toString());
-						if(!isLAT){
-							setAd_id(id);
-						}
-				    }
-				} catch (Exception e) {
-				    // Unrecoverable error connecting to Google Play services (e.g.,
-				    // the old version of the service doesn't support getting AdvertisingId).
-					  e.printStackTrace();
-				}
-				  
-				return adInfo;
-			}
-			
-			@Override
-			protected void onPostExecute(Info adInfo) {
-				if (adInfo == null) {
-					// retry??
-					
-				} else {
-					
-				}
-				super.onPostExecute(adInfo);
-			}
-		}.execute(DeviceInfo.getInstance(), null, null);
-	}
-
 	
 	
 	public String getDevice_id() {
@@ -160,10 +111,16 @@ public class DeviceInfo {
 		return ad_id;
 	}
 
-	private void setAd_id(String ad_id) {
+	public void setAd_id(String ad_id) {
 		this.ad_id = ad_id;
 	}
-	
-	
-	
+
+	public String getNetwork_operation_name() {
+		return network_operation_name;
+	}
+
+	public void setNetwork_operation_name(String network_operation_name) {
+		this.network_operation_name = network_operation_name;
+	}
+
 }

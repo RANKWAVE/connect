@@ -26,7 +26,6 @@ public class Util {
 	}
 
 	public static String getDeviceModel() {
-		
 		return android.os.Build.MODEL;
 	}
 	
