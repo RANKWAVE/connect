@@ -26,12 +26,11 @@ public class Util {
 	}
 
 	public static String getDeviceModel() {
-		
-		return android.os.Build.MODEL;
+		return Build.MODEL;
 	}
 	
 	public static String getOsVersion() {
-		return android.os.Build.VERSION.RELEASE;
+		return Build.VERSION.RELEASE;
 	}
 	
 	public static String getAppVersion(Context context) {

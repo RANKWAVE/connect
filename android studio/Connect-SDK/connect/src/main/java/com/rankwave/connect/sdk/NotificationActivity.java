@@ -125,7 +125,6 @@ public class NotificationActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					try{
-						finish();		
 						
 						String payload = "";
 						String cmn = "";
@@ -156,6 +155,8 @@ public class NotificationActivity extends Activity{
 						notificationIntent.putExtra(Connect.INTENT_PUSH_OPEN_URL, open_url);
 						
 						sendBroadcast(notificationIntent);
+						
+						finish();
 					}catch(Exception e){
 						e.printStackTrace();
 					}

@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="20" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,7 +23,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Custom"> 
+        android:theme="@style/Theme.Custom"
+        android:name="com.rankwave.sdkdemo.DemoApplication">
         <receiver
             android:name="com.rankwave.connect.sdk.core.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
@@ -56,20 +57,13 @@
         </activity>
         <activity android:name=".MainActivity" >
         </activity>
-        <activity android:name=".InputAccountActivity" >
-        </activity>
-        <activity android:name=".InputProfileActivity" >
-        </activity>
-        
+
         <activity
             android:name="com.rankwave.connect.sdk.NotificationActivity" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:launchMode="singleTop">
         </activity>
-        
-        <activity
-            android:name="com.rankwave.connect.sdk.OAuthLoginActivity">
-        </activity>
+
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
@@ -83,15 +77,8 @@
         
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_appid" />
-       
-        <meta-data
-            android:name="com.rankwave.connect.sdk.TwitterConsumerKey"
-            android:value="@string/twitter_consumer_key" />
-        
-         <meta-data
-            android:name="com.rankwave.connect.sdk.TwitterConsumerSecret"
-            android:value="@string/twitter_consumer_secret" />
+            android:value="@string/facebook_app_id" />
+
          
          <meta-data
             android:name="com.rankwave.connect.sdk.SenderId"
@@ -99,6 +86,9 @@
          
          <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
          
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d9c1e2c1a9a6378fb088335adfc9c4f1b9a8934d" />
     </application>
 
 </manifest>

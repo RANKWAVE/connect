@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_profile"
         android:gravity="center"
@@ -49,8 +49,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/img_interest"
+        android:layout_height="180dp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -60,43 +59,31 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/btn_get_connect_token"
+                android:id="@+id/btn_push_on"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Connect Token"
+                android:text="PushOn"
                 android:gravity="center"
-                android:background="@drawable/selector_btn_gray"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btn_get_access_token"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:textColor="#333"
                 android:background="@drawable/selector_btn_white"
-                android:text="Access Token"
-                android:gravity="center"
                 android:textSize="18sp" />
 
             <Button
-                android:id="@+id/btn_get_sns_id"
+                android:id="@+id/btn_push_off"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:background="@drawable/selector_btn_gray"
-                android:text="SNS ID"
+                android:text="PushOff"
                 android:gravity="center"
+                android:background="@drawable/selector_btn_gray"
                 android:textSize="18sp" />
-            
+
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
@@ -104,43 +91,31 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/btn_get_login_type"
+                android:id="@+id/btn_logout"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Login Type"
-                android:gravity="center"
-                android:background="@drawable/selector_btn_white"
-                android:textSize="18sp" />
-            
-            <Button
-                android:id="@+id/btn_get_name"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:textColor="#333"
-                android:text="Name"
+                android:text="Logout"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_gray"
                 android:textSize="18sp" />
-            
+
             <Button
-                android:id="@+id/btn_get_profile_url"
+                android:id="@+id/btn_leave"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:textColor="#333"
-                android:text="Profile URL"
+                android:text="Leave"
                 android:gravity="center"
                 android:background="@drawable/selector_btn_white"
                 android:textSize="18sp" />
         </LinearLayout>
-        
-        <LinearLayout
+
+        <!-- LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -183,9 +158,9 @@
                 android:textSize="18sp" />
 			
             
-        </LinearLayout>
-        
-        <LinearLayout
+        </LinearLayout -->
+
+        <!-- LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -226,9 +201,9 @@
                 android:gravity="center"
                 android:background="@drawable/selector_btn_white"
                 android:textSize="18sp" />
-        </LinearLayout>
-        
-        
+        </LinearLayout -->
+
+
     </LinearLayout>
 
 </LinearLayout>

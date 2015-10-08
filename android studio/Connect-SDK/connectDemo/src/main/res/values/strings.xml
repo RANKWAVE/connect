@@ -3,9 +3,7 @@
 
     <string name="app_name">SDK Demo</string>
     <string name="connect_id">df0cb005edf7bdd0ac6f6cfa0b03e421</string>
-	<string name="facebook_appid">180337005493402</string>
-	<string name="twitter_consumer_key">hclIiq4u3s3PT6qXeCIGM3hJy</string>
-	<string name="twitter_consumer_secret">9ZydYUpC9RaH5DMeUkNkOv07lJcSJbIlpA9lvsdWqLtn891zOf</string>
+	<string name="facebook_app_id">180337005493402</string>
 	<string name="sender_id">937856753474</string>
 	
 </resources>

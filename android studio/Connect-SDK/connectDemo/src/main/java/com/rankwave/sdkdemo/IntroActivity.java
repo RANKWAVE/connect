@@ -13,12 +13,22 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 import com.rankwave.connect.sdk.Connect;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 public class IntroActivity extends Activity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "JQWGA7vFlzSqocTsSjH5dyZcL";
+    private static final String TWITTER_SECRET = "ektIqlRl9cadfoYiDZg35SwAq9771fn9XzpqjMuvd31032f3FB";
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+		Fabric.with(this, new Twitter(authConfig));
 		
 		String payload = getIntent().getStringExtra(Connect.INTENT_PUSH_PAYLOAD);
 	    if (payload != null) {
