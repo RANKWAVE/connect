@@ -290,7 +290,10 @@ public class LoginActivity extends Activity {
 					resultCode, data);
 		}
 		
-		mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
+		if(mTwitterAuthClient != null){
+			mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
+		}
+		
 	}
 	
 	public void showLoading(boolean show) {
