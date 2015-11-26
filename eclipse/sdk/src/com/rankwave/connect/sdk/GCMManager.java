@@ -250,9 +250,24 @@ public class GCMManager {
 				tv_title.setEllipsize(TruncateAt.END);
 				tv_message.setSingleLine(true);
 				tv_message.setEllipsize(TruncateAt.END);
-				
-				
-				
+
+				int icon = 0x1080093;
+				ApplicationInfo ai = context.getPackageManager()
+						.getApplicationInfo(context.getPackageName(), 0);
+				icon = ai.icon;
+
+				//icon 정보가 메타데이터에 있으면 적용하고 없으면 기본 앱 아이콘
+				ApplicationInfo aiMeta = context.getPackageManager().getApplicationInfo(
+						context.getPackageName(), PackageManager.GET_META_DATA);
+				int large = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_LARGE_ICON);
+
+				if(large == 0){
+					large = icon;
+				}
+
+				ImageView iv_icon_image = (ImageView)layout.findViewById(R.id.iv_icon);
+				iv_icon_image.setImageResource(large);
+
 				ImageView iv_noti_image = (ImageView)layout.findViewById(R.id.iv_noti_image);
 				LinearLayout btn_layout = (LinearLayout)layout.findViewById(R.id.btn_layout);
 				
@@ -289,7 +304,7 @@ public class GCMManager {
 			ApplicationInfo ai = context.getPackageManager()
 					.getApplicationInfo(context.getPackageName(), 0);
 			icon = ai.icon;
-			
+
 			String message = "";
 			String title = "";
 			String payload = "";
@@ -358,8 +373,22 @@ public class GCMManager {
 
 			notificationIntent.setAction(String.valueOf(System
 					.currentTimeMillis()));
-			
-			
+
+
+			//icon 정보가 메타데이터에 있으면 적용하고 없으면 기본 앱 아이콘
+			ApplicationInfo aiMeta = context.getPackageManager().getApplicationInfo(
+					context.getPackageName(), PackageManager.GET_META_DATA);
+			int large = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_LARGE_ICON);
+			int small = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_SMALL_ICON);
+
+			if(large == 0){
+				large = icon;
+			}
+
+			if(small == 0){
+				small = icon;
+			}
+
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 			builder.setContentTitle(title)
 			.setContentText(message)
@@ -367,13 +396,14 @@ public class GCMManager {
 			.setWhen(System.currentTimeMillis())
 			.setProgress(0, 0, false)
 			.setAutoCancel(true)
-			.setSmallIcon(icon)
+			.setSmallIcon(small)
+			.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), large))
 			.setContentIntent(pendingIntent);
 			
 			//big picture
 			if(noti_style == 1){
-				Bitmap bigLargeIcon = BitmapFactory.decodeResource(context.getResources(), icon);	//확대시 왼쪽에 나오는 아이콘
-				
+				Bitmap bigLargeIcon = BitmapFactory.decodeResource(context.getResources(), large);	//확대시 왼쪽에 나오는 아이콘
+
 				builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).bigLargeIcon(bigLargeIcon)
 						.setSummaryText(message));
 				

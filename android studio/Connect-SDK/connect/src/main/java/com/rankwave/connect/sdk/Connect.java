@@ -19,7 +19,10 @@ public final class Connect {
 	public static final String PROPERTY_CONNECT_ID = "com.rankwave.connect.sdk.ConnectId";
 	public static final String PROPERTY_CONNECT_SECRET = "com.rankwave.connect.sdk.ConnectSecret";
 	public static final String PROPERTY_SENDER_ID = "com.rankwave.connect.sdk.SenderId";
-	
+
+	public static final String PROPERTY_NOTIFICATION_LARGE_ICON = "com.rankwave.notification.large_icon";
+	public static final String PROPERTY_NOTIFICATION_SMALL_ICON = "com.rankwave.notification.small_icon";
+
 	public static final String SDK_VERISON = "2.1.0";
 	public static final String INTENT_PUSH_PAYLOAD = "com.rankwave.connect.sdk.pushpayload";
 	public static final String INTENT_PUSH_SEQ = "com.rankwave.connect.sdk.pushseq";

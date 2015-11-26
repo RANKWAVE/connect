@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -88,8 +90,25 @@ public class NotificationActivity extends Activity{
 			if(json.has("popup_style") && !json.isNull("popup_style")){
 				popup_style = json.getInt("popup_style");
 			}
-			
-			
+
+
+			int icon = 0x1080093;
+			ApplicationInfo ai = getApplicationContext().getPackageManager()
+					.getApplicationInfo(getApplicationContext().getPackageName(), 0);
+			icon = ai.icon;
+
+			//icon 정보가 메타데이터에 있으면 적용하고 없으면 기본 앱 아이콘
+			ApplicationInfo aiMeta = getApplicationContext().getPackageManager().getApplicationInfo(
+					getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+			int large = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_LARGE_ICON);
+
+			if(large == 0){
+				large = icon;
+			}
+
+			ImageView iv_icon_image = (ImageView)findViewById(R.id.iv_icon);
+			iv_icon_image.setImageResource(large);
+
 			ImageView iv_noti_image = (ImageView)findViewById(R.id.iv_noti_image);
 			LinearLayout btn_layout = (LinearLayout) findViewById(R.id.btn_layout);
 			if(popup_style == 2){

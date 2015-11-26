@@ -234,31 +234,46 @@ public class GCMManager {
 		try{
 			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 			if(pm.isScreenOn()){
-				
+
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View layout = inflater.inflate(R.layout.notification, null);
-				
+
 				layout.setPadding(0, 0, 0, 0);
-				
+
 				TextView tv_title = (TextView) layout.findViewById(R.id.tv_title);
 				TextView tv_message = (TextView) layout.findViewById(R.id.tv_message);
 				tv_title.setText(json.getString("title"));
 				tv_message.setText(json.getString("message"));
-				
-				
+
+
 				tv_title.setSingleLine(true);
 				tv_title.setEllipsize(TruncateAt.END);
 				tv_message.setSingleLine(true);
 				tv_message.setEllipsize(TruncateAt.END);
-				
-				
-				
+
+				int icon = 0x1080093;
+				ApplicationInfo ai = context.getPackageManager()
+						.getApplicationInfo(context.getPackageName(), 0);
+				icon = ai.icon;
+
+				//icon 정보가 메타데이터에 있으면 적용하고 없으면 기본 앱 아이콘
+				ApplicationInfo aiMeta = context.getPackageManager().getApplicationInfo(
+						context.getPackageName(), PackageManager.GET_META_DATA);
+				int large = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_LARGE_ICON);
+
+				if(large == 0){
+					large = icon;
+				}
+
+				ImageView iv_icon_image = (ImageView)layout.findViewById(R.id.iv_icon);
+				iv_icon_image.setImageResource(large);
+
 				ImageView iv_noti_image = (ImageView)layout.findViewById(R.id.iv_noti_image);
 				LinearLayout btn_layout = (LinearLayout)layout.findViewById(R.id.btn_layout);
-				
+
 				iv_noti_image.setVisibility(View.GONE);
 				btn_layout.setVisibility(View.GONE);
-				
+
 				Toast toast = new Toast(context);
 
 				toast.setGravity(Gravity.CENTER_VERTICAL, 0, -200);
@@ -269,19 +284,19 @@ public class GCMManager {
 			}else{
 				Intent intent = new Intent(context,
 						NotificationActivity.class);
-				
+
 				intent.putExtra("json", json.toString());
 				//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
-			}	
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-			
+
 	}
-	
-	
+
+
 	private void notification(Context context, JSONObject json, Bitmap bigPicture){
 		//icon
 		int icon = 0x1080093;
@@ -289,7 +304,7 @@ public class GCMManager {
 			ApplicationInfo ai = context.getPackageManager()
 					.getApplicationInfo(context.getPackageName(), 0);
 			icon = ai.icon;
-			
+
 			String message = "";
 			String title = "";
 			String payload = "";
@@ -300,7 +315,7 @@ public class GCMManager {
 			String open_url = "";
 			int noti_style = 0;
 			int popup_style = 0;
-			
+
 
 			if (json.has("message") == true) {
 				message = json.getString("message");
@@ -325,25 +340,25 @@ public class GCMManager {
 			if (json.has("push_seq") == true) {
 				push_seq = json.getString("push_seq");
 			}
-			
+
 			if(json.has("noti_priority")){
 				noti_priority = json.getInt("noti_priority");
 			}
-						
+
 			if(json.has("open_url")){
 				open_url = json.getString("open_url");
 			}
-			
+
 			if(json.has("noti_style")){
 				noti_style = json.getInt("noti_style");
 			}
 			if(json.has("popup_style")){
 				popup_style = json.getInt("popup_style");
 			}
-						
+
 			NotificationManager notificationManager = (NotificationManager) context
 					.getSystemService(Context.NOTIFICATION_SERVICE);
-			
+
 			Intent notificationIntent = new Intent(
 					context.getApplicationContext(), ConnectReceiver.class)
 					.setAction(Connect.ACTION_PUSH_CLICK);
@@ -351,100 +366,115 @@ public class GCMManager {
 			notificationIntent.putExtra(Connect.INTENT_PUSH_CMN, cmn);
 			notificationIntent.putExtra(Connect.INTENT_PUSH_SEQ, push_seq);
 			notificationIntent.putExtra(Connect.INTENT_PUSH_OPEN_URL, open_url);
-			
+
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(
 					context.getApplicationContext(), 0, notificationIntent,
 					PendingIntent.FLAG_UPDATE_CURRENT);
 
 			notificationIntent.setAction(String.valueOf(System
 					.currentTimeMillis()));
-			
-			
+
+
+			//icon 정보가 메타데이터에 있으면 적용하고 없으면 기본 앱 아이콘
+			ApplicationInfo aiMeta = context.getPackageManager().getApplicationInfo(
+					context.getPackageName(), PackageManager.GET_META_DATA);
+			int large = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_LARGE_ICON);
+			int small = aiMeta.metaData.getInt(Connect.PROPERTY_NOTIFICATION_SMALL_ICON);
+
+			if(large == 0){
+				large = icon;
+			}
+
+			if(small == 0){
+				small = icon;
+			}
+
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 			builder.setContentTitle(title)
-			.setContentText(message)
-			.setTicker(title + " " + message)
-			.setWhen(System.currentTimeMillis())
-			.setProgress(0, 0, false)
-			.setAutoCancel(true)
-			.setSmallIcon(icon)
-			.setContentIntent(pendingIntent);
-			
+					.setContentText(message)
+					.setTicker(title + " " + message)
+					.setWhen(System.currentTimeMillis())
+					.setProgress(0, 0, false)
+					.setAutoCancel(true)
+					.setSmallIcon(small)
+					.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), large))
+					.setContentIntent(pendingIntent);
+
 			//big picture
 			if(noti_style == 1){
-				Bitmap bigLargeIcon = BitmapFactory.decodeResource(context.getResources(), icon);	//확대시 왼쪽에 나오는 아이콘
-				
+				Bitmap bigLargeIcon = BitmapFactory.decodeResource(context.getResources(), large);	//확대시 왼쪽에 나오는 아이콘
+
 				builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).bigLargeIcon(bigLargeIcon)
 						.setSummaryText(message));
-				
-			//long text
+
+				//long text
 			}else if(noti_style == 2){
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message).setBigContentTitle(title));
 			}
-			
+
 			//priority
 			if(noti_priority == 1)
 				builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
-			
-			
+
+
 			int notificationDefault = NotificationCompat.DEFAULT_VIBRATE;
 			notificationDefault = notificationDefault | NotificationCompat.DEFAULT_LIGHTS;
 			notificationDefault = notificationDefault | NotificationCompat.FLAG_AUTO_CANCEL;
 			if (is_play_sound == 1)
 				notificationDefault = notificationDefault | NotificationCompat.DEFAULT_SOUND;
-			
-			
+
+
 			builder.setDefaults(notificationDefault);
-			
+
 			notificationManager.notify(0, builder.build());
-			
-			
+
+
 			//popup
 			if(popup_style == 1 || popup_style == 2){
 				popupNotification(context, json);
 			}
-			
+
 		} catch (PackageManager.NameNotFoundException e) {
 			// if we can't find it in the manifest, just return null
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private class BitmapFromURL extends AsyncTask<String, Void, Bitmap>{
 		Context context;
 		JSONObject json;
-		
+
 		public BitmapFromURL(Context context, JSONObject json){
 			super();
 			this.context = context;
 			this.json = json;
 		}
 		@Override
-        protected Bitmap doInBackground(String... params) {
-            try {
+		protected Bitmap doInBackground(String... params) {
+			try {
 
-                Bitmap bitmap = Util.getBitmapFromURL(json.getString("image_url"));
-                return bitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-            } 
-            return null;
-        }
-		
-		
+				Bitmap bitmap = Util.getBitmapFromURL(json.getString("image_url"));
+				return bitmap;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
 		@Override
-        protected void onPostExecute(Bitmap result) {
+		protected void onPostExecute(Bitmap result) {
 
-            super.onPostExecute(result);
-            try {
-            	notification(context, json, result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+			super.onPostExecute(result);
+			try {
+				notification(context, json, result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
