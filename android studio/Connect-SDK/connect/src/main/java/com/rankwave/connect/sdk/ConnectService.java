@@ -1,15 +1,5 @@
 package com.rankwave.connect.sdk;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 import com.rankwave.connect.sdk.ConnectCallback.FuncResult;
@@ -17,6 +7,16 @@ import com.rankwave.connect.sdk.core.NetworkThread;
 import com.rankwave.connect.sdk.core.Request;
 import com.rankwave.connect.sdk.core.Request.Callback;
 import com.rankwave.connect.sdk.core.Response;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ConnectService {
 	public static final String PREFIX_APP_PATH = "/2.0/app";
@@ -138,6 +138,12 @@ public class ConnectService {
 				params.add(new BasicNameValuePair("id", sns_id));
 				params.add(new BasicNameValuePair("token", twitter_access_token));
 				params.add(new BasicNameValuePair("token_secret", twitter_token_secret));
+			}else if (snsType == SnsType.SNS_TYPE_KAKAO){
+				String kakao_access_token = (String) info.get("kakao_access_token");
+				String sns_id = (String) info.get("sns_id");
+
+				params.add(new BasicNameValuePair("id", sns_id));
+				params.add(new BasicNameValuePair("token", kakao_access_token));
 			}
 			
 			params.add(new BasicNameValuePair("sns_type", SnsType.toString(snsType)));

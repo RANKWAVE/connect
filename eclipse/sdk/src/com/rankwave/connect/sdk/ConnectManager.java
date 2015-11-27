@@ -198,6 +198,56 @@ public class ConnectManager {
 	}
 	
 	
+	/**
+	 * setKakaoToken
+	 *
+	 * @param sns_id : sns_id
+	 * @param kakao_access_token : kakao_access_token
+	 * @param connectCallback : connectCallback
+	 */
+	public static void kakaoLogin(String sns_id, String kakao_access_token, ConnectCallback<ConnectSession> connectCallback) {
+		login_connect_callback = connectCallback;
+
+		ConnectSession connectSession = Connect.getConnectSession();
+		if(connectSession == null){
+			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
+
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
+			}
+			return;
+		}
+
+		if(kakao_access_token == null || kakao_access_token.equals("")){
+			if(connectCallback != null){
+				connectCallback.onFail(FuncResult.E_FAIL, new Exception("kakao_access_token can not be empty."));
+			}
+			return;
+		}
+
+		info.put("sns_id", sns_id);
+		info.put("kakao_access_token", kakao_access_token);
+
+		ConnectService.userConnect(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_KAKAO, info, new ConnectCallback<ConnectSession>(){
+			@Override
+			public void onSuccess(ConnectSession connectSession){
+				connectSession.connectSessionClear();
+
+				connectSession.storeId((String)info.get("sns_id"));
+				connectSession.storeIdType(IdType.toString(IdType.ID_TYPE_SNS));
+				connectSession.storeSnsType(SnsType.toString(SnsType.SNS_TYPE_KAKAO));
+
+				login_connect_callback.onSuccess(connectSession);
+			}
+
+			@Override
+			public void onFail(FuncResult result, Exception exception){
+				login_connect_callback.onFail(result, exception);
+			}
+		});
+	}
+	
+	
 	public static void userDisconnect(ConnectCallback<ConnectSession> connectCallback){
 		ConnectService.userDisconnect(connectCallback);
 		
