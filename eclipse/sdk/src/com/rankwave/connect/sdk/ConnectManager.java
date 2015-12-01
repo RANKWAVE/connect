@@ -203,9 +203,10 @@ public class ConnectManager {
 	 *
 	 * @param sns_id : sns_id
 	 * @param kakao_access_token : kakao_access_token
+	 * @param kakao_refresh_token : kakao_refresh_token
 	 * @param connectCallback : connectCallback
 	 */
-	public static void kakaoLogin(String sns_id, String kakao_access_token, ConnectCallback<ConnectSession> connectCallback) {
+	public static void kakaoLogin(String sns_id, String kakao_access_token, String kakao_refresh_token, ConnectCallback<ConnectSession> connectCallback) {
 		login_connect_callback = connectCallback;
 
 		ConnectSession connectSession = Connect.getConnectSession();
@@ -227,6 +228,7 @@ public class ConnectManager {
 
 		info.put("sns_id", sns_id);
 		info.put("kakao_access_token", kakao_access_token);
+		info.put("kakao_refresh_token", kakao_refresh_token);
 
 		ConnectService.userConnect(IdType.ID_TYPE_SNS, SnsType.SNS_TYPE_KAKAO, info, new ConnectCallback<ConnectSession>(){
 			@Override

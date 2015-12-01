@@ -140,10 +140,12 @@ public class ConnectService {
 				params.add(new BasicNameValuePair("token_secret", twitter_token_secret));
 			}else if (snsType == SnsType.SNS_TYPE_KAKAO){
 				String kakao_access_token = (String) info.get("kakao_access_token");
+				String kakao_refresh_token = (String) info.get("kakao_refresh_token");
 				String sns_id = (String) info.get("sns_id");
 
 				params.add(new BasicNameValuePair("id", sns_id));
 				params.add(new BasicNameValuePair("token", kakao_access_token));
+				params.add(new BasicNameValuePair("refresh_token", kakao_refresh_token));
 			}
 			
 			params.add(new BasicNameValuePair("sns_type", SnsType.toString(snsType)));

@@ -209,9 +209,10 @@ public final class Connect {
 	 * kakaoLogin
 	 * @param sns_id : sns_id
 	 * @param kakao_access_token :  kakao_access_token
+	 * @param kakao_refresh_token :  kakao_refresh_token
 	 * @param connectCallback : ConnectCallback
 	 */
-	public static void kakaoLogin(String sns_id, String kakao_access_token, ConnectCallback<ConnectSession> connectCallback) {
+	public static void kakaoLogin(String sns_id, String kakao_access_token, String kakao_refresh_token, ConnectCallback<ConnectSession> connectCallback) {
 		ConnectSession connectSession = getConnectSession();
 
 		if(connectSession == null){
@@ -239,7 +240,7 @@ public final class Connect {
 		//session clear
 		connectSession.connectSessionClear();
 
-		ConnectManager.kakaoLogin(sns_id, kakao_access_token, connectCallback);
+		ConnectManager.kakaoLogin(sns_id, kakao_access_token, kakao_refresh_token, connectCallback);
 	}
 	
 	/**
