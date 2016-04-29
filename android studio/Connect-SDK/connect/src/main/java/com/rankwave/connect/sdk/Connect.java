@@ -23,7 +23,7 @@ public final class Connect {
 	public static final String PROPERTY_NOTIFICATION_LARGE_ICON = "com.rankwave.notification.large_icon";
 	public static final String PROPERTY_NOTIFICATION_SMALL_ICON = "com.rankwave.notification.small_icon";
 
-	public static final String SDK_VERISON = "2.1.1";
+	public static final String SDK_VERISON = "2.1.2";
 	public static final String INTENT_PUSH_PAYLOAD = "com.rankwave.connect.sdk.pushpayload";
 	public static final String INTENT_PUSH_SEQ = "com.rankwave.connect.sdk.pushseq";
 	public static final String INTENT_PUSH_CMN = "com.rankwave.connect.sdk.pushcmn";
@@ -203,45 +203,7 @@ public final class Connect {
 		
 		ConnectManager.twitterLogin(sns_id, twitter_access_token, twitter_token_secret, connectCallback);
 	}
-
-
-	/**
-	 * kakaoLogin
-	 * @param sns_id : sns_id
-	 * @param kakao_access_token :  kakao_access_token
-	 * @param kakao_refresh_token :  kakao_refresh_token
-	 * @param connectCallback : ConnectCallback
-	 */
-	public static void kakaoLogin(String sns_id, String kakao_access_token, String kakao_refresh_token, ConnectCallback<ConnectSession> connectCallback) {
-		ConnectSession connectSession = getConnectSession();
-
-		if(connectSession == null){
-			Log.e(Connect.TAG, "ConnectSession is null : SDK is not initialized.");
-
-			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("ConnectSession is null : SDK is not initialized."));
-			}
-			return;
-		}
-
-		if(sns_id == null || sns_id.equals("")){
-			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("kakao id can not be empty."));
-			}
-			return;
-		}
-
-		if(kakao_access_token == null || kakao_access_token.equals("")){
-			if(connectCallback != null){
-				connectCallback.onFail(FuncResult.E_FAIL, new Exception("kakao_access_token can not be empty."));
-			}
-			return;
-		}
-		//session clear
-		connectSession.connectSessionClear();
-
-		ConnectManager.kakaoLogin(sns_id, kakao_access_token, kakao_refresh_token, connectCallback);
-	}
+	
 	
 	/**
 	 * logout

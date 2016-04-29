@@ -2,7 +2,6 @@ package com.rankwave.connect.sdk.core;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,55 +206,33 @@ public class NetworkThread implements Runnable {
 	
 	
 	
-	 private HttpClient getHttpClient() {
+	private HttpClient getHttpClient() {
 
-	        try {
+        try {
+            HttpParams params = new BasicHttpParams();
 
-	            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
-	            trustStore.load(null, null);
-
-
-
-
-	            SSLSocketFactory sf = new SFSSLSocketFactory(trustStore);
-
-	            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 
 
+            SchemeRegistry registry = new SchemeRegistry();
+
+            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+
+            registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
 
 
-	            HttpParams params = new BasicHttpParams();
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
 
-	            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+            return new DefaultHttpClient(ccm, params);
 
-	            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+        } catch (Exception e) {
 
+            return new DefaultHttpClient();
 
+        }
 
-
-	            SchemeRegistry registry = new SchemeRegistry();
-
-	            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-
-	            registry.register(new Scheme("https", sf, 443));
-
-
-
-
-	            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-
-
-
-
-	            return new DefaultHttpClient(ccm, params);
-
-	        } catch (Exception e) {
-
-	            return new DefaultHttpClient();
-
-	        }
-
-	    }
+    }
 
 }
