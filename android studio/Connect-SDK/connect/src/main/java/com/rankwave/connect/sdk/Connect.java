@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.rankwave.connect.sdk;
 
 import android.content.Context;
@@ -411,7 +410,7 @@ public final class Connect {
 
 
 }
-=======
+
 package com.rankwave.connect.sdk;
 
 import android.content.Context;
@@ -822,4 +821,3 @@ public final class Connect {
 	
 	
 }
->>>>>>> origin/master
