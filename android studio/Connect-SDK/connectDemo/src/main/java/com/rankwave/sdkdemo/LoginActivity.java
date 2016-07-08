@@ -23,6 +23,14 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.response.model.UserProfile;
+import com.kakao.util.exception.KakaoException;
+import com.kakao.util.helper.log.Logger;
 import com.rankwave.connect.sdk.Connect;
 import com.rankwave.connect.sdk.ConnectCallback;
 import com.rankwave.connect.sdk.ConnectSession;
@@ -48,6 +56,8 @@ public class LoginActivity extends Activity {
 
 	TwitterAuthClient mTwitterAuthClient;
 
+	private SessionCallback callback;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,8 +65,16 @@ public class LoginActivity extends Activity {
 		FacebookSdk.sdkInitialize(LoginActivity.this);
 
 		setContentView(R.layout.login);
-		
-		
+
+/*
+		DemoApplication.setCurrentActivity(LoginActivity.this);
+*/
+		callback = new SessionCallback();
+		Session.getCurrentSession().addCallback(callback);
+		Session.getCurrentSession().checkAndImplicitOpen();
+
+
+
 		/*
 		 * SDK 내부적으로 필요한 리소스를 초기화 하고, SDK 를 이용할 수 있게 준비하는 작업을 수행합니다.
 		 */
@@ -137,7 +155,7 @@ public class LoginActivity extends Activity {
 										new GraphRequest.Callback() {
 											public void onCompleted(GraphResponse response) {
            										 /* handle the result */
-												try{
+												try {
 													JSONObject jsonObject = response.getJSONObject();
 													SnsUser snsUser = new SnsUser();
 													snsUser.setName(jsonObject.getString("name"));
@@ -151,7 +169,7 @@ public class LoginActivity extends Activity {
 													intent.putExtra("snsUser", snsUser);
 													startActivity(intent);
 
-												}catch(Exception  e){
+												} catch (Exception e) {
 													e.printStackTrace();
 												}
 
@@ -264,22 +282,126 @@ public class LoginActivity extends Activity {
 			}
 		});
 
+
+
+//		Button btn_login_kakao = (Button) findViewById(R.id.btn_kakao_login);
+//
+//		btn_login_kakao.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				showLoading(true);
+//
+//				DemoApplication.setCurrentActivity(LoginActivity.this);
+//				callback = new SessionCallback();
+//				Session.getCurrentSession().addCallback(callback);
+//				Session.getCurrentSession().checkAndImplicitOpen();
+//
+//				showLoading(false);
+//			}
+//		});
+
 		showLoading(false);
 
 		ImageView iv_loading = (ImageView) findViewById(R.id.iv_loading);
 		rotateAnimation(1000, iv_loading);
 	}
 
-	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Session.getCurrentSession().removeCallback(callback);
+	}
+
+	private class SessionCallback implements ISessionCallback {
+
+		@Override
+		public void onSessionOpened() {
+			UserManagement.requestMe(new MeResponseCallback() {
+				@Override
+				public void onSuccess(UserProfile userProfile) {
+					String id = String.valueOf(userProfile.getId());
+
+					String token = Session.getCurrentSession().getAccessToken();
+					String refreshToken = Session.getCurrentSession().getRefreshToken();
+
+					Connect.kakaoLogin(id, token, refreshToken, new ConnectCallback<ConnectSession>() {
+						@Override
+						public void onSuccess(ConnectSession connectSession) {
+							Log.i(AppConst.LOG_TAG, "========================================");
+							Log.i(AppConst.LOG_TAG, "kakaoLogin Success.");
+							Log.i(AppConst.LOG_TAG, "========================================");
+						}
+
+						@Override
+						public void onFail(FuncResult funcResult, Exception ex) {
+							Log.e(AppConst.LOG_TAG, "========================================");
+							Log.e(AppConst.LOG_TAG, "kakaoLogin Fail.");
+							Log.e(AppConst.LOG_TAG, "----------------------------------------");
+							Log.e(AppConst.LOG_TAG, ex.toString());
+							Log.e(AppConst.LOG_TAG, "========================================");
+						}
+					});
+
+
+					SnsUser snsUser = new SnsUser();
+					snsUser.setName(userProfile.getNickname());
+					snsUser.setSns_id(String.valueOf(userProfile.getId()));
+					snsUser.setAccess_token(token);
+					snsUser.setToken_secret("");
+					snsUser.setId_type("sns");
+					snsUser.setSns_type("KO");
+					snsUser.setProfile_image(userProfile.getProfileImagePath());
+
+					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+					intent.putExtra("snsUser", snsUser);
+					startActivity(intent);
+				}
+
+				@Override
+				public void onFailure(ErrorResult errorResult) {
+
+				}
+
+				@Override
+				public void onSessionClosed(ErrorResult errorResult) {
+
+				}
+
+				@Override
+				public void onNotSignedUp() {
+
+				}
+			});
+
+
+
+		}
+
+		@Override
+		public void onSessionOpenFailed(KakaoException exception) {
+			if(exception != null) {
+				Logger.e(exception);
+			}
+		}
+	}
+
+
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		if(callbackManager != null)
 			callbackManager.onActivityResult(requestCode, resultCode, data);
 
 		if(mTwitterAuthClient != null){
 			mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
 		}
+
+		if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+			return;
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
 	public void showLoading(boolean show) {

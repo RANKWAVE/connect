@@ -50,6 +50,21 @@
             android:background="@drawable/selector_btn_login_twitter" />
 
 
+        <!--Button
+            android:id="@+id/btn_kakao_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:text="KAKAO LOGIN" / -->
+
+        <com.kakao.usermgmt.LoginButton
+            android:id="@+id/com_kakao_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp" />
+
     </LinearLayout>
 
     <RelativeLayout

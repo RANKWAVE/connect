@@ -4,10 +4,6 @@
     android:versionCode="7"
     android:versionName="1.0" >
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="21" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -18,7 +14,18 @@
     <permission android:name="com.rankwave.sdkdemo.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.rankwave.sdkdemo.permission.C2D_MESSAGE" />
-    
+
+    <!-- by K.H.E, 2016.07.07,
+        Reference : http://stackoverflow.com/questions/16112470/android-exported-receiver-does-not-require-permission-on-receivers-meant-to
+        For avoiding warning : 'Exported receiver does not require permission'
+        Defining permission.
+    -->
+    <permission
+        android:name="com.rankwave.connect.sdk.SEND_PAYLOAD"
+        android:protectionLevel="normal" />
+    <uses-permission
+        android:name="com.rankwave.connect.sdk.permission.SEND_PAYLOAD" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -37,12 +44,20 @@
             </intent-filter>
         </receiver>
         <receiver android:name="com.rankwave.connect.sdk.core.ConnectReceiver" />
-        <receiver android:name="com.rankwave.sdkdemo.ConnectPayloadReceiver" >
+
+        <!-- By K.H.E, 2016.07.07
+            Reference : http://stackoverflow.com/questions/16112470/android-exported-receiver-does-not-require-permission-on-receivers-meant-to
+            For avoiding warning : 'Exported receiver does not require permission'
+            Add android::permission and android:enabled.
+        -->
+        <receiver
+            android:name="com.rankwave.sdkdemo.ConnectPayloadReceiver"
+            android:permission="com.rankwave.connect.sdk.permission.SEND_PAYLOAD"
+            android:enabled="false" >
             <intent-filter>
                 <action android:name="com.rankwave.connect.sdk.SEND_PAYLOAD"/>
             </intent-filter>
         </receiver>
-        
 
         <activity
             android:name=".IntroActivity"
@@ -80,15 +95,21 @@
             android:value="@string/facebook_app_id" />
 
          
-         <meta-data
+        <meta-data
             android:name="com.rankwave.connect.sdk.SenderId"
             android:value="@string/sender_id" />
          
-         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
          
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d9c1e2c1a9a6378fb088335adfc9c4f1b9a8934d" />
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+
     </application>
+
 
 </manifest>
